@@ -50,6 +50,7 @@ CREATE TABLE `compositions` (
   `listening_example_link` varchar(255) DEFAULT NULL COMMENT 'A link to a listening example, maybe on YouTube',
   `checked_out` varchar(255) DEFAULT NULL COMMENT 'To whom was this piece lended',
   `paper_size` varchar(4) NOT NULL COMMENT 'Physical size, from the paper_sizes table',
+  `image_path` varchar(2048) DEFAULT NULL COMMENT 'Where a picture (image) of the score resides',
   `last_inventory_date` datetime DEFAULT NULL COMMENT 'When was the last time somebody touched this music',
   `enabled` int(11) UNSIGNED NOT NULL COMMENT 'Set greater than 0 if this composition can be played'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table keeps compositions.';
@@ -87,7 +88,7 @@ CREATE TABLE `genres` (
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Name of the genre, for example March',
   `description` varchar(255) DEFAULT '' COMMENT 'Description or comments of this particular genre',
   `enabled` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Set non-zero to enable the genre to be used'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table keeps genres.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table keeps genres (March, Jazz, Transcription, etc.).';
 
 --
 -- Dumping data for table `genres`

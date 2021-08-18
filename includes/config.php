@@ -8,9 +8,8 @@
 */
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'arbilewca');
-define('DB_USER', 'arbilewca');
-define('DB_PASS', 'w1ndb4nd');
+define('DB_USER', 'librarian');
+define('DB_PASS', 'fundamental0+Confident');
 define('DB_CHARSET', 'utf8');
-define('PROXY_SERVER', '10.19.7.19');
 define('REGION', 'HOME');
 ?>

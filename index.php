@@ -17,7 +17,7 @@
 ?>
 <br />
 <main role="main" class="container">
-	<div class="jumbotron" style='background: rgba(0, 0, 0, 0) url("/images/productsplatforms2-sm.jpg") no-repeat scroll 0px 0px;'>
+	<div class="jumbotron">
 		<h1 class="display-4">Austin Civic Wind Ensemble</h1>
 		<p class="lead">Music Library</p>
 		<br />

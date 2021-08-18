@@ -10,19 +10,19 @@ echo '
         <div class="collapse navbar-collapse collapse" id="navbarTop">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item' . ( PAGE_NAME === 'home' ? ' active">' : '">') . '
-                    <a class="nav-link text-uppercase" href="/"><i class="fa fa-home"></i> Home</a>
+                    <a class="nav-link text-uppercase" href="#"><i class="fa fa-home"></i> Home</a>
                 </li>
                 <li class="nav-item' . ( PAGE_NAME === 'about' ? ' active">' : '">') . '
                     <a class="nav-link text-uppercase" href="about.php"><i class="fas fa-info-circle"></i> About</a>
                 </li>
                 <li class="nav-item' . ( PAGE_NAME === 'search' ? ' active">' : '">') . '
-                    <a class="nav-link text-uppercase" href="connect_images.php"><i class="fas fa-search"></i> Search</a>
+                    <a class="nav-link text-uppercase" href="search.php"><i class="fas fa-search"></i> Search</a>
                 </li>
                 <li class="nav-item' . ( PAGE_NAME === 'enter' ? ' active">' : '">') . '
                     <a class="nav-link text-uppercase" href="enter_menu.php"><i class="fas fa-id-card"></i> Enter</a>
                 </li>
                 <li class="nav-item' . ( PAGE_NAME === 'report' ? ' active">' : '">') . '
-                    <a class="nav-link text-uppercase" href="list_vnc_targets.php"><i class="fas fa-chart-area"></i> Reports</a>
+                    <a class="nav-link text-uppercase" href="reports.php"><i class="fas fa-chart-area"></i> Reports</a>
                 </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">';

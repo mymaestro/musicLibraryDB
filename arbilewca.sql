@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 5.1.1-1.fc34
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 28, 2018 at 02:50 PM
--- Server version: 10.3.10-MariaDB
--- PHP Version: 7.2.12
+-- Generation Time: Aug 19, 2021 at 11:21 PM
+-- Server version: 10.5.11-MariaDB
+-- PHP Version: 7.4.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -51,6 +50,7 @@ CREATE TABLE `compositions` (
   `checked_out` varchar(255) DEFAULT NULL COMMENT 'To whom was this piece lended',
   `paper_size` varchar(4) NOT NULL COMMENT 'Physical size, from the paper_sizes table',
   `image_path` varchar(2048) DEFAULT NULL COMMENT 'Where a picture (image) of the score resides',
+  `windrep_link` text DEFAULT NULL COMMENT 'Where can you this arrangement on the Wind Repertory site windrep.org?',
   `last_inventory_date` datetime DEFAULT NULL COMMENT 'When was the last time somebody touched this music',
   `enabled` int(11) UNSIGNED NOT NULL COMMENT 'Set greater than 0 if this composition can be played'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table keeps compositions.';
@@ -194,7 +194,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id_users`, `username`, `password`, `name`, `address`, `roles`) VALUES
-(2, 'admin', '$2y$10$cG.C00l.2QwQF/pRm6xR6elqOVrdMVi0LmEc1zmFb05PjeOJyxB4q', NULL, 'gill@fishparts.net', 'administrator user');
+(2, 'admin', '$2y$10$cG.C00l.2QwQF/pRm6xR6elqOVrdMVi0LmEc1zmFb05PjeOJyxB4q', NULL, 'gill@fishparts.net', 'administrator user'),
+(3, 'librarian', '$2y$10$vRs6g2HtCsK5IwkF9n2uIONcMgnbjIR2wvjy0B.gbj7bA4L50uEUy', NULL, 'bandgeek@acwe.org', 'administrator user');
 
 --
 -- Indexes for dumped tables
@@ -286,7 +287,7 @@ ALTER TABLE `recordings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_users` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique ID for the user', AUTO_INCREMENT=3;
+  MODIFY `id_users` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique ID for the user', AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

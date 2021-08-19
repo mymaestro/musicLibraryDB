@@ -22,4 +22,5 @@ if(!empty($_POST)) {
         $message = 'No data deleted';
     }
 echo json_encode($message);
+}
 ?>

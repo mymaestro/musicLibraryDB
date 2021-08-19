@@ -17,18 +17,28 @@
 ?>
 <br />
 <main role="main" class="container">
-	<div class="jumbotron" style='background: rgba(0, 0, 0, 0) url("/images/productsplatforms2-sm.jpg") no-repeat scroll 0px 0px;'>
+	<div class="jumbotron">
 		<h2 class="display-4">Enter library materials</h2>
 		<p class="lead">Music Library</p>
 		<br />
-		<div class="card">
-			<div class="card-header">
-				Music
+		<div class="card-group">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Compositions</h5>
+					<p class="card-text">Work with compositions in the music library.</p>
+				</div>
+				<div class="card-footer">
+					<a href="list_compositions.php" class="card-link">Compositions</a>
+				</div>
 			</div>
-			<div class="card-body">
-				<h5 class="card-title">Compositions</h5>
-				<p class="card-text">Work with compositions in the music library.</p>
-				<a href="list_compositions.php" class="card-link">Compositions</a>
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Parts</h5>
+					<p class="card-text">Work with instrument parts.</p>
+				</div>
+				<div class="card-footer">
+					<a href="list_parts.php" class="card-link">Parts</a>
+				</div>
 			</div>
 		</div>
 		<br />
@@ -80,7 +90,7 @@
 					<p class="card-text"><small class="text-muted">Folio, march or book</small></p>
 				</div>
 				<div class="card-footer">
-					<a href="list_papersizes.php" class="card-link">Part sizes</a>
+					<a href="list_papersizes.php" class="card-link">Part paper sizes</a>
 				</div>
 			</div>
 		</div>

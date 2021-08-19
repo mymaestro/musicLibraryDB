@@ -25,7 +25,7 @@
             <br />
         </div><!-- right -->
 <?php endif; ?>
-        <div id="genre_table">
+        <div id="compositions_table">
         <?php
         require_once('includes/config.php');
         require_once('includes/functions.php');
@@ -294,6 +294,16 @@
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="listening_example_link" name="listening_example_link" placeholder="https://acwe.org/recordings/piece.mp3" maxlength="255"/>
                                 <small id="listening_example_linkHelp" class="form-text text-muted">Where can you find a recording of this arrangement of this piece?</small>
+                            </div>
+                        </div>
+                        <div class="row bg-white">
+                            <div class="col-md-2">
+                            <!-- windrep (255 characters)  'A link to this piece on windrep.org' -->
+                            <label for="windrep_link" class="col-form-label">Wind Repertory Project link</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="windrep_link" name="windrep_link" placeholder="https://www.windrep.org/Russian_Christmas_Music" maxlength="255"/>
+                                <small id="windrep_linkHelp" class="form-text text-muted">Where can you this arrangement on the Wind Repertory site?</small>
                             </div>
                         </div>
                         <div class="row bg-white">

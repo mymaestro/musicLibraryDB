@@ -195,7 +195,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id_users`, `username`, `password`, `name`, `address`, `roles`) VALUES
 (2, 'admin', '$2y$10$cG.C00l.2QwQF/pRm6xR6elqOVrdMVi0LmEc1zmFb05PjeOJyxB4q', NULL, 'gill@fishparts.net', 'administrator user'),
-(3, 'librarian', '$2y$10$vRs6g2HtCsK5IwkF9n2uIONcMgnbjIR2wvjy0B.gbj7bA4L50uEUy', NULL, 'bandgeek@acwe.org', 'administrator user');
+(3, 'librarian', '$2y$10$qtzTSkEgsjeWCnTqR7ef/OGUCtJFSBO43GAX8P213uttgCP8gO21.', NULL, 'bandgeek@acwe.org', 'administrator user');
 
 --
 -- Indexes for dumped tables

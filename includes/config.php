@@ -1,9 +1,8 @@
 <?php
 /*
 #############################################################################
-# Licensed Materials - Property of ACWE*
-# (C) Copyright HCL Technologies Ltd. 2017, 2018 All rights reserved.
-# * Trademark of HCL Technologies Limited
+# Licensed Materials - Property of ACWE
+# (C) Copyright Austin Civic Wind Ensemble 2020, 2021. All rights reserved.
 #############################################################################
 */
 define('DB_HOST', 'localhost');

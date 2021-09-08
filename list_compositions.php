@@ -260,27 +260,7 @@
                         </div>
                         <div class="row bg-white">
                             <div class="col-md-2">
-                        
-                            $('#add_data_Modal').modal('hide');
-                        $('#composition_table').html(data);
-                    }
-                });
-            }
-        });
-        $(document).on('click', '.view_data', function(){
-            var catalog_number = $(this).attr("id");
-            if(catalog_number != '')
-            {
-                $.ajax({
-                    url:"select_compositions.php",
-                    method:"POST",
-                    data:{catalog_number:catalog_number},
-                    success:function(data){
-                        $('#composition_detail').html(data);
-                        $('#dataModal').modal('show');
-                    }
-                });
-            }    <!-- storage_location (255 characters)  'Where it is kept (which drawer)' -->
+                            <!-- storage_location (255 characters)  'Where it is kept (which drawer)' -->
                             <label for="storage_location" class="col-form-label">Storage location</label>
                             </div>
                             <div class="col-md-10">

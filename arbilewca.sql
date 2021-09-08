@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 19, 2021 at 11:21 PM
+-- Generation Time: Sep 08, 2021 at 03:11 AM
 -- Server version: 10.5.11-MariaDB
--- PHP Version: 7.4.22
+-- PHP Version: 7.4.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -108,10 +108,22 @@ CREATE TABLE `paper_sizes` (
   `id_paper_size` varchar(4) NOT NULL COMMENT 'Paper size ID (one letter)',
   `name` varchar(255) NOT NULL COMMENT 'Size, for example Legal, Letter, Folio',
   `description` varchar(255) DEFAULT NULL COMMENT 'Use to list other examples',
-  `vertical` int(11) UNSIGNED DEFAULT NULL COMMENT 'Vertical size in inches times 100',
-  `horizontal` int(11) UNSIGNED DEFAULT NULL COMMENT 'Horizontal size in inches times 100',
+  `vertical` decimal(7,2) UNSIGNED DEFAULT NULL COMMENT 'Vertical size in inches',
+  `horizontal` decimal(7,2) UNSIGNED DEFAULT NULL COMMENT 'Horizontal size in inches',
   `enabled` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Set greater than 0 if this size is used'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table keeps paper sizes.';
+
+--
+-- Dumping data for table `paper_sizes`
+--
+
+INSERT INTO `paper_sizes` (`id_paper_size`, `name`, `description`, `vertical`, `horizontal`, `enabled`) VALUES
+('F', 'Folio', 'Folio size, used for parts and some scores, is roughly equivalent to EU C4, which is 9 x 12.9', '12.00', '9.00', 1),
+('G', 'Legal', 'Legal size is taller than letter. Should be 8.5 x 14', '14.00', '8.50', 0),
+('L', 'Letter', 'Letter, roughly equivalent to A4, is used for choral scores and parts. Should be 8.5\" x 11\"', '11.00', '8.50', 1),
+('M', 'Marching band part', 'The standard for marching band flip folder parts is 6.75\"w x 5.25\"h', '5.25', '6.75', 1),
+('T', 'Tabloid', 'Tabloid, sometimes called ledger, is similar to A3.', '17.00', '11.00', 1),
+('V', 'Octavo', 'About an eighth the size of an unfolded newspaper, or 7 x 10.75', '10.75', '7.00', 0);
 
 -- --------------------------------------------------------
 
@@ -195,7 +207,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id_users`, `username`, `password`, `name`, `address`, `roles`) VALUES
 (2, 'admin', '$2y$10$cG.C00l.2QwQF/pRm6xR6elqOVrdMVi0LmEc1zmFb05PjeOJyxB4q', NULL, 'gill@fishparts.net', 'administrator user'),
-(3, 'librarian', '$2y$10$qtzTSkEgsjeWCnTqR7ef/OGUCtJFSBO43GAX8P213uttgCP8gO21.', NULL, 'bandgeek@acwe.org', 'administrator user');
+(3, 'librarian', '$2y$10$fCkrzNdYi2Krebl6aiRUFekfRGl3aJmMqqszdeuylceAo3YSynGJi', 'My Librarian', 'bandgeek@acwe.org', 'administrator');
 
 --
 -- Indexes for dumped tables
@@ -287,7 +299,7 @@ ALTER TABLE `recordings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_users` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique ID for the user', AUTO_INCREMENT=4;
+  MODIFY `id_users` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique ID for the user', AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables

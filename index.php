@@ -18,7 +18,7 @@
 <br />
 <main role="main" class="container">
 	<div class="jumbotron">
-		<h1 class="display-4">Austin Civic Wind Ensemble</h1>
+		<h1 class="display-4"><?php echo ORGDESC ?></h1>
 		<p class="lead">Music Library</p>
 		<br />
 		<br />

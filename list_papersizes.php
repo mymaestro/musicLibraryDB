@@ -18,7 +18,7 @@
 ?>
     <br />
     <div class="container">
-        <h2 align="center">Music Paper Sizes</h2>
+        <h2 align="center"><?php echo ORGNAME ?> Music Paper Sizes</h2>
 <?php if($u_admin) : ?>
         <div align="right">
             <button type="button" name="add" id="add" data-toggle="modal" data-target="#add_data_Modal" class="btn btn-warning">Add</button>

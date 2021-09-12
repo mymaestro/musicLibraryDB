@@ -32,7 +32,7 @@ if(!empty($_POST)) {
     } else {
         $sql = "
         INSERT INTO part_types(collation, name, description, id_part_collection, enabled)
-        VALUES($collection, '$name', '$description', '$id_part_collection', '$enabled');
+        VALUES($collation, '$name', '$description', '$id_part_collection', '$enabled');
         ";
         $message = 'Data Inserted';
     }

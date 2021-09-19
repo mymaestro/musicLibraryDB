@@ -20,7 +20,7 @@ if(!empty($_POST)) {
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
     $description = mysqli_real_escape_string($f_link, $_POST['description']);
 
-    if($_POST["id_part"] != "") {
+    if($_POST["update"] == "update") {
         $sql = "
         UPDATE parts
         SET id_part = $id_part,
@@ -32,7 +32,7 @@ if(!empty($_POST)) {
         copies_count = '$copies_count',
         WHERE id_part='".$_POST["id_part"]."'";
         $message = 'Data Updated';
-    } else {
+    } elseif($_POST["update"] == "add") {
         $sql = "
         INSERT INTO parts(id_part, catalog_number, name, description, originals_count, copies_count)
         VALUES($id_part, '$catalog_number', '$name', '$description', '$originals_count', '$copies_count');

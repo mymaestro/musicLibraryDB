@@ -19,7 +19,7 @@ if(!empty($_POST)) {
     $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
 
-    if($_POST["id_part_collection"] != "") {
+    if($_POST["update"] == "update") {
         $sql = "
         UPDATE part_collections
         SET name ='$name',
@@ -28,7 +28,7 @@ if(!empty($_POST)) {
         enabled = '$enabled'
         WHERE id_part_collection='".$_POST["id_part_collection"]."'";
         $message = 'Data Updated';
-    } else {
+    } elseif($_POST["update"] == "add") {
         $sql = "
         INSERT INTO part_collections(name, description, id_part_type, enabled)
         VALUES('$name', '$description', '$id_part_type', $enabled);

@@ -18,7 +18,7 @@
 ?>
     <br />
     <div class="container">
-        <h2 align="center">ACWE Part Types</h2>
+        <h2 align="center"><?php echo ORGNAME /> Part Types</h2>
 <?php if($u_admin) : ?>
         <div align="right">
             <button type="button" name="add" id="add" data-toggle="modal" data-target="#add_data_Modal" class="btn btn-warning">Add</button>
@@ -39,6 +39,7 @@
                         <th>ID</th>
                         <th>Collation</th>
                         <th>Name</th>
+                        <th>Family</th>
                         <th>Description</th>
                         <th>Part Collection</th>
                         <th>Enabled</th>
@@ -52,6 +53,7 @@
             $id_part_type = $rowList['id_part_type'];
             $collation = $rowList['collation'];
             $name = $rowList['name'];
+            $family = $rowList['family'];
             $description = $rowList['description'];
             $id_part_collection = $rowList['id_part_collection'];
             $enabled = $rowList['enabled'];
@@ -59,6 +61,7 @@
                         <td>'.$id_part_type.'</td>
                         <td>'.$collation.'</td>
                         <td>'.$name.'</td>
+                        <td>'.$family.'</td>
                         <td>'.$description.'</td>
                         <td>'.$id_part_collection.'</td>
                         <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>';

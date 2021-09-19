@@ -29,7 +29,7 @@ if(!empty($_POST)) {
         enabled = '$enabled'
         WHERE id_ensemble='".$_POST["id_ensemble"]."'";
         $message = 'Data Updated';
-    } else {
+    } elseif($_POST["update"] == "add") {
         $sql = "
         INSERT INTO ensembles(id_ensemble, name, description, link, enabled)
         VALUES('$id_ensemble','$name', '$description', '$link', $enabled);

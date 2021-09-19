@@ -45,7 +45,7 @@
                     </thead>
                     <tbody>';
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $sql = "SELECT * FROM part_types ORDER BY name;";
+        $sql = "SELECT * FROM part_collections ORDER BY name;";
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
         while ($rowList = mysqli_fetch_array($res)) {
             $id_part_collection = $rowList['id_part_collection'];
@@ -116,8 +116,8 @@
                                 <label for="description" class="col-form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                                 <br />
-                                <label for="link" class="col-form-label">Part types (link)</label>
-                                <input type="text" class="form-control" id="id_part_type" name="id_part_type">
+                                <label for="link" class="col-form-label">Part types that are in this collection (link)</label>
+                                <input type="text" class="form-control" id="id_part_type" name="id_part_type" placeholder="This will be a pick list of part types">
                                 <br />
                                 <label for="enabled" class="col-form-label">Enabled</label>
                                 <div class="form-check form-check-inline">
@@ -151,7 +151,6 @@
                 dataType:"json",
                 success:function(data){
                     $('#id_part_collection').val(data.id_part_collection);
-                    $('#collation').val(data.collation);
                     $('#name').val(data.name);
                     $('#description').val(data.description);
                     $('#id_part_type').val(data.id_part_type);

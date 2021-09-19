@@ -31,7 +31,7 @@ if(!empty($_POST)) {
     } else {
         $sql = "
         INSERT INTO part_collections(name, description, id_part_type, enabled)
-        VALUES('$name', '$description', '$id_part_type', '$enabled');
+        VALUES('$name', '$description', '$id_part_type', $enabled);
         ";
         $message = 'Data Inserted';
     }

@@ -32,7 +32,7 @@ if(!empty($_POST)) {
     } else {
         $sql = "
         INSERT INTO ensembles(id_ensemble, name, description, link, enabled)
-        VALUES('$id_ensemble','$name', '$description', '$link', '$enabled);
+        VALUES('$id_ensemble','$name', '$description', '$link', $enabled);
         ";
         $message = 'Data Inserted';
     }
@@ -50,6 +50,7 @@ if(!empty($_POST)) {
            ';
         echo '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
+        error_log("Command:" . $sql);
         error_log("Error: " . $error_message);
     }
  }

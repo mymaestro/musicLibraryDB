@@ -22,6 +22,8 @@ if(!empty($_POST)) {
     $vertical = mysqli_real_escape_string($f_link, $_POST['vertical']);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
 
+    error_log("POST update=".$_POST["update"]);
+
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE paper_sizes 

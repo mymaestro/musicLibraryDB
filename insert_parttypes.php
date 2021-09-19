@@ -25,6 +25,8 @@ if(!empty($_POST)) {
     $family = mysqli_real_escape_string($f_link, $_POST['family']);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
 
+    error_log("POST update".$_POST["update"]);
+
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE part_types 

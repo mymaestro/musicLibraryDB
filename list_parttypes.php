@@ -155,6 +155,7 @@
                                 <input class="form-control" id="enabled" name="enabled" type="checkbox" value="1"></>
                             </div>
                         </div>
+                        <input type="hidden" name="update" id="update" value="0" />
                         <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
                     </form>  
                   </div><!-- container-fluid -->

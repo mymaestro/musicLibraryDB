@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 08, 2021 at 03:11 AM
--- Server version: 10.5.11-MariaDB
+-- Generation Time: Sep 19, 2021 at 10:27 PM
+-- Server version: 10.5.12-MariaDB
 -- PHP Version: 7.4.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -74,8 +74,9 @@ CREATE TABLE `ensembles` (
 --
 
 INSERT INTO `ensembles` (`id_ensemble`, `name`, `description`, `link`, `enabled`) VALUES
+('B5', 'Brass quintet', 'A brass quintet is a five-piece musical ensemble composed of brass instruments. The instrumentation for a brass quintet typically includes two trumpets or cornets, one French horn, one trombone or euphonium/baritone horn, and one tuba or bass trombone.', '', 1),
 ('C', 'Austin Civic Wind Ensemble', 'The Austin Civic Wind Ensemble is a gathering of adult musicians enjoying the challenge of a high-quality repertoire.  The wide range of age and skill level supports our value of inclusion and fosters our mission of using music for lifelong learning, while promoting joy in our community through live performances.', 'https://acwe.org/about', 1),
-('F', 'Violent Clown Flute Choir', 'The Violent Clown Flute Choir flute ensemble does not require auditions and welcomes players of varying skill levels who desire to be part of a unique chamber group experience and celebrate the beautiful sound of the flute - including piccolo, C flute, alto flute, and bass flute. The choir plays mostly intermediate level repertoire and focuses on the fundamentals of flute playing to improve all members\' musical aptitude.', 'http://violetcrownflutechoir.org', 1);
+('F', 'Violet Crown Flute Choir', 'The Violet Crown Flute Choir flute ensemble does not require auditions and welcomes players of varying skill levels who desire to be part of a unique chamber group experience and celebrate the beautiful sound of the flute - including piccolo, C flute, alto flute, and bass flute. The choir plays mostly intermediate level repertoire and focuses on the fundamentals of flute playing to improve all members\' musical aptitude.', 'http://violetcrownflutechoir.org', 1);
 
 -- --------------------------------------------------------
 
@@ -96,7 +97,8 @@ CREATE TABLE `genres` (
 
 INSERT INTO `genres` (`id_genre`, `name`, `description`, `enabled`) VALUES
 ('C', 'Christmas', 'Christmas music comprises a variety of genres of music normally performed or heard around the Christmas season.', 1),
-('M', 'March', 'A march, as a musical genre, is a piece of music with a strong regular rhythm which in origin was expressly written for marching to and most frequently performed by a military band.', 0);
+('M', 'March', 'A march, as a musical genre, is a piece of music with a strong regular rhythm which in origin was expressly written for marching to and most frequently performed by a military band.', 1),
+('Y', 'Symphonic transcription', 'Transcriptions of classic and contemporary symphonic works for band', 1);
 
 -- --------------------------------------------------------
 
@@ -118,8 +120,9 @@ CREATE TABLE `paper_sizes` (
 --
 
 INSERT INTO `paper_sizes` (`id_paper_size`, `name`, `description`, `vertical`, `horizontal`, `enabled`) VALUES
+('B', 'Broadsheet', 'Many broadsheets measure roughly 29+1â„2 by 23+1â„2 in', '23.50', '29.50', 1),
 ('F', 'Folio', 'Folio size, used for parts and some scores, is roughly equivalent to EU C4, which is 9 x 12.9', '12.00', '9.00', 1),
-('G', 'Legal', 'Legal size is taller than letter. Should be 8.5 x 14', '14.00', '8.50', 0),
+('G', 'Legal', 'Legal size is taller than letter. Should be 8.5 x 14', '14.00', '8.50', 1),
 ('L', 'Letter', 'Letter, roughly equivalent to A4, is used for choral scores and parts. Should be 8.5\" x 11\"', '11.00', '8.50', 1),
 ('M', 'Marching band part', 'The standard for marching band flip folder parts is 6.75\"w x 5.25\"h', '5.25', '6.75', 1),
 ('T', 'Tabloid', 'Tabloid, sometimes called ledger, is similar to A3.', '17.00', '11.00', 1),
@@ -165,11 +168,56 @@ CREATE TABLE `part_types` (
   `id_part_type` int(10) UNSIGNED NOT NULL COMMENT 'The ID of this part type.',
   `collation` int(10) UNSIGNED NOT NULL COMMENT 'Orchestra score order',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The name of the type of part, for example Trumpet 1',
-  `description` varchar(255) DEFAULT NULL COMMENT 'Longer description of the type of part',
+  `description` varchar(2048) DEFAULT NULL COMMENT 'Longer description of the type of part',
   `family` varchar(128) NOT NULL COMMENT 'Woodwind, brass, percussion, strings, etc.',
   `id_part_collection` int(10) UNSIGNED DEFAULT NULL COMMENT 'If this part is more than one instrument this is the ID of the collection',
   `enabled` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Set to 1 to enable this part type'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table holds kinds/types of parts for parts and part collections.';
+
+--
+-- Dumping data for table `part_types`
+--
+
+INSERT INTO `part_types` (`id_part_type`, `collation`, `name`, `description`, `family`, `id_part_collection`, `enabled`) VALUES
+(1, 10, 'Piccolo', 'The piccolo is a half-size flute, and a member of the woodwind family of musical instruments.', 'Woodwind', 1, 1),
+(2, 20, 'Flute', 'A flute is an aerophone or reedless wind instrument that produces its sound from the flow of air across an opening. ', 'Woodwind', 1, 1),
+(3, 30, 'Alto Flute', 'The alto flute has a deeper range and more powerful tone.', 'Woodwind', 1, 1),
+(4, 40, 'Oboe', 'The oboe is a type of double reed woodwind instrument.', 'Woodwind', 1, 1),
+(5, 50, 'English Horn', 'The English horn', 'Woodwind', 1, 1),
+(6, 60, 'Bassoon', 'The bassoon is a woodwind instrument in the double reed family, which has a tenor and bass sound.', 'Woodwind', 1, 1),
+(7, 70, 'Contrabassoon', 'The contrabassoon, also known as the double bassoon, is a larger version of the bassoon, sounding an octave lower.', 'Woodwind', 1, 0),
+(8, 80, 'Clarinet in Eb', 'The E-flat (E♭) clarinet is a member of the clarinet family, smaller than the more common B♭ clarinet and pitched a perfect fourth higher.', 'Woodwind', 1, 1),
+(9, 90, 'Clarinet in Bb', 'The clarinet has a single-reed mouthpiece, a straight, cylindrical tube with an almost cylindrical bore, and a flared bell.', 'Woodwind', 1, 1),
+(10, 100, 'Bass Clarinet', 'Bass clarinet is usually pitched in B♭ (meaning it is a transposing instrument on which a written C sounds as B♭), but it plays notes an octave below the soprano B♭ clarinet.', 'Woodwind', 1, 1),
+(11, 110, 'Soprano Saxophone', 'The soprano saxophone is a higher-register variety of the saxophone.', 'Woodwind', 1, 1),
+(12, 120, 'Alto Saxophone', 'The saxophone is a type of single-reed woodwind instrument with a conical body, usually made of brass.', 'Woodwind', 1, 1),
+(13, 130, 'Tenor Saxophone', 'The tenor saxophone is a medium-sized type of single-reed woodwind instrument with a conical body, usually made of brass.', 'Woodwind', 1, 1),
+(14, 140, 'Baritone Saxophone', 'The baritone saxophone is a type of single-reed woodwind instrument with a conical body, usually made of brass.', 'Woodwind', 1, 1),
+(15, 150, 'Bass Saxophone', 'The bass saxophone is a type of single-reed woodwind instrument with a conical body, usually made of brass.', 'Woodwind', 1, 1),
+(16, 160, 'Horn in F', 'The French horn (since the 1930s known simply as the \"horn\" in professional music circles) is a brass instrument made of tubing wrapped into a coil with a flared bell.', 'Brass', 1, 0),
+(17, 170, 'Trumpet in Bb', 'The trumpet is a brass instrument commonly used in classical and jazz ensembles.', 'Brass', 1, 1),
+(18, 180, 'Trombone', 'Trombone is a brass instrument an extendable slide that can increase the length of the instruments tubing.', 'Brass', 1, 1),
+(19, 190, 'Bass Trombone', 'A variation of the trombone family, considered the lower member of the trombone family.', 'Brass', 1, 1),
+(20, 200, 'Baritone', 'The baritone horn, or sometimes just called baritone, is a valved, low-pitched brass instrument.', 'Brass', 1, 1),
+(21, 210, 'Euphonium', 'Euphonium, a brass wind instrument with valves, is the leading instrument in the tenor-bass range in military bands.', 'Brass', 1, 1),
+(22, 220, 'Tuba', 'The tuba is the lowest-pitched musical instrument in the brass family.', 'Brass', 1, 1),
+(23, 230, 'Timpani', 'Timpani or kettledrums are musical instruments in the percussion family.', 'Percussion', 1, 1),
+(24, 240, 'Cymbals', 'A cymbal is a common percussion instrument. Often used in pairs, cymbals consist of thin, normally round plates of various alloys.', 'Percussion', 1, 1),
+(25, 250, 'Agogo bells', 'An agogô (Yoruba: agogo, meaning bell) is a single or a multiple bell', 'Percussion', 1, 1),
+(26, 260, 'Triangle', 'The triangle is an idiophone type of musical instrument in the percussion family.', 'Percussion', 1, 1),
+(27, 270, 'Tam-Tam', 'A gong of indefinite pitch.', 'Percussion', 1, 1),
+(28, 280, 'Tambourine', 'The tambourine is a musical instrument in the percussion family consisting of a frame, often of wood or plastic, with pairs of small metal jingles, called \"zills\".', 'Percussion', 1, 1),
+(29, 290, 'Snare drum', 'The snare drum or side drum is a percussion instrument that produces a sharp staccato sound when the head is struck with a drum stick.', 'Percussion', 1, 1),
+(30, 300, 'Bass drum', 'The bass drum, or kick drum, is a large drum that produces a note of low definite or indefinite pitch.', 'Percussion', 1, 1),
+(31, 310, 'Marimba', 'A percussion instrument consisting of a set of wooden bars struck with yarn or rubber mallets to produce musical tones.', 'Percussion', 1, 1),
+(32, 320, 'Vibraphone', 'A percussion instrument that has tuned metal bars.', 'Percussion', 1, 1),
+(33, 330, 'Xylophone', 'A percussion instrument consisting of a set of graduated, tuned wooden bars supported at nodal (nonvibrating) points and struck with sticks or padded mallets.', 'Percussion', 1, 1),
+(34, 340, 'Chimes', 'Also called tubular bells, chimes produce a sound that resembles church bells, or a carillon.', 'Percussion', 1, 1),
+(35, 350, 'Harp', 'The harp is a stringed musical instrument that has a number of individual strings running at an angle to its soundboard; the strings are plucked with the fingers.', 'Percussion', 1, 1),
+(36, 360, 'Piano', 'The piano is an acoustic, stringed musical instrument in which the strings are struck by wooden hammers and is played using a keyboard.', 'Percussion', 1, 1),
+(37, 370, 'String Bass', ' The double bass, also known simply as the bass, is the largest and lowest-pitched bowed (or plucked) string instrument.', 'Strings', 1, 1),
+(38, 30, 'Alto Flute', 'The alto flute has a deeper range and more powerful tone.', 'Woodwind', 1, 1),
+(39, 30, 'Alto Flute', 'The alto flute has a deeper range and more powerful tone.', 'Woodwind', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -252,6 +300,7 @@ ALTER TABLE `parts`
 -- Indexes for table `part_collections`
 --
 ALTER TABLE `part_collections`
+  ADD PRIMARY KEY (`id_part_collection`),
   ADD KEY `id_part_type` (`id_part_type`);
 
 --
@@ -284,10 +333,16 @@ ALTER TABLE `parts`
   MODIFY `id_part` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The unique ID of this part';
 
 --
+-- AUTO_INCREMENT for table `part_collections`
+--
+ALTER TABLE `part_collections`
+  MODIFY `id_part_collection` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary identifier of a part collection';
+
+--
 -- AUTO_INCREMENT for table `part_types`
 --
 ALTER TABLE `part_types`
-  MODIFY `id_part_type` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The ID of this part type.';
+  MODIFY `id_part_type` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The ID of this part type.', AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `recordings`

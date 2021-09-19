@@ -25,7 +25,7 @@
             <br />
         </div><!-- right -->
 <?php endif; ?>
-        <div id="part_type_table">
+        <div id="part_collection_table">
         <?php
         require_once('includes/config.php');
         require_once('includes/functions.php');
@@ -85,7 +85,7 @@
                     <h3 class="modal-title">Part Type Collection Details</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
                 </div><!-- modal-header -->
-                <div class="modal-body" id="part_type_detail">
+                <div class="modal-body" id="part_collection_detail">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -103,6 +103,7 @@
                 <div class="modal-body">
                   <div class="container-fluid">
                     <form method="post" id="insert_form">
+                        <input type="hidden" name="id_part_collection" id="id_part_collection" value="0" />
                         <div class="row bg-white">
                             <div class="col-md-3">
                                 <label for="name" class="col-form-label">Part type collection name*</label>
@@ -124,6 +125,7 @@
                                 <input class="form-control" id="enabled" name="enabled" type="checkbox" value="1"></>
                             </div>
                         </div>
+                        <input type="hidden" name="update" id="update" value="0" />
                         <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
                     </form>  
                   </div><!-- container-fluid -->
@@ -143,11 +145,11 @@
             $('#insert_form')[0].reset();
         });
         $(document).on('click', '.edit_data', function(){
-            var id_part_type = $(this).attr("id");
+            var id_part_collection = $(this).attr("id");
             $.ajax({
                 url:"fetch_partcollections.php",
                 method:"POST",
-                data:{id_part_type:id_part_type},
+                data:{id_part_collection:id_part_collection},
                 dataType:"json",
                 success:function(data){
                     $('#id_part_collection').val(data.id_part_collection);
@@ -170,9 +172,9 @@
             {
                 alert("Title is required");
             }
-            else if($('#id_part_type').val() == '')
+            else if($('#id_part_collection').val() == '')
             {
-                alert("Ensemble ID is required");
+                alert("Part type ID is required");
             }
             else
             {
@@ -186,21 +188,21 @@
                     success:function(data){
                         $('#insert_form')[0].reset();
                         $('#add_data_Modal').modal('hide');
-                        $('#ensemble_table').html(data);
+                        $('#part_collection_table').html(data);
                     }
                 });
             }
         });
         $(document).on('click', '.view_data', function(){
-            var id_part_type = $(this).attr("id");
-            if(id_part_type != '')
+            var id_part_collection = $(this).attr("id");
+            if(id_part_collection != '')
             {
                 $.ajax({
                     url:"select_partcollections.php",
                     method:"POST",
-                    data:{id_part_type:id_part_type},
+                    data:{id_part_collection:id_part_collection},
                     success:function(data){
-                        $('#ensemble_detail').html(data);
+                        $('#part_collection_detail').html(data);
                         $('#dataModal').modal('show');
                     }
                 });

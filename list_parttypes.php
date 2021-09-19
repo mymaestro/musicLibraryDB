@@ -109,6 +109,7 @@
                 <div class="modal-body">
                   <div class="container-fluid">
                     <form method="post" id="insert_form">
+                        <input type="hidden" name="id_part_type" id="id_part_type" />
                         <div class="row bg-light">
                             <div class="col-md-3">
                                 <label for="collation" class="col-form-label">Sorting order*</label>

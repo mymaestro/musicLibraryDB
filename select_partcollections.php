@@ -5,7 +5,7 @@ error_log("Running select_partcollections.php with id=". $_POST["id_part_collect
 if (isset($_POST["id_part_collection"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    $sql = "SELECT * FROM part_types WHERE id_part_collection = '".$_POST["id_part_collection"]."'";
+    $sql = "SELECT * FROM part_collections WHERE id_part_collection = '".$_POST["id_part_collection"]."'";
     $res = mysqli_query($f_link, $sql);
     $output .= '
     <div class="table-responsive">

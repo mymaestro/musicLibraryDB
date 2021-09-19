@@ -2,13 +2,13 @@
  //insert_parttypes.php
 require_once('includes/config.php');
 require_once('includes/functions.php');
-error_log("RUNNING insert_parttypes.php with id_parttype=". $_POST["id_parttype"]);
+error_log("RUNNING insert_parttypes.php with id_part_type=". $_POST["id_part_type"]);
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
     $output = '';
     $message = '';
     $timestamp = time();
-    // error_log("POST id_parttype=".$_POST["id_part_type"]);
+    // error_log("POST id_part_type=".$_POST["id_part_type"]);
     error_log("POST collation=".$_POST["collation"]);
     error_log("POST name=".$_POST["name"]);
     error_log("POST family=".$_POST["family"]);
@@ -25,7 +25,7 @@ if(!empty($_POST)) {
     $family = mysqli_real_escape_string($f_link, $_POST['family']);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
 
-    error_log("POST update".$_POST["update"]);
+    error_log("POST update=".$_POST["update"]);
 
     if($_POST["update"] == "update") {
         $sql = "

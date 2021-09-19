@@ -1,5 +1,7 @@
 <?php
-  define('PAGE_TITLE', 'Austin Civic Wind Ensemble Music Library');
+  require_once('includes/config.php'); 
+  define('PAGE_TITLE',  ORGDESC . ' 
+  Music Library');
   define('PAGE_NAME', 'home');
   require_once("includes/header.php");
   session_start();

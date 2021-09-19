@@ -111,7 +111,7 @@
                                 <label for="collation" class="col-form-label">Sorting order*</label>
                             </div>
                             <div class="col-md-2">
-                                <input type="text" class="form-control" id="collation" name="collation" placeholder="999" required/>
+                                <input type="number" class="form-control" id="collation" name="collation" placeholder="999" required/>
                             </div>
                         </div><hr />
                         <div class="row bg-white">
@@ -121,14 +121,31 @@
                             <div class="col-md-7">
                                 <input type="text" class="form-control" id="name" name="name" placeholder="Vuvuzela 4" required/>
                             </div>
+                        </div>
+                        <div class="row bg-white">
+                            <div class="col-md-3">
+                                <label for="family" class="col-form-label">Part type family</label>
+                            </div>
+                            <div class="col-md-7 form-check form-check-inline">
+                                <label class="form-check-label" for="familywood">Woodwind </label>
+                                <input type="radio" class="form-check-input" id="familywood" name="family" value="Woodwind" checked>
+                                <label class="form-check-label" for="familybrass">Brass </label>
+                                <input type="radio" class="form-check-input" id="familybrass" name="family" value="Brass">
+                                <label class="form-check-label" for="familyperc">Percussion </label>
+                                <input type="radio" class="form-check-input" id="familyperc" name="family" value="Percussion">
+                                <label class="form-check-label" for="familystring">Strings </label>
+                                <input type="radio" class="form-check-input" id="familystring" name="family" value="Strings">
+                                <label class="form-check-label" for="familyother">Other </label>
+                                <input type="radio" class="form-check-input" id="familyother" name="family" value="Other">
+                            </div>
                         </div><hr />
                         <div class="row bg-white">
                             <div class="col-md-12">
-                                <label for="description" class="col-form-label">Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                <label for="description" class="col-form-label">Description (up to 2048 characters)</label>
+                                <textarea class="form-control" id="description" name="description" rows="3" maxlength="2048"></textarea>
                                 <br />
                                 <label for="link" class="col-form-label">Part type collection (link)</label>
-                                <input type="text" class="form-control" id="id_part_collection" name="id_part_collection">
+                                <input type="number" class="form-control" id="id_part_collection" name="id_part_collection">
                                 <br />
                                 <label for="enabled" class="col-form-label">Enabled</label>
                                 <div class="form-check form-check-inline">
@@ -165,6 +182,7 @@
                     $('#collation').val(data.collation);
                     $('#name').val(data.name);
                     $('#description').val(data.description);
+                    $('#family').val(data.family);
                     $('#id_part_collection').val(data.id_part_collection);
                     if ((data.enabled) == 1) {
                         $('#enabled').prop('checked',true);
@@ -184,7 +202,7 @@
             }
             else if($('#id_part_type').val() == '')
             {
-                alert("Ensemble ID is required");
+                alert("Part Type ID is required");
             }
             else
             {
@@ -198,7 +216,7 @@
                     success:function(data){
                         $('#insert_form')[0].reset();
                         $('#add_data_Modal').modal('hide');
-                        $('#ensemble_table').html(data);
+                        $('#part_type_table').html(data);
                     }
                 });
             }
@@ -212,7 +230,7 @@
                     method:"POST",
                     data:{id_part_type:id_part_type},
                     success:function(data){
-                        $('#ensemble_detail').html(data);
+                        $('#part_type_detail').html(data);
                         $('#dataModal').modal('show');
                     }
                 });

@@ -173,6 +173,22 @@
                 }
            });
         });
+        $(document).on('click', '.delete_data', function(){
+            var id_ensemble = $(this).attr("id");
+            $.ajax({
+                url:"delete_records.php",
+                method:"POST",
+                data:{
+                    table_name: "ensembles",
+                    table_key_name: "id_ensemble",
+                    table_key:id_ensemble},
+                dataType:"json",
+                success:function(data){
+                    $('#ensemble_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+           });
+        });
         $('#insert_form').on("submit", function(event){
             event.preventDefault();
             if($('#title').val() == "")

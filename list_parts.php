@@ -224,6 +224,22 @@
                 }
            });
         });
+        $(document).on('click', '.delete_data', function(){
+            var part_id = $(this).attr("id");
+            $.ajax({
+                url:"delete_records.php",
+                method:"POST",
+                data:{
+                    table_name:"parts",
+                    table_key_name:"id_part_type",
+                    table_key:id_part},
+                dataType:"json",
+                success:function(data){
+                    $('#part_detail').html(data)
+                    $('#dataModal').modal('show');
+                }
+           });
+        });
         $('#insert_form').on("submit", function(event){
             event.preventDefault();
             if($('#id_part').val() == "")

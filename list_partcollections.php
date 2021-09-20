@@ -162,7 +162,22 @@
                     $('#insert').val("Update");
                     $('#update').val("update");
                     $('#add_data_Modal').modal('show');
-
+                }
+           });
+        });
+        $(document).on('click', '.delete_data', function(){
+            var id_part_collection = $(this).attr("id");
+            $.ajax({
+                url:"delete_records.php",
+                method:"POST",
+                data:{
+                    table_name:"part_collections",
+                    table_key_name:"id_part_collection",
+                    table_key:id_part_collection},
+                dataType:"json",
+                success:function(data){
+                    $('#part_collection_detail').html(data);
+                    $('#dataModal').modal('show');
                 }
            });
         });

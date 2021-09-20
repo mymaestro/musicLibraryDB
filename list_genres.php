@@ -166,6 +166,22 @@
                 }
            });
         });
+        $(document).on('click', '.delete_data', function(){
+            var id_genre = $(this).attr("id");
+            $.ajax({
+                url:"delete_records.php",
+                method:"POST",
+                data:{
+                    table_name: "genres",
+                    table_key_name: "id_genre",
+                    table_key:id_genre},
+                dataType:"json",
+                success:function(data){
+                    $('#genre_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+           });
+        });
         $('#insert_form').on("submit", function(event){
             event.preventDefault();
             if($('#name').val() == "")

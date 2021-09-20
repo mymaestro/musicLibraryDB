@@ -190,6 +190,22 @@
                 }
            });
         });
+        $(document).on('click', '.delete_data', function(){
+            var id_paper_size = $(this).attr("id");
+            $.ajax({
+                url:"delete_records.php",
+                method:"POST",
+                data:{
+                    table_name:"paper_sizes",
+                    table_key_name:"id_paper_size",
+                    table_key:id_paper_size},
+                dataType:"json",
+                success:function(data){
+                    $('#paper_size_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+           });
+        });
         $('#insert_form').on("submit", function(event){
             event.preventDefault();
             if($('#name').val() == "")

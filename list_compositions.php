@@ -373,6 +373,22 @@
                 }
            });
         });
+        $(document).on('click', '.delete_data', function(){
+            var catalog_number = $(this).attr("id");
+            $.ajax({
+                url:"delete_records.php",
+                method:"POST",
+                data:{
+                    table_name: "compositions",
+                    table_key_name: "catalog_number",
+                    table_key:catalog_number},
+                dataType:"json",
+                success:function(data){
+                    $('#composition_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+           });
+        });
         $('#insert_form').on("submit", function(event){
             event.preventDefault();
             if($('#name').val() == "")

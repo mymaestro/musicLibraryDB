@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 19, 2021 at 10:27 PM
+-- Generation Time: Sep 29, 2021 at 07:46 AM
 -- Server version: 10.5.12-MariaDB
 -- PHP Version: 7.4.23
 
@@ -140,6 +140,9 @@ CREATE TABLE `parts` (
   `id_part_type` int(10) UNSIGNED NOT NULL COMMENT 'Which type of part, from the part_types table',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Name of the part, if different from the part type',
   `description` varchar(255) DEFAULT '' COMMENT 'Description or comments of this particular part',
+  `paper_size` varchar(4) DEFAULT NULL COMMENT 'Physical size, from the paper_sizes table',
+  `page_count` int(11) DEFAULT NULL COMMENT 'How many pages does this part contain?',
+  `image_path` text DEFAULT NULL COMMENT 'Where an image of this part is stored.',
   `originals_count` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Set greater than 0 if originals of this part exist',
   `copies_count` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Set greater than 0 if copies of this part exist'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table holds parts.';
@@ -181,7 +184,6 @@ CREATE TABLE `part_types` (
 INSERT INTO `part_types` (`id_part_type`, `collation`, `name`, `description`, `family`, `id_part_collection`, `enabled`) VALUES
 (1, 10, 'Piccolo', 'The piccolo is a half-size flute, and a member of the woodwind family of musical instruments.', 'Woodwind', 1, 1),
 (2, 20, 'Flute', 'A flute is an aerophone or reedless wind instrument that produces its sound from the flow of air across an opening. ', 'Woodwind', 1, 1),
-(3, 30, 'Alto Flute', 'The alto flute has a deeper range and more powerful tone.', 'Woodwind', 1, 1),
 (4, 40, 'Oboe', 'The oboe is a type of double reed woodwind instrument.', 'Woodwind', 1, 1),
 (5, 50, 'English Horn', 'The English horn', 'Woodwind', 1, 1),
 (6, 60, 'Bassoon', 'The bassoon is a woodwind instrument in the double reed family, which has a tenor and bass sound.', 'Woodwind', 1, 1),
@@ -216,6 +218,7 @@ INSERT INTO `part_types` (`id_part_type`, `collation`, `name`, `description`, `f
 (35, 350, 'Harp', 'The harp is a stringed musical instrument that has a number of individual strings running at an angle to its soundboard; the strings are plucked with the fingers.', 'Percussion', 1, 1),
 (36, 360, 'Piano', 'The piano is an acoustic, stringed musical instrument in which the strings are struck by wooden hammers and is played using a keyboard.', 'Percussion', 1, 1),
 (37, 370, 'String Bass', ' The double bass, also known simply as the bass, is the largest and lowest-pitched bowed (or plucked) string instrument.', 'Strings', 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -291,7 +294,9 @@ ALTER TABLE `paper_sizes`
 --
 ALTER TABLE `parts`
   ADD PRIMARY KEY (`id_part`),
-  ADD KEY `id_part_type` (`id_part_type`);
+  ADD KEY `id_part_type` (`id_part_type`),
+  ADD KEY `paper_size` (`paper_size`),
+  ADD KEY `catalog_number` (`catalog_number`);
 
 --
 -- Indexes for table `part_collections`
@@ -333,7 +338,7 @@ ALTER TABLE `parts`
 -- AUTO_INCREMENT for table `part_collections`
 --
 ALTER TABLE `part_collections`
-  MODIFY `id_part_collection` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary identifier of a part collection';
+  MODIFY `id_part_collection` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary identifier of a part collection', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `part_types`
@@ -369,7 +374,9 @@ ALTER TABLE `compositions`
 -- Constraints for table `parts`
 --
 ALTER TABLE `parts`
-  ADD CONSTRAINT `parts_ibfk_1` FOREIGN KEY (`id_part_type`) REFERENCES `part_types` (`id_part_type`);
+  ADD CONSTRAINT `parts_ibfk_1` FOREIGN KEY (`id_part_type`) REFERENCES `part_types` (`id_part_type`),
+  ADD CONSTRAINT `parts_ibfk_2` FOREIGN KEY (`paper_size`) REFERENCES `paper_sizes` (`id_paper_size`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `parts_ibfk_3` FOREIGN KEY (`catalog_number`) REFERENCES `compositions` (`catalog_number`);
 
 --
 -- Constraints for table `part_collections`

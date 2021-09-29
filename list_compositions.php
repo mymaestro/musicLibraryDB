@@ -173,7 +173,23 @@
                                 <label for="genre" class="col-form-label">Genre</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="genre" name="genre" placeholder="Z" maxlength="4"/>
+                            <?php
+                                $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                                $sql = "SELECT `id_genre`, `name` FROM genres WHERE `enabled` = 1 ORDER BY name;";
+                                error_log("Running " . $sql);
+                                $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                                $opt = "<select class='form-select form-control' aria-label='Select paper size' id='genre' name='genre'>";
+                                while($rowList = mysqli_fetch_array($res)) {
+                                    $id_genre = $rowList['id_genre'];
+                                    $genre_name = $rowList['name'];
+                                    $opt .= "<option value='".$id_genre."'>".$genre_name."</option>";
+                                }
+                                $opt .= "</select>";
+                                mysqli_close($f_link);
+                                echo $opt;
+                                error_log("returned: " . $sql);
+                                ?> 
+<!--                                <input type="text" class="form-control" id="genre" name="genre" placeholder="Z" maxlength="4"/> -->
                                 <small id="genreHelp" class="form-text text-muted">This will be a selection from the Genres table</small>
                             </div>
                             <div class="col-md-2">
@@ -181,7 +197,23 @@
                                 <label for="ensemble" class="col-form-label">Ensemble</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="ensemble" name="ensemble" placeholder="Z" maxlength="4"/>
+                            <?php
+                                $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                                $sql = "SELECT `id_ensemble`, `name` FROM ensembles WHERE `enabled` = 1 ORDER BY name;";
+                                error_log("Running " . $sql);
+                                $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                                $opt = "<select class='form-select form-control' aria-label='Select ensemble' id='ensemble' name='ensemble'>";
+                                while($rowList = mysqli_fetch_array($res)) {
+                                    $id_ensemble = $rowList['id_ensemble'];
+                                    $ensemble_name = $rowList['name'];
+                                    $opt .= "<option value='".$id_ensemble."'>".$ensemble_name."</option>";
+                                }
+                                $opt .= "</select>";
+                                mysqli_close($f_link);
+                                echo $opt;
+                                error_log("returned: " . $sql);
+                                ?>   
+<!--                                <input type="text" class="form-control" id="ensemble" name="ensemble" placeholder="Z" maxlength="4"/> -->
                                 <small id="ensembleHelp" class="form-text text-muted">This will be a selection from the Ensembles table</small>
                             </div>
                         </div>
@@ -218,7 +250,24 @@
                                 <label for="paper_size" class="col-form-label">Paper size</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="paper_size" name="paper_size" placeholder="Z" maxlength="4"/>
+                            <?php
+                                $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                                $sql = "SELECT `id_paper_size`, `name` FROM paper_sizes WHERE `enabled` = 1 ORDER BY name;";
+                                error_log("Running " . $sql);
+                                $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                                $opt = "<select class='form-select form-control' aria-label='Select paper size' id='paper_size' name='paper_size'>";
+                                while($rowList = mysqli_fetch_array($res)) {
+                                    $id_paper_size = $rowList['id_paper_size'];
+                                    $paper_size_name = $rowList['name'];
+                                    $opt .= "<option value='".$id_paper_size."'>".$paper_size_name."</option>";
+                                }
+                                $opt .= "</select>";
+                                mysqli_close($f_link);
+                                echo $opt;
+                                error_log("returned: " . $sql);
+                                ?> 
+<!--
+                                <input type="text" class="form-control" id="paper_size" name="paper_size" placeholder="Z" maxlength="4"/> -->
                                 <small id="paper_sizeHelp" class="form-text text-muted">What size of paper are the parts on? Select from the paper_sizes options.</small>
                             </div>
                         </div>

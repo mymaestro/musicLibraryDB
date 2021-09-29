@@ -25,6 +25,10 @@
     <dl>
       <dt>Compositions</dt>
         <dd>Search compositions in the music library. This table holds the data about the music in the library. You find here the title, composer, arranger, publish date, etc.</dd>
+        <form method="POST">
+          <input type="TEXT" name="search" />
+          <input type="SUBMIT" name="submit" value="Search" />
+        </form>
       <dt>Ensembles</dt>
         <dd>Search ensembles. Bands and smaller ensembles</dd>
       <dt>Genres</dt>

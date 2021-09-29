@@ -142,7 +142,25 @@
                                 <label for="catalog_number" class="col-form-label">Catalog number*</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="title" name="title" placeholder="Lookup from compositions" required/>
+                            <?php
+                                $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                                $sql = "SELECT `catalog_number`, `name` FROM compositions WHERE `enabled` = 1 ORDER BY catalog_number;";
+                                error_log("Running " . $sql);
+                                $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                                $opt = "<select class='form-select form-control' aria-label='Select composition' id='title' name='title'>";
+                                while($rowList = mysqli_fetch_array($res)) {
+                                    $comp_catno = $rowList['catalog_number'];
+                                    $comp_name = $rowList['name'];
+                                    $opt .= "<option value='".$comp_catno."'>".$comp_name."</option>";
+                                }
+                                $opt .= "</select>";
+                                mysqli_close($f_link);
+                                echo $opt;
+                                error_log("returned: " . $sql);
+                                ?>   
+<!--
+                                    <input type="text" class="form-control" id="title" name="title" placeholder="Lookup from compositions" required/>
+                                -->                                                  
                             </div>
                         </div>
                         <div class="row">
@@ -150,7 +168,24 @@
                                 <label class="col-form-label">Part type*</label>
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" id="part_type" name="part_type" placeholder="Lookup from part types" required/>
+                                <!-- Read part types from part_types table -->
+                            <?php
+                                $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                                $sql = "SELECT `id_part_type`, `name` FROM part_types WHERE `enabled` = 1 ORDER BY collation;";
+                                error_log("Running " . $sql);
+                                $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                                $opt = "<select class='form-select form-control' aria-label='Select part typee' id='part_type' name='part_type'>";
+                                while($rowList = mysqli_fetch_array($res)) {
+                                    $id_part_type = $rowList['id_part_type'];
+                                    $part_type_name = $rowList['name'];
+                                    $opt .= "<option value='".$id_part_type."'>".$part_type_name."</option>";
+                                }
+                                $opt .= "</select>";
+                                mysqli_close($f_link);
+                                echo $opt;
+                                error_log("returned: " . $sql);
+                                ?>   
+                                <!-- input type="text" class="form-control" id="part_type" name="part_type" placeholder="Lookup from part types" required/ -->
                             </div>
                             <div class="col-md-5">
                                 <p id="composition_name">Composition title</p>

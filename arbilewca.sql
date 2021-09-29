@@ -215,10 +215,7 @@ INSERT INTO `part_types` (`id_part_type`, `collation`, `name`, `description`, `f
 (34, 340, 'Chimes', 'Also called tubular bells, chimes produce a sound that resembles church bells, or a carillon.', 'Percussion', 1, 1),
 (35, 350, 'Harp', 'The harp is a stringed musical instrument that has a number of individual strings running at an angle to its soundboard; the strings are plucked with the fingers.', 'Percussion', 1, 1),
 (36, 360, 'Piano', 'The piano is an acoustic, stringed musical instrument in which the strings are struck by wooden hammers and is played using a keyboard.', 'Percussion', 1, 1),
-(37, 370, 'String Bass', ' The double bass, also known simply as the bass, is the largest and lowest-pitched bowed (or plucked) string instrument.', 'Strings', 1, 1),
-(38, 30, 'Alto Flute', 'The alto flute has a deeper range and more powerful tone.', 'Woodwind', 1, 1),
-(39, 30, 'Alto Flute', 'The alto flute has a deeper range and more powerful tone.', 'Woodwind', 1, 0);
-
+(37, 370, 'String Bass', ' The double bass, also known simply as the bass, is the largest and lowest-pitched bowed (or plucked) string instrument.', 'Strings', 1, 1);
 -- --------------------------------------------------------
 
 --

@@ -28,9 +28,13 @@ if(!empty($_POST)) {
     error_log("POST date_acquired=".$_POST["date_acquired"]);
     error_log("POST cost=".$_POST["cost"]);
     error_log("POST listening_example_link=".$_POST["listening_example_link"]);
+    error_log("POST windrep_link=".$_POST["windrep_link"]);
+    error_log("POST image_path=".$_POST["image_path"]);
     error_log("POST checked_out=".$_POST["checked_out"]);
     error_log("POST paper_size=".$_POST["paper_size"]);
     error_log("POST last_inventory_date=".$_POST["last_inventory_date"]);
+    
+    
 
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
@@ -51,6 +55,8 @@ if(!empty($_POST)) {
     $date_acquired = mysqli_real_escape_string($f_link, $_POST['date_acquired']);
     $cost = mysqli_real_escape_string($f_link, $_POST['cost']);
     $listening_example_link = mysqli_real_escape_string($f_link, $_POST['listening_example_link']);
+    $image_path = mysqli_real_escape_string($f_link, $_POST['image_path']);
+    $windrep_link = mysqli_real_escape_string($f_link, $_POST['windrep_link']);
     $checked_out = mysqli_real_escape_string($f_link, $_POST['checked_out']);
     $paper_size = mysqli_real_escape_string($f_link, $_POST['paper_size']);
     $last_inventory_date = mysqli_real_escape_string($f_link, $_POST['last_inventory_date']);
@@ -83,13 +89,15 @@ if(!empty($_POST)) {
         checked_out = '$checked_out',
         paper_size = '$paper_size',
         last_inventory_date = '$last_inventory_date',
+        image_path = '$image_path',
+        windrep_link = '$windrep_link',
         enabled = $enabled
         WHERE catalog_number='".$_POST["catalog_number"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration_start, duration_end, comments, performance_notes, storage_location, date_acquired, cost, listening_example_link, checked_out, paper_size, last_inventory_date, enabled)
-        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, '$last_performance_date', '$duration_start', '$duration_end', '$comments', '$performance_notes', '$storage_location', '$date_acquired', '$cost', '$listening_example_link', '$checked_out', '$paper_size', '$last_inventory_date', $enabled);
+        INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration_start, duration_end, comments, performance_notes, storage_location, date_acquired, cost, listening_example_link, checked_out, paper_size, image_path, windrep_link, last_inventory_date, enabled)
+        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, '$last_performance_date', '$duration_start', '$duration_end', '$comments', '$performance_notes', '$storage_location', '$date_acquired', '$cost', '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$winrep_link', '$last_inventory_date', $enabled);
         ";
         $message = 'Data Inserted';
     }

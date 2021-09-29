@@ -347,6 +347,16 @@
                         </div>
                         <div class="row bg-white">
                             <div class="col-md-2">
+                            <!-- image_path (255 characters)  'A link to a picture of the score' -->
+                            <label for="image_path" class="col-form-label">Image path</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="image_path" name="image_path" placeholder="https://acwe.org/files/scores/piece.pdf" maxlength="255"/>
+                                <small id="image_pathHelp" class="form-text text-muted">Where can you find an image of the first page of the score?</small>
+                            </div>
+                        </div>
+                        <div class="row bg-white">
+                            <div class="col-md-2">
                             <!-- windrep (255 characters)  'A link to this piece on windrep.org' -->
                             <label for="windrep_link" class="col-form-label">Wind Repertory Project link</label>
                             </div>

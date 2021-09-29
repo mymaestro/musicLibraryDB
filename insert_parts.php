@@ -11,12 +11,16 @@ if(!empty($_POST)) {
     error_log("POST id_part=".$_POST["id_part"]);
     error_log("POST catalog_number=".$_POST["catalog_number"]);
     error_log("POST name=".$_POST["name"]);
+    error_log("POST paper_size=".$_POST["paper_size"]);
+    error_log("POST page_count=".$_POST["page_count"]);
     error_log("POST description=".$_POST["description"]);
     $id_part = mysqli_real_escape_string($f_link, $_POST['id_part']);
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $originals_count = mysqli_real_escape_string($f_link, $_POST['originals_count']);
     $copies_count = mysqli_real_escape_string($f_link, $_POST['copies_count']);
     $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
+    $paper_size = mysqli_real_escape_string($f_link, $_POST['paper_size']);
+    $page_count = mysqli_real_escape_string($f_link, $_POST['page_count']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
     $description = mysqli_real_escape_string($f_link, $_POST['description']);
 
@@ -30,12 +34,14 @@ if(!empty($_POST)) {
         description = '$description',
         originals_count = '$originals_count',
         copies_count = '$copies_count',
+        paper_size = '$paper_size',
+        page_count = $page_count,
         WHERE id_part='".$_POST["id_part"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO parts(id_part, catalog_number, name, description, originals_count, copies_count)
-        VALUES($id_part, '$catalog_number', '$name', '$description', '$originals_count', '$copies_count');
+        INSERT INTO parts(id_part, catalog_number, name, description, paper_size, page_count, originals_count, copies_count)
+        VALUES($id_part, '$catalog_number', '$name', '$description', '$paper_size', $page_count, '$originals_count', '$copies_count');
         ";
         $message = 'Data Inserted';
     }

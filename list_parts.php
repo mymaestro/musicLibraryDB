@@ -142,25 +142,22 @@
                                 <label for="catalog_number" class="col-form-label">Catalog number*</label>
                             </div>
                             <div class="col-md-4">
-                            <?php
-                                $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                                $sql = "SELECT `catalog_number`, `name` FROM compositions WHERE `enabled` = 1 ORDER BY catalog_number;";
-                                error_log("Running " . $sql);
-                                $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                                $opt = "<select class='form-select form-control' aria-label='Select composition' id='title' name='title'>";
-                                while($rowList = mysqli_fetch_array($res)) {
-                                    $comp_catno = $rowList['catalog_number'];
-                                    $comp_name = $rowList['name'];
-                                    $opt .= "<option value='".$comp_catno."'>".$comp_name."</option>";
-                                }
-                                $opt .= "</select>";
-                                mysqli_close($f_link);
-                                echo $opt;
-                                error_log("returned: " . $sql);
-                                ?>   
-<!--
-                                    <input type="text" class="form-control" id="title" name="title" placeholder="Lookup from compositions" required/>
-                                -->                                                  
+                                <?php
+                                    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                                    $sql = "SELECT `catalog_number`, `name` FROM compositions WHERE `enabled` = 1 ORDER BY catalog_number;";
+                                    error_log("Running " . $sql);
+                                    $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                                    $opt = "<select class='form-select form-control' aria-label='Select composition' id='title' name='title'>";
+                                    while($rowList = mysqli_fetch_array($res)) {
+                                        $comp_catno = $rowList['catalog_number'];
+                                        $comp_name = $rowList['name'];
+                                        $opt .= "<option value='".$comp_catno."'>".$comp_name."</option>";
+                                    }
+                                    $opt .= "</select>";
+                                    mysqli_close($f_link);
+                                    echo $opt;
+                                    error_log("returned: " . $sql);
+                                ?>                                               
                             </div>
                         </div>
                         <div class="row">
@@ -187,10 +184,39 @@
                                 ?>   
                                 <!-- input type="text" class="form-control" id="part_type" name="part_type" placeholder="Lookup from part types" required/ -->
                             </div>
-                            <div class="col-md-5">
-                                <p id="composition_name">Composition title</p>
+                            <div class="col-md-3">
+                                <!-- request paper size -->
+                                <label for="paper_size" class="col-form-label">Paper size</label>
+                            </div>
+                            <div class="col-md-4">
+                            <?php
+                                $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                                $sql = "SELECT `id_paper_size`, `name` FROM paper_sizes WHERE `enabled` = 1 ORDER BY name;";
+                                error_log("Running " . $sql);
+                                $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                                $opt = "<select class='form-select form-control' aria-label='Select paper size' id='paper_size' name='paper_size'>";
+                                while($rowList = mysqli_fetch_array($res)) {
+                                    $id_paper_size = $rowList['id_paper_size'];
+                                    $paper_size_name = $rowList['name'];
+                                    $opt .= "<option value='".$id_paper_size."'>".$paper_size_name."</option>";
+                                }
+                                $opt .= "</select>";
+                                mysqli_close($f_link);
+                                echo $opt;
+                                error_log("returned: " . $sql);
+                                ?> 
                         </div>
-                        </div><hr />
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="col-form-label">Pages*</label>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- How many pages -->
+                                <input type="number" class="form-control" id="page_count" name="page_count" min="1" max="12"/>
+                            </div>
+                        </div>
+                        <hr />
                         <div class="row bg-light">
                             <div class="col-md-2">
                                 <label class="col-form-label">Originals count*</label>

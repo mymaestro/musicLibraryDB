@@ -309,7 +309,7 @@ if (isset($_SESSION['username'])) {
                     method: "POST",
                     data: {
                         table_name: "parts",
-                        table_key_name: "id_part_type",
+                        table_key_name: "id_part",
                         table_key: id_part
                     },
                     dataType: "json",
@@ -342,13 +342,13 @@ if (isset($_SESSION['username'])) {
                 }
             });
             $(document).on('click', '.view_data', function() {
-                var part_id = $(this).attr("id");
-                if (part_id != '') {
+                var id_part = $(this).attr("id");
+                if (id_part != '') {
                     $.ajax({
                         url: "select_parts.php",
                         method: "POST",
                         data: {
-                            part_id: part_id
+                            id_part: id_part
                         },
                         success: function(data) {
                             $('#part_detail').html(data);

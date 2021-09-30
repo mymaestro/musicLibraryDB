@@ -16,6 +16,7 @@ if(!empty($_POST)) {
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     error_log("POST enabled=".$enabled);
     $id_paper_size = mysqli_real_escape_string($f_link, $_POST['id_paper_size']);
+    $id_paper_size_hold = mysqli_real_escape_string($f_link, $_POST['id_paper_size_hold']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
     $description = mysqli_real_escape_string($f_link, $_POST['description']);
     $horizontal = mysqli_real_escape_string($f_link, $_POST['horizontal']);
@@ -27,12 +28,13 @@ if(!empty($_POST)) {
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE paper_sizes 
-        SET name ='$name',
+        SET id_paper_size = '$id_paper_size',
+        name ='$name',
         description = '$description',
         horizontal = '$horizontal',
         vertical = '$vertical',
         enabled = '$enabled'
-        WHERE id_paper_size='".$_POST["id_paper_size"]."'";
+        WHERE id_paper_size='".$_POST["id_paper_size_hold"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "

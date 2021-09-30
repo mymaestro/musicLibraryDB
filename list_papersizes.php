@@ -112,6 +112,7 @@
                             </div>
                             <div class="col-md-2">
                                 <input type="text" class="form-control" id="id_paper_size" name="id_paper_size" placeholder="X" required minlength="1" maxlength="4" size="4"/>
+                                <input type="hidden" id="id_paper_size_hold" name="id_paper_size_hold" value=""/>
                             </div>
                         </div><hr />
                         <div class="row">
@@ -176,6 +177,7 @@
                 dataType:"json",
                 success:function(data){
                     $('#id_paper_size').val(data.id_paper_size);
+                    $('#id_paper_size_hold').val(data.id_paper_size);
                     $('#name').val(data.name);
                     $('#description').val(data.description);
                     $('#vertical').val(data.vertical);
@@ -186,7 +188,6 @@
                     $('#insert').val("Update");
                     $('#update').val("update");
                     $('#add_data_Modal').modal('show');
-
                 }
            });
         });
@@ -224,7 +225,7 @@
                     success:function(data){
                         $('#insert_form')[0].reset();
                         $('#add_data_Modal').modal('hide');
-                        $('#ensemble_table').html(data);
+                        $('#paper_size_table').html(data);
                     }
                 });
             }

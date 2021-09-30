@@ -15,16 +15,18 @@ if(!empty($_POST)) {
     error_log("POST enabled=".$enabled);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
     $id_genre = mysqli_real_escape_string($f_link, $_POST['id_genre']);
+    $id_genre_hold = mysqli_real_escape_string($f_link, $_POST['id_genre_hold']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
     $description = mysqli_real_escape_string($f_link, $_POST['description']);
 
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE genres 
-        SET name ='$name',
+        SET id_genre = '$id_genre',
+        name ='$name',
         description = '$description',
         enabled = $enabled
-        WHERE id_genre='".$_POST["id_genre"]."'";
+        WHERE id_genre='".$_POST["id_genre_hold"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "

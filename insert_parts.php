@@ -16,6 +16,7 @@ if(!empty($_POST)) {
     error_log("POST image_path=".$_POST["image_path"]);
     error_log("POST description=".$_POST["description"]);
     $id_part = mysqli_real_escape_string($f_link, $_POST['id_part']);
+    $id_part_hold = mysqli_real_escape_string($f_link, $_POST['id_part_hold']);
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $originals_count = mysqli_real_escape_string($f_link, $_POST['originals_count']);
     $copies_count = mysqli_real_escape_string($f_link, $_POST['copies_count']);
@@ -29,22 +30,22 @@ if(!empty($_POST)) {
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE parts
-        SET id_part = $id_part,
+        SET id_part = '$id_part',
         catalog_number = '$catalog_number',
         id_part_type = '$id_part_type',
         name ='$name',
         description = '$description',
-        originals_count = '$originals_count',
-        copies_count = '$copies_count',
+        originals_count = $originals_count,
+        copies_count = $copies_count,
         paper_size = '$paper_size',
         page_count = $page_count,
         image_path = '$image_path',
-        WHERE id_part='".$_POST["id_part"]."'";
+        WHERE id_part='".$_POST["id_part_hold"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO parts(id_part, catalog_number, name, description, paper_size, page_count, image_path, originals_count, copies_count)
-        VALUES($id_part, '$catalog_number', '$name', '$description', '$paper_size', $page_count, '$image_path', '$originals_count', '$copies_count');
+        INSERT INTO parts(id_part, catalog_number, id_part_type, name, description, paper_size, page_count, image_path, originals_count, copies_count)
+        VALUES($id_part, '$catalog_number', '$id_part_type', '$name', '$description', '$paper_size', $page_count, '$image_path', '$originals_count', '$copies_count');
         ";
         $message = 'Data Inserted';
     }

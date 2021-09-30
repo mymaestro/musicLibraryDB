@@ -15,6 +15,7 @@ if(!empty($_POST)) {
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     error_log("POST enabled=".$enabled);
     $id_ensemble = mysqli_real_escape_string($f_link, $_POST['id_ensemble']);
+    $id_ensemble_hold = mysqli_real_escape_string($f_link, $_POST['id_ensemble_hold']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
     $description = mysqli_real_escape_string($f_link, $_POST['description']);
     $link = mysqli_real_escape_string($f_link, $_POST['link']);
@@ -23,11 +24,12 @@ if(!empty($_POST)) {
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE ensembles 
-        SET name ='$name',
+        SET id_ensemble = '$id_ensemble',
+        name ='$name',
         description = '$description',
         link = '$link',
         enabled = '$enabled'
-        WHERE id_ensemble='".$_POST["id_ensemble"]."'";
+        WHERE id_ensemble='".$_POST["id_ensemble_hold"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "

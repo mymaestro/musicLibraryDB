@@ -109,6 +109,7 @@
                             </div>
                             <div class="col-md-2">
                                 <input type="text" class="form-control" id="id_ensemble" name="id_ensemble" placeholder="X" required/>
+                                <input type="hidden" id="id_ensemble_hold" name="id_ensemble_hold" value="" />
                             </div>
                         </div><hr />
                         <div class="row bg-white">
@@ -160,6 +161,7 @@
                 dataType:"json",
                 success:function(data){
                     $('#id_ensemble').val(data.id_ensemble);
+                    $('#id_ensemble_hold').val(data.id_ensemble);
                     $('#name').val(data.name);
                     $('#description').val(data.description);
                     $('#link').val(data.link);

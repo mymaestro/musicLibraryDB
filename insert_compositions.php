@@ -9,6 +9,7 @@ if(!empty($_POST)) {
     $message = '';
     $timestamp = time();
     error_log("POST catalog_number=".$_POST["catalog_number"]);
+    error_log("POST catalog_number_hold=".$_POST["catalog_number_hold"]);
     error_log("POST name=".$_POST["name"]);
     error_log("POST description=".$_POST["description"]);
 
@@ -68,7 +69,8 @@ if(!empty($_POST)) {
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE compositions 
-        SET name ='$name',
+        SET catalog_number='$catalog_number',
+        name ='$name',
         description = '$description',
         composer = '$composer',
         arranger = '$arranger',
@@ -92,7 +94,7 @@ if(!empty($_POST)) {
         image_path = '$image_path',
         windrep_link = '$windrep_link',
         enabled = $enabled
-        WHERE catalog_number='".$_POST["catalog_number"]."'";
+        WHERE catalog_number='".$_POST["catalog_number_hold"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "

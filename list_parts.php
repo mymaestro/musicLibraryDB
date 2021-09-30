@@ -106,7 +106,7 @@ if (isset($_SESSION['username'])) {
                 // error_log("returned: " . $sql);
                 ?>
             </div><!-- accordion -->
-        </div><!-- part_table -->
+        </div><!-- parts_table -->
     </div><!-- container -->
 
     <div id="dataModal" class="modal">
@@ -140,6 +140,7 @@ if (isset($_SESSION['username'])) {
                                 </div>
                                 <div class="col-md-3">
                                     <input type="text" class="form-control" id="id_part" name="id_part" placeholder="P00001" required />
+                                    <input type="hidden" id="id_part_hold" name="id_part_hold" value="" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="catalog_number" class="col-form-label">Catalog number*</label>
@@ -185,7 +186,6 @@ if (isset($_SESSION['username'])) {
                                     echo $opt;
                                     error_log("returned: " . $sql);
                                     ?>
-                                    <!-- input type="text" class="form-control" id="part_type" name="part_type" placeholder="Lookup from part types" required/ -->
                                 </div>
                                 <div class="col-md-3">
                                     <!-- request paper size -->
@@ -291,6 +291,7 @@ if (isset($_SESSION['username'])) {
                     dataType: "json",
                     success: function(data) {
                         $('#id_part').val(data.id_part);
+                        $('#id_part_hold').val(data.id_part);
                         $('#catalog_number').val(data.catalog_number);
                         $('#id_part_type').val(data.id_part_type);
                         $('#name').val(data.name);
@@ -336,7 +337,7 @@ if (isset($_SESSION['username'])) {
                         success: function(data) {
                             $('#insert_form')[0].reset();
                             $('#add_data_Modal').modal('hide');
-                            $('#part_table').html(data);
+                            $('#parts_table').html(data);
                         }
                     });
                 }

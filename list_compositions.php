@@ -110,6 +110,7 @@
                             </div>
                             <div class="col-md-2">
                                 <input type="text" class="form-control" id="catalog_number" name="catalog_number" placeholder="X" required minlength="2" maxlength="5" size="5"/>
+                                <input type="hidden" id="catalog_number_hold" name="catalog_number_hold" value="" />
                             </div>
                         </div>
                         <hr />
@@ -420,6 +421,7 @@
                 dataType:"json",
                 success:function(data){
                     $('#catalog_number').val(data.catalog_number);
+                    $('#catalog_number_hold').val(data.catalog_number);
                     $('#name').val(data.name);
                     $('#description').val(data.description);
                     if ((data.enabled) == 1) {

@@ -106,6 +106,7 @@
                             </div>
                             <div class="col-md-2">
                                 <input type="text" class="form-control" id="id_genre" name="id_genre" placeholder="X" required minlength="1" maxlength="4" size="4"/>
+                                <input type="hidden" id="id_genre_hold" name="id_genre_hold" value=""/>
                             </div>
                         </div><hr />
                         <div class="row bg-white">
@@ -154,6 +155,7 @@
                 dataType:"json",
                 success:function(data){
                     $('#id_genre').val(data.id_genre);
+                    $('#id_genre_hold').val(data.id_genre);
                     $('#name').val(data.name);
                     $('#description').val(data.description);
                     if ((data.enabled) == 1) {
@@ -162,7 +164,6 @@
                     $('#insert').val("Update");
                     $('#update').val("update");
                     $('#add_data_Modal').modal('show');
-
                 }
            });
         });
@@ -174,7 +175,8 @@
                 data:{
                     table_name: "genres",
                     table_key_name: "id_genre",
-                    table_key:id_genre},
+                    table_key:id_genre
+                },
                 dataType:"json",
                 success:function(data){
                     $('#genre_detail').html(data);

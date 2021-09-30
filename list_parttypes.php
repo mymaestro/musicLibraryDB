@@ -217,13 +217,13 @@
         });
         $('#insert_form').on("submit", function(event){
             event.preventDefault();
-            if($('#title').val() == "")
+            if($('#name').val() == "")
             {
-                alert("Title is required");
+                alert("Part type name is required");
             }
-            else if($('#id_part_type').val() == '')
+            else if($('#collation').val() == '')
             {
-                alert("Part Type ID is required");
+                alert("Sort order is required");
             }
             else
             {

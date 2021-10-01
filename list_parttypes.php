@@ -36,7 +36,6 @@
                     <caption class="title">Available part types</caption>
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Collation</th>
                         <th>Name</th>
                         <th>Family</th>
@@ -58,7 +57,6 @@
             $id_part_collection = $rowList['id_part_collection'];
             $enabled = $rowList['enabled'];
             echo '<tr>
-                        <td>'.$id_part_type.'</td>
                         <td>'.$collation.'</td>
                         <td>'.$name.'</td>
                         <td>'.$family.'</td>

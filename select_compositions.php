@@ -22,10 +22,42 @@ if (isset($_POST["catalog_number"])) {
                 <td>'.$rowList["composer"].'</td>
             </tr>
             <tr>
+                <td><label>Arranger</label></td>
+                <td>'.$rowList["arranger"].'</td>
+            </tr>
+            <tr>
+                <td><label>Publisher</label></td>
+                <td>'.$rowList["publisher"].'</td>
+            </tr>
+            <tr>
+                <td><label>Editor</label></td>
+                <td>'.$rowList["editor"].'</td>
+            </tr>
+            <tr>
+                <td><label>Grade</label></td>
+                <td>'.$rowList["grade"].'</td>
+            </tr>
+            <tr>
+                <td><label>Comments</label></td>
+                <td>'.$rowList["comments"].'</td>
+            </tr>
+            <tr>
+                <td><label>Listening link</label></td>
+                <td>'.$rowList["listening_example_link"].'</td>
+            <tr>
+                <td><label>Genre</label></td>
+                <td>'.$rowList["genre"].'</td>
+            </tr>
+            <tr>
+                <td><label>Ensemble</label></td>
+                <td>'.$rowList["ensemble"].'</td>
+            </tr>
+            <tr>
                 <td><label>Enabled</label></td>
                 <td>'. (($rowList["enabled"] == 1) ? "Yes" : "No") .'</td>
             </tr>
             ';
+
     }
     $output .= '
         </table>

@@ -25,7 +25,24 @@
             <br />
         </div><!-- right -->
 <?php endif; ?>
-        <div id="compositions_table">
+        <div id="search_form">
+            <form action="" method="POST">
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <button type="submit" name="submitButton" class="btn btn-secondary">Search</button>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="search" name="search" class="form-control" aria-describedby="searchHelp">
+                    </div>
+                    <div class="col-auto">
+                       <span id="searchHelp" class="form-text">
+                           Search the name, description, composer, arranger, and comments
+                       </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="composition_table">
         <?php
         require_once('includes/config.php');
         require_once('includes/functions.php');
@@ -39,25 +56,43 @@
                         <th>Catalog number</th>
                         <th>Name</th>
                         <th>Composer</th>
+                        <th>Arranger</th>
                         <th>Description</th>
+                        <th>Comments</th>
+                        <th>Genre</th>
+                        <th>Ensemble</th>
                         <th>Enabled</th>
                     </tr>
                     </thead>
                     <tbody>';
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $sql = "SELECT * FROM compositions ORDER BY catalog_number;";
+        if (isset($_POST["submitButton"])) {
+            error_log("POST search=".$_POST["search"]);
+            $search = mysqli_real_escape_string($f_link, $_POST['search']);
+            $sql = "SELECT * FROM compositions WHERE MATCH(name, description, composer, arranger, comments) AGAINST( '".$search."' IN NATURAL LANGUAGE MODE) ORDER BY catalog_number;";
+        } else {
+            $sql = "SELECT * FROM compositions ORDER BY catalog_number;";
+        }
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
         while ($rowList = mysqli_fetch_array($res)) {
             $catalog_number = $rowList['catalog_number'];
             $name = $rowList['name'];
             $description = $rowList['description'];
+            $comments = $rowList['comments'];
             $composer = $rowList['composer'];
+            $arranger = $rowList['arranger'];
+            $genre = $rowList['genre'];
+            $ensemble = $rowList['ensemble'];
             $enabled = $rowList['enabled'];
             echo '<tr>
                         <td>'.$catalog_number.'</td>
                         <td>'.$name.'</td>
                         <td>'.$composer.'</td>
+                        <td>'.$arranger.'</td>
                         <td>'.$description.'</td>
+                        <td>'.$comments.'</td>
+                        <td>'.$genre.'</td>
+                        <td>'.$ensemble.'</td>
                         <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>';
             if ($u_admin) { echo '
                         <td><input type="button" name="delete" value="Delete" id="'.$catalog_number.'" class="btn btn-danger btn-sm delete_data" /></td>
@@ -177,7 +212,7 @@
                             <?php
                                 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                                 $sql = "SELECT `id_genre`, `name` FROM genres WHERE `enabled` = 1 ORDER BY name;";
-                                error_log("Running " . $sql);
+                                //error_log("Running " . $sql);
                                 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
                                 $opt = "<select class='form-select form-control' aria-label='Select paper size' id='genre' name='genre'>";
                                 while($rowList = mysqli_fetch_array($res)) {
@@ -188,7 +223,7 @@
                                 $opt .= "</select>";
                                 mysqli_close($f_link);
                                 echo $opt;
-                                error_log("returned: " . $sql);
+                                //error_log("returned: " . $sql);
                                 ?> 
 <!--                                <input type="text" class="form-control" id="genre" name="genre" placeholder="Z" maxlength="4"/> -->
                                 <small id="genreHelp" class="form-text text-muted">This will be a selection from the Genres table</small>
@@ -201,7 +236,7 @@
                             <?php
                                 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                                 $sql = "SELECT `id_ensemble`, `name` FROM ensembles WHERE `enabled` = 1 ORDER BY name;";
-                                error_log("Running " . $sql);
+                                //error_log("Running " . $sql);
                                 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
                                 $opt = "<select class='form-select form-control' aria-label='Select ensemble' id='ensemble' name='ensemble'>";
                                 while($rowList = mysqli_fetch_array($res)) {
@@ -212,7 +247,7 @@
                                 $opt .= "</select>";
                                 mysqli_close($f_link);
                                 echo $opt;
-                                error_log("returned: " . $sql);
+                                //error_log("returned: " . $sql);
                                 ?>   
 <!--                                <input type="text" class="form-control" id="ensemble" name="ensemble" placeholder="Z" maxlength="4"/> -->
                                 <small id="ensembleHelp" class="form-text text-muted">This will be a selection from the Ensembles table</small>
@@ -224,27 +259,8 @@
                                 <label for="grade" class="col-form-label">Grade level (1-5)</label>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="grade" id="grade1" value="1">
-                                    <label class="form-check-label" for="grade1">1</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="grade" id="grade2" value="2">
-                                    <label class="form-check-label" for="grade2">2</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="grade" id="grade3" value="3">
-                                    <label class="form-check-label" for="grade3">3</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="grade" id="grade4" value="4">
-                                    <label class="form-check-label" for="grade4">4</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="grade" id="grade5" value="5">
-                                    <label class="form-check-label" for="grade4">5</label>
-                                </div>
-                                <small id="gradeHelp" class="form-text text-muted">Level of difficulty</small>
+                                1<input type="range" class="form-range" min="1" max="5" step="0.5" id="range"/>5
+                                <small id="gradeHelp" class="form-text text-muted">Level of difficulty (1-5 in 1/2 grade increments)</small>
                             </div>
                             <div class="col-md-2">
                                 <!-- paper_size (4 characters)  'Physical size, from the paper_sizes table' -->
@@ -254,7 +270,7 @@
                             <?php
                                 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                                 $sql = "SELECT `id_paper_size`, `name` FROM paper_sizes WHERE `enabled` = 1 ORDER BY name;";
-                                error_log("Running " . $sql);
+                                //error_log("Running " . $sql);
                                 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
                                 $opt = "<select class='form-select form-control' aria-label='Select paper size' id='paper_size' name='paper_size'>";
                                 while($rowList = mysqli_fetch_array($res)) {
@@ -265,7 +281,7 @@
                                 $opt .= "</select>";
                                 mysqli_close($f_link);
                                 echo $opt;
-                                error_log("returned: " . $sql);
+                                //error_log("returned: " . $sql);
                                 ?> 
 <!--
                                 <input type="text" class="form-control" id="paper_size" name="paper_size" placeholder="Z" maxlength="4"/> -->
@@ -287,8 +303,8 @@
                                 <label for="duration_start" class="col-form-label">Duration (start/end time)</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="datetime" class="form-control" id="duration_start" name="duration_start" placeholder="20180101T220000" />
-                                <input type="datetime" class="form-control" id="duration_end" name="duration_end" placeholder="20180101T220000" />
+                                <input type="time" step="1" class="form-control" id="duration_start" name="duration_start" />
+                                <input type="time" step="1" class="form-control" id="duration_end" name="duration_end" />
                                 <small id="durationHelp" class="form-text text-muted">Start and end times to calculate performance duration</small>
                             </div>
                         </div>
@@ -424,13 +440,33 @@
                     $('#catalog_number_hold').val(data.catalog_number);
                     $('#name').val(data.name);
                     $('#description').val(data.description);
+                    $('#composer').val(data.composer);
+                    $('#arranger').val(data.arranger);
+                    $('#editor').val(data.editor);
+                    $('#publisher').val(data.publisher);
+                    $('#genre').val(data.genre);
+                    $('#ensemble').val(data.ensemble);
+                    $('#grade').val(data.grade);
+                    $('#last_performance_date').val(data.last_performance_date);
+                    $('#duration_start').val(data.duration_start);
+                    $('#duration_end').val(data.duration_end);
+                    $('#comments').val(data.comments);
+                    $('#performance_notes').val(data.performance_notes);
+                    $('#storage_location').val(data.storage_location);
+                    $('#date_acquired').val(data.date_acquired);
+                    $('#cost').val(data.cost);
+                    $('#listening_example_link').val(data.listening_example_link);
+                    $('#checked_out').val(data.checked_out);
+                    $('#paper_size').val(data.paper_size);
+                    $('#image_path').val(data.image_path);
+                    $('#windrep_link').val(data.windrep_link);
+                    $('#last_inventory_date').val(data.last_inventory_date);
                     if ((data.enabled) == 1) {
                         $('#enabled').prop('checked',true);
                     }
                     $('#insert').val("Update");
                     $('#update').val("update");
                     $('#add_data_Modal').modal('show');
-
                 }
            });
         });

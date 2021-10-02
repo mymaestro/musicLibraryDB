@@ -34,8 +34,6 @@ if(!empty($_POST)) {
     error_log("POST checked_out=".$_POST["checked_out"]);
     error_log("POST paper_size=".$_POST["paper_size"]);
     error_log("POST last_inventory_date=".$_POST["last_inventory_date"]);
-    
-    
 
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
@@ -46,21 +44,62 @@ if(!empty($_POST)) {
     $publisher = mysqli_real_escape_string($f_link, $_POST['publisher']);
     $genre = mysqli_real_escape_string($f_link, $_POST['genre']);
     $ensemble = mysqli_real_escape_string($f_link, $_POST['ensemble']);
-    $grade = mysqli_real_escape_string($f_link, $_POST['grade']);
-    $last_performance_date = mysqli_real_escape_string($f_link, $_POST['last_performance_date']);
-    $duration_start = mysqli_real_escape_string($f_link, $_POST['duration_start']);
-    $duration_end = mysqli_real_escape_string($f_link, $_POST['duration_end']);
     $comments = mysqli_real_escape_string($f_link, $_POST['comments']);
     $performance_notes = mysqli_real_escape_string($f_link, $_POST['performance_notes']);
     $storage_location = mysqli_real_escape_string($f_link, $_POST['storage_location']);
-    $date_acquired = mysqli_real_escape_string($f_link, $_POST['date_acquired']);
-    $cost = mysqli_real_escape_string($f_link, $_POST['cost']);
     $listening_example_link = mysqli_real_escape_string($f_link, $_POST['listening_example_link']);
     $image_path = mysqli_real_escape_string($f_link, $_POST['image_path']);
     $windrep_link = mysqli_real_escape_string($f_link, $_POST['windrep_link']);
     $checked_out = mysqli_real_escape_string($f_link, $_POST['checked_out']);
     $paper_size = mysqli_real_escape_string($f_link, $_POST['paper_size']);
+
+    // Special handling for numbers and dates
+    $grade = mysqli_real_escape_string($f_link, $_POST['grade']);
+    if (empty($grade)) {
+        $grade = "NULL";
+    } else {
+        $grade = "'" . $grade . "'";
+    }
+
+    $last_performance_date = mysqli_real_escape_string($f_link, $_POST['last_performance_date']);
+    if (empty($last_performance_date)) {
+        $last_performance_date = "NULL";
+    } else {
+        $last_performance_date = "'" . $last_performance_date . "'";
+    }
+
+    $duration_start = mysqli_real_escape_string($f_link, $_POST['duration_start']);
+    if (empty($duration_start)) {
+        $duration_start = "NULL";
+    } else {
+        $duration_start = "'" . $duration_start . "'";
+    }
+    
+    $duration_end = mysqli_real_escape_string($f_link, $_POST['duration_end']);
+    if (empty($duration_end)) {
+        $duration_end = "NULL";
+    } else {
+        $duration_end = "'" . $duration_end . "'";
+    }
+
+    $date_acquired = mysqli_real_escape_string($f_link, $_POST['date_acquired']);
+    if (empty($date_acquired)) {
+        $date_acquired = "NULL";
+    } else {
+        $date_acquired = "'" . $date_acquired . "'";
+    }
+
+    $cost = mysqli_real_escape_string($f_link, $_POST['cost']);
+    if (empty($cost)) {
+        $cost = "NULL";
+    }
+
     $last_inventory_date = mysqli_real_escape_string($f_link, $_POST['last_inventory_date']);
+    if (empty($last_inventory_date)) {
+        $last_inventory_date = "NULL";
+    } else {
+        $last_inventory_date = "'" . $last_inventory_date . "'";
+    }
 
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     error_log("POST enabled=".$enabled);
@@ -77,20 +116,20 @@ if(!empty($_POST)) {
         editor = '$editor',
         publisher = '$publisher',
         genre = '$genre',
-        ensemble = '$ensemble',
+        ensemble = '$ensemble', 
         grade = $grade,
-        last_performance_date = '$last_performance_date',
-        duration_start = '$duration_start',
-        duration_end = '$duration_end',
+        last_performance_date = $last_performance_date,
+        duration_start = $duration_start,
+        duration_end = $duration_end,
         comments = '$comments',
         performance_notes = '$performance_notes',
         storage_location = '$storage_location',
-        date_acquired = '$date_acquired',
-        cost = '$cost',
+        date_acquired = $date_acquired,
+        cost = $cost,
         listening_example_link = '$listening_example_link',
         checked_out = '$checked_out',
         paper_size = '$paper_size',
-        last_inventory_date = '$last_inventory_date',
+        last_inventory_date = $last_inventory_date,
         image_path = '$image_path',
         windrep_link = '$windrep_link',
         enabled = $enabled
@@ -99,7 +138,7 @@ if(!empty($_POST)) {
     } elseif($_POST["update"] == "add") {
         $sql = "
         INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration_start, duration_end, comments, performance_notes, storage_location, date_acquired, cost, listening_example_link, checked_out, paper_size, image_path, windrep_link, last_inventory_date, enabled)
-        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, '$last_performance_date', '$duration_start', '$duration_end', '$comments', '$performance_notes', '$storage_location', '$date_acquired', '$cost', '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$winrep_link', '$last_inventory_date', $enabled);
+        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, $last_performance_date, $duration_start, $duration_end, '$comments', '$performance_notes', '$storage_location', $date_acquired, $cost, '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$winrep_link', $last_inventory_date, $enabled);
         ";
         $message = 'Data Inserted';
     }

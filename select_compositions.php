@@ -26,6 +26,10 @@ if (isset($_POST["catalog_number"])) {
                 <td>'.$rowList["arranger"].'</td>
             </tr>
             <tr>
+                <td><label>Description</label></td>
+                <td>'.$rowList["description"].'</td>
+            </tr>
+            <tr>
                 <td><label>Publisher</label></td>
                 <td>'.$rowList["publisher"].'</td>
             </tr>

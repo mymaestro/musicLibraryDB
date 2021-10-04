@@ -21,7 +21,7 @@
         <h2 align="center"><?php echo ORGNAME ?> Genres</h2>
 <?php if($u_admin) : ?>
         <div align="right">
-            <button type="button" name="add" id="add" data-toggle="modal" data-target="#add_data_Modal" class="btn btn-warning">Add</button>
+            <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
             <br />
         </div><!-- right -->
 <?php endif; ?>
@@ -80,12 +80,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Genre details</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
                 </div><!-- modal-header -->
                 <div class="modal-body" id="genre_detail">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
@@ -95,7 +95,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Genre information</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
                 </div><!-- modal-header -->
                 <div class="modal-body">
                   <div class="container-fluid">
@@ -133,7 +133,7 @@
                   </div><!-- container-fluid -->
                 </div><!-- modal-body -->
                 <div class="modal-footer">  
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
+                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>  
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->

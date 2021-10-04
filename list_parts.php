@@ -22,7 +22,7 @@ if (isset($_SESSION['username'])) {
         <h2 align="center"><?php echo ORGNAME ?> Instrument parts</h2>
         <?php if ($u_admin) : ?>
             <div align="right">
-                <button type="button" name="add" id="add" data-toggle="modal" data-target="#add_data_Modal" class="btn btn-warning">Add</button>
+                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
                 <br />
             </div><!-- right -->
         <?php endif; ?>
@@ -57,7 +57,7 @@ if (isset($_SESSION['username'])) {
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="header' . $portfolio . '">
                             <h4 class="panel-title">
-                              <a data-toggle="collapse" data-parent="#accordion" href="#section' . $portfolio . '" aria-expanded="true" aria-controls="section' . $portfolio . '">' . $portfolio . '</a>
+                              <a data-bs-toggle="collapse" data-bs-parent="#accordion" href="#section' . $portfolio . '" aria-expanded="true" aria-controls="section' . $portfolio . '">' . $portfolio . '</a>
                             </h4>
                         </div><!-- div panel-heading -->
                         <div id="section' . $portfolio . '" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="header' . $portfolio . '">
@@ -114,12 +114,12 @@ if (isset($_SESSION['username'])) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Part details</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
                 </div><!-- modal-header -->
                 <div class="modal-body" id="part_detail">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
@@ -129,7 +129,7 @@ if (isset($_SESSION['username'])) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Part information</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
                 </div><!-- modal-header -->
                 <div class="modal-body">
                     <div class="container-fluid">
@@ -268,7 +268,7 @@ if (isset($_SESSION['username'])) {
                     </div><!-- container-fluid -->
                 </div><!-- modal-body -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->

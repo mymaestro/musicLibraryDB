@@ -1,8 +1,8 @@
 <?php
+  session_start();
   define('PAGE_TITLE', 'List paper sizes');
   define('PAGE_NAME', 'PaperSizes');
   require_once("includes/header.php");
-  session_start();
   $u_admin = FALSE;
   $u_user = FALSE;
   if (isset($_SESSION['username'])) {

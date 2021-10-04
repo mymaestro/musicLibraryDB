@@ -1,10 +1,10 @@
 <?php
+  session_start();
   require_once('includes/config.php'); 
   define('PAGE_TITLE',  ORGDESC . ' 
   Music Library');
   define('PAGE_NAME', 'home');
   require_once("includes/header.php");
-  session_start();
   $u_admin = FALSE;
   $u_user = FALSE;
   if (isset($_SESSION['username'])) {

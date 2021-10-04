@@ -52,6 +52,8 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username'])){  // Not logge
                             $_SESSION['username'] = $username;
                             $_SESSION['roles'] = $roles;
                             error_log("Session starting.");
+                            error_log("SESSION username = " . $_SESSION['username']);
+                            error_log("SESSION roles = " . $_SESSION['roles']);
                             $username_err = "Roles: " . $roles;
                             $password_err = "";
                             $login_success = TRUE;

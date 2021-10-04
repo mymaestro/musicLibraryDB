@@ -26,13 +26,13 @@ echo '
                 </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">';
-    if (isset($username)) {
-        echo '<li class="nav-item"><a href="logout.php"><i class="fas fa-unlock"></i></a>' . $username . '@';
+    if (isset($_SESSION['username'])) {
+        echo '<li class="nav-item"><a href="logout.php"><i class="fas fa-unlock"></i></a>' . $_SESSION['username'] . '@';
     } else {
         echo '<li class="nav-item">
              <a href="login.php"><i class="fas fa-lock"></i></a>';
     }
-    echo $_SERVER['REMOTE_ADDR'] . ' ' . constant("REGION") .'</li>
+    echo $_SERVER['REMOTE_ADDR'] .'</li>
           </ul>
         </div>
     </nav>

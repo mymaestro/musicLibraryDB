@@ -1,15 +1,17 @@
 <?php
+// Initialize the session
+session_start();
 // Include config file
 define('PAGE_TITLE', 'Welcome');
 define('PAGE_NAME', 'welcome');
-require_once("includes/header.php");
+require_once('includes/header.php');
 require_once('includes/config.php');
-// Initialize the session
-session_start();
 // If session variable is not set it will redirect to login page
 if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
-  header("location: login.php");
+  header("location: ./login.php");
   exit;
+} else {
+  $error_message = "No session set.";
 }
 ?>
 <body class="text-center">

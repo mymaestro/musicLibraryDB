@@ -71,7 +71,7 @@
             $search = mysqli_real_escape_string($f_link, $_POST['search']);
             $sql = "SELECT * FROM compositions WHERE MATCH(name, description, composer, arranger, comments) AGAINST( '".$search."' IN NATURAL LANGUAGE MODE) ORDER BY catalog_number;";
         } else {
-            $sql = "SELECT * FROM compositions ORDER BY catalog_number;";
+            $sql = "SELECT * FROM compositions ORDER BY RAND();";
         }
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
         while ($rowList = mysqli_fetch_array($res)) {

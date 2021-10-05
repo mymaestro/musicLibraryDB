@@ -24,14 +24,6 @@
 	<div class="jumbotron">
 		<h1 class="display-4"><?php echo ORGDESC ?></h1>
 		<p class="lead">Music Library</p>
-		<?php
-		 $sql = "SELECT name, composer FROM compositions ORDER BY RAND() LIMIT 1;";
-		 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-		 while ($rowList = mysqli_fetch_array($res)) {
-			 $name = $rowList['name'];
-			 $composer = $rowList['composer'];
-			 echo "<p>Today's pick: <strong><em>".$name.'</em></strong> by '.$composer.'</p>';
-		 } ?>
 		<br />
 		<div class="card-group">
 			<div class="card">
@@ -58,7 +50,17 @@
 					<a href="reports.php" class="btn btn-sm btn-primary">Reports</a>
 				</div>
 			</div>
+
 		</div>
+		<br />
+		<?php
+		 $sql = "SELECT name, composer FROM compositions ORDER BY RAND() LIMIT 1;";
+		 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+		 while ($rowList = mysqli_fetch_array($res)) {
+			 $name = $rowList['name'];
+			 $composer = $rowList['composer'];
+			 echo "<p>Today's pick: <strong><em>".$name.'</em></strong> by '.$composer.'</p>';
+		 } ?>
 	</div>
 </main>
 <?php

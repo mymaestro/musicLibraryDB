@@ -23,14 +23,13 @@
         <div align="right">
             <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
             <br />
-        </div><!-- right -->
+        </div><!-- right button -->
 <?php endif; ?>
         <div id="part_type_table">
         <?php
         require_once('includes/config.php');
         require_once('includes/functions.php');
-        echo '
-            <div class="panel panel-default">
+        echo '            <div class="panel panel-default">
                <div class="table-repsonsive">
                     <table class="table table-hover">
                     <caption class="title">Available part types</caption>
@@ -87,22 +86,22 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Part Type Details</h3>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body" id="part_type_detail">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- dataModal -->
     <div id="add_data_Modal" class="modal">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Part type information</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body">
                   <div class="container-fluid">
@@ -128,17 +127,27 @@
                             <div class="col-md-3">
                                 <label for="family" class="col-form-label">Part type family</label>
                             </div>
-                            <div class="col-md-7 form-check form-check-inline">
-                                <label class="form-check-label" for="familywood">Woodwind </label>
-                                <input type="radio" class="form-check-input" id="familywood" name="family" value="Woodwind" checked>
-                                <label class="form-check-label" for="familybrass">Brass </label>
-                                <input type="radio" class="form-check-input" id="familybrass" name="family" value="Brass">
-                                <label class="form-check-label" for="familyperc">Percussion </label>
-                                <input type="radio" class="form-check-input" id="familyperc" name="family" value="Percussion">
-                                <label class="form-check-label" for="familystring">Strings </label>
-                                <input type="radio" class="form-check-input" id="familystring" name="family" value="Strings">
-                                <label class="form-check-label" for="familyother">Other </label>
-                                <input type="radio" class="form-check-input" id="familyother" name="family" value="Other">
+                            <div class="col-md-7">
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label" for="familywood">Woodwind </label>
+                                    <input type="radio" class="form-check-input" id="familywood" name="family" value="Woodwind" checked>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label" for="familybrass">Brass </label>
+                                    <input type="radio" class="form-check-input" id="familybrass" name="family" value="Brass">
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label" for="familyperc">Percussion </label>
+                                    <input type="radio" class="form-check-input" id="familyperc" name="family" value="Percussion">
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label" for="familystring">Strings </label>
+                                    <input type="radio" class="form-check-input" id="familystring" name="family" value="Strings">
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label" for="familyother">Other </label>
+                                    <input type="radio" class="form-check-input" id="familyother" name="family" value="Other">
+                                </div>
                             </div>
                         </div><hr />
                         <div class="row bg-white">
@@ -146,21 +155,22 @@
                                 <label for="description" class="col-form-label">Description (up to 2048 characters)</label>
                                 <textarea class="form-control" id="description" name="description" rows="3" maxlength="2048"></textarea>
                                 <br />
-                                <label for="link" class="col-form-label">Part type collection (link)</label>
+                                <label for="link" class="col-form-label">Part type collection? (How many parts in the collection)</label>
                                 <input type="number" class="form-control" id="id_part_collection" name="id_part_collection">
                                 <br />
-                                <label for="enabled" class="col-form-label">Enabled</label>
-                                <div class="form-check form-check-inline">
-                                <input class="form-control" id="enabled" name="enabled" type="checkbox" value="1"></>
+                                <div class="form-check">
+                                    <label for="enabled" class="form-check-label">Enabled</label>
+                                    <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
+                                </div>
                             </div>
                         </div>
-                        <input type="hidden" name="update" id="update" value="0" />
-                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
-                    </form>  
                   </div><!-- container-fluid -->
                 </div><!-- modal-body -->
                 <div class="modal-footer">  
-                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>  
+                        <input type="hidden" name="update" id="update" value="0" />
+                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
+                     </form>  
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->

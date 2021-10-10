@@ -15,22 +15,19 @@
 <?php
   require_once("includes/navbar.php");
   error_log("RUNNING list_ensembles.php");
-?>
-    <br />
-    <div class="container">
+?>   <div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Ensembles</h2>
 <?php if($u_admin) : ?>
         <div align="right">
             <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
             <br />
-        </div><!-- right -->
+        </div><!-- right button -->
 <?php endif; ?>
         <div id="ensemble_table">
         <?php
         require_once('includes/config.php');
         require_once('includes/functions.php');
-        echo '
-            <div class="panel panel-default">
+        echo '            <div class="panel panel-default">
                <div class="table-repsonsive">
                     <table class="table table-hover">
                     <caption class="title">Available ensembles</caption>
@@ -77,28 +74,27 @@
         // error_log("returned: " . $sql);
         ?>
     </div><!-- container -->
-
     <div id="dataModal" class="modal"><!-- view data -->
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Ensemble Details</h3>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body" id="ensemble_detail">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- dataModal -->
     <div id="add_data_Modal" class="modal">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Ensemble information</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body">
                   <div class="container-fluid">
@@ -128,18 +124,19 @@
                                 <label for="link" class="col-form-label">Link</label>
                                 <input type="text" class="form-control" id="link" name="link">
                                 <br />
-                                <label for="enabled" class="col-form-label">Enabled</label>
-                                <div class="form-check form-check-inline">
-                                <input class="form-control" id="enabled" name="enabled" type="checkbox" value="1"></>
+                                <div class="form-check">
+                                    <label for="enabled" class="form-check-label">Enabled</label>
+                                    <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
+                                </div>
                             </div>
                         </div>
                         <input type="hidden" name="update" id="update" value="0" />
                         <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
-                    </form>  
+                    </form>
                   </div><!-- container-fluid -->
                 </div><!-- modal-body -->
                 <div class="modal-footer">  
-                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>  
+                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->

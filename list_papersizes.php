@@ -80,18 +80,17 @@
         // error_log("returned: " . $sql);
         ?>
     </div><!-- container -->
-
     <div id="dataModal" class="modal"><!-- view data -->
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Paper Size Details</h3>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body" id="paper_size_detail">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
@@ -101,7 +100,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Paper size information</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body">
                   <div class="container-fluid">
@@ -144,9 +143,10 @@
                                 <label for="description" class="col-form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" rows="3" maxlength="255"></textarea>
                                 <br />
-                                <label for="enabled" class="col-form-label">Enabled</label>
-                                <div class="form-check form-check-inline">
-                                <input class="form-control" id="enabled" name="enabled" type="checkbox" value="1"></>
+                                <div class="form-check">
+                                    <label for="enabled" class="form-check-label">Enabled</label>
+                                    <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
+                                </div>
                             </div>
                         </div>
                         <input type="hidden" name="update" id="update" value="0" />
@@ -155,7 +155,7 @@
                   </div><!-- container-fluid -->
                 </div><!-- modal-body -->
                 <div class="modal-footer">  
-                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>  
+                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->

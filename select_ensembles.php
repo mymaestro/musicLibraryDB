@@ -20,12 +20,15 @@ if (isset($_POST["id_ensemble"])) {
             <tr>
                 <td><label>Description</label></td>
                 <td>'.$rowList["description"].'</td>
-            </tr>
-            <tr>
+            </tr>';
+        $enslink = $rowList["link"];
+        if ($enslink != '') {
+            $output .= '            <tr>
                 <td><label>Link</label></td>
                 <td>'.$rowList["link"].'</td>
-            </tr>
-            <tr>
+            </tr>';
+        }
+        $output .= '            <tr>
                 <td><label>Enabled</label></td>
                 <td>'. (($rowList["enabled"] == 1) ? "Yes" : "No") .'</td>
             </tr>

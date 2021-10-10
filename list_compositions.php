@@ -15,9 +15,7 @@
 <?php
   require_once("includes/navbar.php");
   error_log("RUNNING list_compositions.php");
-?>
-    <br />
-    <div class="container">
+?><div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Compositions</h2>
 <?php if($u_admin) : ?>
         <div align="right">
@@ -69,9 +67,39 @@
         if (isset($_POST["submitButton"])) {
             error_log("POST search=".$_POST["search"]);
             $search = mysqli_real_escape_string($f_link, $_POST['search']);
-            $sql = "SELECT * FROM compositions WHERE MATCH(name, description, composer, arranger, comments) AGAINST( '".$search."' IN NATURAL LANGUAGE MODE) ORDER BY catalog_number;";
+            $sql = "SELECT c.catalog_number,
+                           c.name,
+                           c.description,
+                           c.comments,
+                           c.composer,
+                           c.arranger,
+                           g.name genre,
+                           e.name ensemble,
+                           c.enabled
+                    FROM   compositions c
+                    JOIN   genres g
+                    ON     c.genre = g.id_genre
+                    JOIN   ensembles e
+                    ON     c.ensemble = e.id_ensemble
+                    WHERE  MATCH(c.name, c.description, c.composer, c.arranger, c.comments)
+                    AGAINST( '".$search."' IN NATURAL LANGUAGE MODE)
+                    ORDER BY c.catalog_number;";
         } else {
-            $sql = "SELECT * FROM compositions ORDER BY RAND();";
+            $sql = "SELECT c.catalog_number,
+                           c.name,
+                           c.description,
+                           c.comments,
+                           c.composer,
+                           c.arranger,
+                           g.name genre,
+                           e.name ensemble,
+                           c.enabled
+                    FROM   compositions c
+                    JOIN   genres g
+                    ON     c.genre = g.id_genre
+                    JOIN   ensembles e
+                    ON     c.ensemble = e.id_ensemble
+                    ORDER BY RAND();";
         }
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
         while ($rowList = mysqli_fetch_array($res)) {
@@ -96,7 +124,8 @@
                         <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>';
             if ($u_admin) { echo '
                         <td><input type="button" name="delete" value="Delete" id="'.$catalog_number.'" class="btn btn-danger btn-sm delete_data" /></td>
-                        <td><input type="button" name="edit" value="Edit" id="'.$catalog_number.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
+                        <td><input type="button" name="edit" value="Edit" id="'.$catalog_number.'" class="btn btn-primary btn-sm edit_data" /></td>';
+                        }
             echo '
                         <td><input type="button" name="view" value="View" id="'.$catalog_number.'" class="btn btn-secondary btn-sm view_data" /></td>
                     </tr>
@@ -113,27 +142,27 @@
         ?>
     </div><!-- container -->
 
-    <div id="dataModal" class="modal"><!-- view data -->
-        <div class="modal-dialog modal-xl">
+    <div class="modal" id="view_data_modal"><!-- view data -->
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Composition details</h3>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body" id="composition_detail">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
-    </div><!-- dataModal -->
-    <div id="add_data_Modal" class="modal" role="document"><!-- add_data_Modal -->
-        <div class="modal-dialog modal-xl">
+    </div><!-- view_data_modal -->
+    <div class="modal" id="add_data_Modal"><!-- add_data_Modal -->
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Compositions information</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body">
                   <div class="container-fluid">
@@ -256,11 +285,11 @@
                         <div class="row bg-white">
                             <div class="col-md-2">
                                 <!-- grade decimal(1,1) UNSIGNED  'Grade of difficulty' -->
-                                <label for="grade" class="col-form-label">Grade level (1-5)</label>
+                                <label for="grade" class="col-form-label">Grade level (1-7)</label>
                             </div>
                             <div class="col-md-4">
-                                1<input type="range" class="form-range" min="1" max="5" step="0.5" id="range"/>5
-                                <small id="gradeHelp" class="form-text text-muted">Level of difficulty (1-5 in 1/2 grade increments)</small>
+                                1<input type="range" class="form-range" min="1" max="7" step="0.5" id="range"/>7
+                                <small id="gradeHelp" class="form-text text-muted">Level of difficulty (1-7 in 1/2 grade increments)</small>
                             </div>
                             <div class="col-md-2">
                                 <!-- paper_size (4 characters)  'Physical size, from the paper_sizes table' -->
@@ -375,7 +404,7 @@
                         <div class="row bg-white">
                             <div class="col-md-2">
                             <!-- windrep (255 characters)  'A link to this piece on windrep.org' -->
-                            <label for="windrep_link" class="col-form-label">Wind Repertory Project link</label>
+                            <label for="windrep_link" class="col-form-label">Wind Repertory Project link</label><button id="windrep" class="btn btn-secondary btn-sm">Search</button>
                             </div>
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="windrep_link" name="windrep_link" placeholder="https://www.windrep.org/Russian_Christmas_Music" maxlength="255"/>
@@ -402,27 +431,33 @@
                                 <small id="last_inventory_dateHelp" class="form-text text-muted">When was the last time somebody touched this music</small>
                             </div>
                         </div>
+                        <div class="row">
                                 <br />
-                                <label for="enabled" class="col-form-label">Enabled</label>
-                                <div class="form-check form-check-inline">
+                                <div class="form-check">
+                                <label for="enabled" class="form-check-label">Enabled</label>
                                 <!-- enabled (0 or 1) UNSIGNED  'Set greater than 0 if this composition can be played' -->
-                                <input class="form-control" id="enabled" name="enabled" type="checkbox" value="1"></>
+                                <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
                             </div>
                         </div>
-                        <input type="hidden" name="update" id="update" value="0" />
-                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
-                    </form>  
                   </div><!-- container-fluid -->
                 </div><!-- modal-body -->
                 <div class="modal-footer">  
-                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>  
+                        <input type="hidden" name="update" id="update" value="0" />
+                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                    </form>  
+                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
 <!-- jquery function to add/update database records -->
     <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
+        $('#windrep').click(function() {
+            var searchURL = 'https://www.windrep.org/index.php?search=' + $('#name').val();
+            window.open(searchURL);
+            return false;
+        });
         $('#add').click(function(){
             $('#insert').val("Insert");
             $('#update').val("add");
@@ -482,7 +517,7 @@
                 dataType:"json",
                 success:function(data){
                     $('#composition_detail').html(data);
-                    $('#dataModal').modal('show');
+                    $('#view_data_modal').modal('show');
                 }
            });
         });
@@ -527,7 +562,7 @@
                     data:{catalog_number:catalog_number},
                     success:function(data){
                         $('#composition_detail').html(data);
-                        $('#dataModal').modal('show');
+                        $('#view_data_modal').modal('show');
                     }
                 });
             }

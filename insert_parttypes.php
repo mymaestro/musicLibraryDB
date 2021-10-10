@@ -16,8 +16,8 @@ if(!empty($_POST)) {
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     error_log("POST enabled=".$enabled);
     error_log("POST id_part_collection=".$_POST["id_part_collection"]);
-    $id_part_collection = ((isset($_POST["id_part_collection"])) ? 1 : 0);
     error_log("POST id_part_collection=".$id_part_collection);
+    $id_part_collection =  mysqli_real_escape_string($f_link, $_POST["id_part_collection"]);
     $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
     $collation = mysqli_real_escape_string($f_link, $_POST['collation']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);

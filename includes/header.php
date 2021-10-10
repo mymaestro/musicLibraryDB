@@ -18,13 +18,20 @@ echo '<!DOCTYPE html>
     <title>'. PAGE_TITLE .'</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->    
-    <link href="css/theme.css" rel="stylesheet">
-    <link href="css/carousel.css" rel="stylesheet">
-    <link href="assets/css/docs.min.css" rel="stylesheet">
-    <link href="css/form-validation.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- jQuery 3.6 -->
+    <script src="js/jquery-3.6.0.min.js"></script>
     <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+    <!-- Prevent navbar overlay -->
+    <style>
+    body {
+        padding-top: 60px;
+    }
+    @media (max-width: 979px) {
+        body {
+            padding-top: 0px;
+        }
+    }
+    </style>
 </head>
 ';

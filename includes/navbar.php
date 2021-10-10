@@ -1,15 +1,13 @@
 <?php
 require_once("includes/config.php");
-echo '
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
-    <div class="container-fluid">
+echo '   <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+    <div class="container-xl">
         <a class="navbar-brand" href="#"><img src="'.ORGLOGO.'" alt="'.ORGNAME.'" width="23" height="32"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarTop">
-            <ul class="navbar-nav mr-auto mb-2 mb-sm-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item' . ( PAGE_NAME === 'home' ? ' active">' : '">') . '
                     <a class="nav-link text-uppercase" href="index.php"><i class="fa fa-home"></i> Home</a>
                 </li>
@@ -26,10 +24,11 @@ echo '
                     <a class="nav-link text-uppercase" href="reports.php"><i class="fas fa-chart-area"></i> Reports</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown1" data-bs-toggle="dropdown" aria-expanded="false">MATERIALS</a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdown1">
+                    <a class="nav-link dropdown-toggle" href="#" id="nav_menu_dropdown" data-bs-toggle="dropdown" aria-expanded="false">MATERIALS</a>
+                    <ul class="dropdown-menu" aria-labelledby="nav_menu_dropdown">
                     <li><a class="dropdown-item" href="list_compositions.php">Compositions</a></li>
                     <li><a class="dropdown-item" href="list_parts.php">Parts</a></li>
+                    <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="list_ensembles.php">Ensembles</a></li>
                     <li><a class="dropdown-item" href="list_genres.php">Genres</a></li>
                     <li><a class="dropdown-item" href="list_parttypes.php">Part types</a></li>
@@ -38,15 +37,14 @@ echo '
                     </ul>
               </li>
           </ul>
-          <ul class="nav navbar-nav navbar-right">';
+          <!-- ul class="nav navbar-nav navbar-right" -->
+          <p class="nav navbar-right">';
     if (isset($_SESSION['username'])) {
-        echo '<li class="nav-item"><a href="logout.php"><i class="fas fa-unlock"></i></a>' . $_SESSION['username'] . '@';
+        echo '<a href="logout.php"><i class="fas fa-unlock"></i>' . $_SESSION['username'];
     } else {
-        echo '<li class="nav-item">
-             <a href="login.php"><i class="fas fa-lock"></i></a>';
+        echo '<a href="login.php"><i class="fas fa-lock"></i>';
     }
-    echo $_SERVER['REMOTE_ADDR'] .'</li>
-          </ul>
+    echo '</a></p>
         </div>
     </div>
     </nav>

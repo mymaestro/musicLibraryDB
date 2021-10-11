@@ -53,7 +53,7 @@ if(!empty($_POST)) {
     $checked_out = mysqli_real_escape_string($f_link, $_POST['checked_out']);
     $paper_size = mysqli_real_escape_string($f_link, $_POST['paper_size']);
 
-    // Special handling for numbers and dates
+    // Special handling for numbers and dates and columns that can be NULL
     $grade = mysqli_real_escape_string($f_link, $_POST['grade']);
     if (empty($grade)) {
         $grade = "NULL";

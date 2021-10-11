@@ -26,68 +26,106 @@ if (isset($_SESSION['username'])) {
             </div><!-- right -->
         <?php endif; ?>
         <div id="parts_table">
-            <div id="accordion">
+            <div class="accordion accordion-flush" id="parts_accordion">
                 <?php
                 require_once('includes/config.php');
                 require_once('includes/functions.php');
                 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                $sql = "SELECT * FROM parts ORDER BY catalog_number;";
+                $sql = "SELECT p.catalog_number,
+                               c.name title,
+                               p.id_part_type,
+                               y.name part_type,
+                               y.collation,
+                               p.name,
+                               p.description,
+                               p.is_part_collection,
+                               p.paper_size,
+                               z.name paper,
+                               p.page_count,
+                               p.image_path,
+                               p.originals_count,
+                               p.copies_count
+                        FROM   parts p
+                        JOIN   compositions c
+                        ON     p.catalog_number = c.catalog_number
+                        JOIN   part_types y
+                        ON     y.id_part_type = p.id_part_type
+                        JOIN   paper_sizes z
+                        ON     z.id_paper_size = p.paper_size
+                        ORDER BY catalog_number, y.collation;";
+
                 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                $oldPortfolio = "xyzzy";
+                $old_catalog_number = "xyzzy";
                 while ($rowList = mysqli_fetch_array($res)) {
                     $catalog_number = $rowList['catalog_number'];
+                    $title = $rowList['title'];
                     $id_part_type = $rowList['id_part_type'];
-                    $name = $rowList['catalog_number'];
+                    $part_type = $rowList['part_type'];
+                    $paper = $rowList['paper'];
+                    $page_count = $rowList['page_count'];
+                    $name = $rowList['name'];
                     $description = $rowList['description'];
                     $originals_count = $rowList['originals_count'];
                     $copies_count = $rowList['copies_count'];
 
-                    if ($portfolio != $oldPortfolio) {
-                        if ($oldPortfolio != "xyzzy") {
+                    if ($catalog_number != $old_catalog_number) {
+                        if ($old_catalog_number != "xyzzy") {
                             echo '
                                 </tbody>
                            </table>
                            </div><!-- table-responsive -->
-                        </div><!-- section' . $oldPortfolio . ' -->
+                        </div><!-- section' . $old_catalog_number . ' -->
                     </div><!-- class panel -->';
                         } // End the table, and not the very first one
                         echo '
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="header' . $portfolio . '">
-                            <h4 class="panel-title">
-                              <a data-bs-toggle="collapse" data-bs-parent="#accordion" href="#section' . $portfolio . '" aria-expanded="true" aria-controls="section' . $portfolio . '">' . $portfolio . '</a>
-                            </h4>
-                        </div><!-- div panel-heading -->
-                        <div id="section' . $portfolio . '" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="header' . $portfolio . '">
-                            <div class="table-repsonsive">
-                            <table class="table table-hover">
-                                <caption class="title">Available ' . $portfolio . ' parts</caption>
-                                <thead>
-                                <tr>
-                                    <th>Catalog number</th>
-                                    <th>Part type</th>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Originals</th>
-                                    <th>Copies</th>
-                                </tr>
-                                </thead>
-                                <tbody>';
-                        $oldPortfolio = $portfolio;
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-' . $catalog_number . '">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-' . $catalog_number . '" aria-expanded="false" aria-controls="collapse-' . $catalog_number . '">
+                                '. $catalog_number .': '. $title .'
+                            </button>
+                        </h2>
+                        <div id="collapse-' . $catalog_number . '" class="accordion-collapse collapse" aria-labelledby="heading-'. $catalog_number .'" data-bs-parent="parts_accordion">
+                            <div class="accordion-body">
+                                <div class="table-repsonsive">
+                                <table class="table table-hover">
+                                    <caption class="title">' . $title . ' parts</caption>
+                                    <thead>
+                                    <tr>
+                                        <th>Part type</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Paper size</th>
+                                        <th>Pages</th>
+                                        <th>Originals</th>
+                                        <th>Copies</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>';
+                        $old_catalog_number = $catalog_number;
                     }
-                    echo '<tr>
-                                    <td>' . $catalog_number . '</td>
-                                    <td>' . $id_part_type . '</td>
+                    $table_row_class = "";
+                    if ($copies_count == 0) {
+                        $table_row_class = "table-warning";
+                    }
+                    if ($originals_count == 0) {
+                        $table_row_class = "table-danger";
+                    }
+
+                    echo '<tr class="'. $table_row_class .'">
+                                    <td>' . $part_type . '</td>
                                     <td>' . $name . '</td>
                                     <td>' . $description . '</td>
+                                    <td>' . $paper . '</td>
+                                    <td>' . $page_count . '</td>
                                     <td>' . $originals_count . '</td>
                                     <td>' . $copies_count . '</td>';
                     if ($u_admin) {
                         echo '
-                                    <td><input type="button" name="edit" value="Edit" id="' . $rowID . '" class="btn btn-primary btn-sm edit_data" /></td>';
+                                    <td><input type="button" name="delete" value="Delete" id="' . $catalog_number . '-' . $id_part_type . '" class="btn btn-danger btn-sm delete_data" /></td>
+                                    <td><input type="button" name="edit" value="Edit" id="' . $catalog_number . '-' . $id_part_type . '" class="btn btn-primary btn-sm edit_data" /></td>';
                     }
                     echo '
-                                    <td><input type="button" name="view" value="View" id="' . $rowID . '" class="btn btn-secondary btn-sm view_data" /></td>
+                                    <td><input type="button" name="view" value="View" id="' . $catalog_number . '-' . $id_part_type  . '" class="btn btn-secondary btn-sm view_data" /></td>
                                 </tr>
                                 ';
                 }
@@ -95,8 +133,8 @@ if (isset($_SESSION['username'])) {
                                 </tbody>
                            </table>
                            </div><!-- table-responsive -->
-                        </div><!-- section' . $oldPortfolio . ' -->
-                    </div><!-- class panel -->
+                        </div><!-- accordion-body-' . $old_catalog_number . ' -->
+                    </div><!-- accordion-item -->
                 ';
                 mysqli_close($f_link);
                 // error_log("returned: " . $sql);
@@ -141,7 +179,7 @@ if (isset($_SESSION['username'])) {
                                     $sql = "SELECT `id_part_type`, `name` FROM part_types WHERE `enabled` = 1 ORDER BY collation;";
                                     //error_log("Running " . $sql);
                                     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                                    $opt = "<select class='form-select form-control' aria-label='Select part typee' id='part_type' name='part_type'>";
+                                    $opt = "<select class='form-select form-control' aria-label='Select part typee' id='id_part_type' name='id_part_type'>";
                                     while ($rowList = mysqli_fetch_array($res)) {
                                         $id_part_type = $rowList['id_part_type'];
                                         $part_type_name = $rowList['name'];
@@ -152,6 +190,7 @@ if (isset($_SESSION['username'])) {
                                     echo $opt;
                                     //error_log("returned: " . $sql);
                                     ?>
+                                    <input type="hidden" id="id_part_type_hold" name="id_part_type_hold" value="" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="catalog_number" class="col-form-label">Catalog number*</label>
@@ -162,7 +201,7 @@ if (isset($_SESSION['username'])) {
                                     $sql = "SELECT `catalog_number`, `name` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
                                     //error_log("Running " . $sql);
                                     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                                    $opt = "<select class='form-select form-control' aria-label='Select composition' id='title' name='title'>";
+                                    $opt = "<select class='form-select form-control' aria-label='Select composition' id='catalog_number' name='catalog_number'>";
                                     while ($rowList = mysqli_fetch_array($res)) {
                                         $comp_catno = $rowList['catalog_number'];
                                         $comp_name = $rowList['name'];
@@ -173,6 +212,7 @@ if (isset($_SESSION['username'])) {
                                     echo $opt;
                                     //error_log("returned: " . $sql);
                                     ?>
+                                    <input type="hidden" id="catalog_number_hold" name="catalog_number_hold" value="" />
                                 </div>
                             </div><!-- row -->
                             <div class="row bg-light">
@@ -181,7 +221,7 @@ if (isset($_SESSION['username'])) {
                                 </div>
                                 <div class="col-md-3">
                                     <!-- How many pages -->
-                                    <input type="number" class="form-control" id="page_count" name="page_count" aria-label="Page count" min="1" max="12" />
+                                    <input type="number" class="form-control" id="page_count" name="page_count" aria-label="Page count" min="1" max="12" required />
                                 </div>
                                 <div class="col-md-3">
                                     <!-- Request paper size -->
@@ -215,10 +255,10 @@ if (isset($_SESSION['username'])) {
                                         <input type="number" class="form-control" id="originals_count" name="originals_count" min="0" max="999" required />
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="col-form-label">Copies count</label>
+                                        <label class="col-form-label">Copies count*</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="number" class="form-control" id="copies_count" name="copies_count" min="0" max="999" />
+                                        <input type="number" class="form-control" id="copies_count" name="copies_count" min="0" max="999" required />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -239,6 +279,14 @@ if (isset($_SESSION['username'])) {
                                 </div>
                                 <div class="row">
                                     <div class="col-md-2">
+                                        <label for="image_path" class="col-form-label">Parts in a part collection</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <input type="number" class="form-control" id="is_part_collection" name="is_part_collection" aria-label="Part collection" />
+                                    </div>
+                                </div>
+                                <div class="row bg-light">
+                                    <div class="col-md-2">
                                         <label for="image_path" class="col-form-label">Image path</label>
                                     </div>
                                     <div class="col-md-10">
@@ -248,7 +296,7 @@ if (isset($_SESSION['username'])) {
                     </div><!-- container-fluid -->
                 </div><!-- modal-body -->
                 <div class="modal-footer">
-                                <input type="hidden" name="part_id" id="part_id" />
+                                <input type="hidden" name="update" id="update" value="0" />
                                 <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
                         </form>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -261,15 +309,19 @@ if (isset($_SESSION['username'])) {
         $(document).ready(function() {
             $('#add').click(function() {
                 $('#insert').val("Insert");
+                $('#update').val("add");
                 $('#insert_form')[0].reset();
             });
             $(document).on('click', '.edit_data', function() {
                 var part_id = $(this).attr("id");
+                var catalog_number = part_id.split('-')[0];
+                var id_part_type = part_id.split('-')[1];
                 $.ajax({
                     url: "fetch_parts.php",
                     method: "POST",
                     data: {
-                        part_id: part_id
+                        id_part_type: id_part_type,
+                        catalog_number: catalog_number
                     },
                     dataType: "json",
                     success: function(data) {
@@ -279,9 +331,14 @@ if (isset($_SESSION['username'])) {
                         $('#id_part_type_hold').val(data.id_part_type);
                         $('#name').val(data.name);
                         $('#description').val(data.description);
+                        $('#is_part_collection').val(data.is_parts_collection);
+                        $('#paper_size').val(data.paper_size);
+                        $('#page_count').val(data.page_count);
+                        $('#image_path').val(data.image_path);
                         $('#originals_count').val(data.originals_count);
                         $('#copies_count').val(data.copies_count);
                         $('#insert').val("Update");
+                        $('#update').val("update");
                         $('#add_data_Modal').modal('show');
                     }
                 });
@@ -305,10 +362,10 @@ if (isset($_SESSION['username'])) {
             });
             $('#insert_form').on("submit", function(event) {
                 event.preventDefault();
-                if ($('#id_part').val() == "") {
-                    alert("Part ID is required");
-                } else if ($('#id_part').val() == '') {
-                    alert("part ID is required");
+                if ($('#id_part_type').val() == "") {
+                    alert("Part type ID is required");
+                } else if ($('#catalog_number').val() == '') {
+                    alert("Catalog number is required");
                 } else {
                     $.ajax({
                         url: "insert_parts.php",

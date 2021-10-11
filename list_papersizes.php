@@ -149,12 +149,12 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" name="update" id="update" value="0" />
-                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
-                    </form>  
                   </div><!-- container-fluid -->
                 </div><!-- modal-body -->
                 <div class="modal-footer">  
+                        <input type="hidden" name="update" id="update" value="0" />
+                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                    </form>  
                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->

@@ -345,17 +345,18 @@ if (isset($_SESSION['username'])) {
             });
             $(document).on('click', '.delete_data', function() {
                 var part_id = $(this).attr("id");
+                var catalog_number = part_id.split('-')[0];
+                var id_part_type = part_id.split('-')[1];
                 $.ajax({
-                    url: "delete_records.php",
+                    url: "delete_parts.php",
                     method: "POST",
                     data: {
-                        table_name: "parts",
-                        table_key_name: "id_part",
-                        table_key: id_part
+                        catalog_number: catalog_number,
+                        id_part_type: id_part_type
                     },
                     dataType: "json",
                     success: function(data) {
-                        $('#part_detail').html(data)
+                        $('#parts_table').html(data)
                         $('#dataModal').modal('show');
                     }
                 });
@@ -383,13 +384,16 @@ if (isset($_SESSION['username'])) {
                 }
             });
             $(document).on('click', '.view_data', function() {
-                var id_part = $(this).attr("id");
-                if (id_part != '') {
+                var part_id = $(this).attr("id");
+                var catalog_number = part_id.split('-')[0];
+                var id_part_type = part_id.split('-')[1];
+                if (id_part_type != '') {
                     $.ajax({
                         url: "select_parts.php",
                         method: "POST",
                         data: {
-                            id_part: id_part
+                            id_part_type: id_part_type,
+                            catalog_number: catalog_number
                         },
                         success: function(data) {
                             $('#part_detail').html(data);

@@ -180,7 +180,8 @@
                 data:{
                     table_name: "ensembles",
                     table_key_name: "id_ensemble",
-                    table_key:id_ensemble},
+                    table_key: id_ensemble
+                },
                 dataType:"json",
                 success:function(data){
                     $('#ensemble_detail').html(data);

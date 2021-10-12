@@ -30,28 +30,30 @@ if(!empty($_POST)) {
         link = '$link',
         enabled = '$enabled'
         WHERE id_ensemble='".$_POST["id_ensemble_hold"]."'";
-        $message = 'Data Updated';
+        $message = "Ensemble $name updated";
     } elseif($_POST["update"] == "add") {
         $sql = "
         INSERT INTO ensembles(id_ensemble, name, description, link, enabled)
         VALUES('$id_ensemble','$name', '$description', '$link', $enabled);
         ";
-        $message = 'Data Inserted';
+        $message = "Ensemble $name inserted";
     }
     $referred = $_SERVER['HTTP_REFERER'];
     if(mysqli_query($f_link, $sql)) {
         $output .= '<label class="text-success">' . $message . '</label>';
         $query = parse_url($referred, PHP_URL_QUERY);
         $referred = str_replace(array('?', $query), '', $referred);
-        echo '<p><a href="'.$referred.'">Return</a></p>';
+        $output .= '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
+        error_log($output);
     } else {
         $message = "Failed";
         $error_message = mysqli_error($f_link);
         $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
            ';
-        echo '<p><a href="'.$referred.'">Return</a></p>';
+        $output .= '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
+        error_log($output);
         error_log("Command:" . $sql);
         error_log("Error: " . $error_message);
     }

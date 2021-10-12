@@ -14,7 +14,7 @@
 <body>
 <?php
   require_once("includes/navbar.php");
-  error_log("RUNNING list_ensembles.php");
+  error_log("RUNNING list_ensembles2.php");
 ?>   <div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Ensembles</h2>
 <?php if($u_admin) : ?>
@@ -89,17 +89,16 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- dataModal -->
-    <div id="deleteModal" class="modal"><!-- view data -->
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Delete Ensemble?</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div><!-- modal-header -->
-                <div class="modal-body" id="ensemble_delete">
+    <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-body p-4 text-center">
+                    <h5 class="mb-0">Delete this ensemble?</h5>
+                    <p id="ensemble2delete">You can cancel now.</p>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer flex-nowrap p-0">
+                    <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
+                    <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0" data-bs-dismiss="modal">No thanks</button>
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
@@ -187,8 +186,16 @@
                 }
            });
         });
-        $(document).on('click', '.delete_data', function(){
+        $(document).on('click', '.delete_data', function(){ // button that brings up modal
+            // input button name="delete" id="id_ensemble" class="delete_data"
             var id_ensemble = $(this).attr("id");
+            $('#deleteModal').modal('show');
+            $('#confirm-delete').data('id', id_ensemble);
+            $('#ensemble2delete').text(id_ensemble);
+        });
+        $('#confirm-delete').click(function(){
+            // The confirm delete button
+            var id_ensemble = $(this).data('id');
             $.ajax({
                 url:"delete_records.php",
                 method:"POST",
@@ -197,10 +204,9 @@
                     table_key_name: "id_ensemble",
                     table_key: id_ensemble
                 },
-                dataType:"json",
                 success:function(data){
-                    $('#ensemble_detail').html(data);
-                    $('#dataModal').modal('show');
+                    $('#insert_form')[0].reset();
+                    $('#ensemble_table').html(data);
                 }
            });
         });

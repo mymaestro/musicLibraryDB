@@ -157,6 +157,20 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- view_data_modal -->
+    <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-body p-4 text-center">
+                    <h5 class="mb-0">Delete this composition?</h5>
+                    <p id="composition2delete">You can cancel now.</p>
+                </div>
+                <div class="modal-footer flex-nowrap p-0">
+                    <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
+                    <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0" data-bs-dismiss="modal">No thanks</button>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- deleteModal -->
     <div class="modal" id="add_data_Modal"><!-- add_data_Modal -->
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
@@ -505,19 +519,27 @@
                 }
            });
         });
-        $(document).on('click', '.delete_data', function(){
+        $(document).on('click', '.delete_data', function(){ // button that brings up modal
+            // input button name="delete" id="catalog_number" class="delete_data"
             var catalog_number = $(this).attr("id");
+            $('#deleteModal').modal('show');
+            $('#confirm-delete').data('id', catalog_number);
+            $('#ensemble2delete').text(catalog_number);
+        });
+        $('#confirm-delete').click(function(){
+            // The confirm delete button
+            var catalog_number = $(this).data('id');
             $.ajax({
                 url:"delete_records.php",
                 method:"POST",
                 data:{
                     table_name: "compositions",
                     table_key_name: "catalog_number",
-                    table_key:catalog_number},
-                dataType:"json",
+                    table_key: catalog_number
+                },
                 success:function(data){
-                    $('#composition_detail').html(data);
-                    $('#view_data_modal').modal('show');
+                    $('#insert_form')[0].reset();
+                    $('#composition_table').html(data);
                 }
            });
         });

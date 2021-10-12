@@ -95,6 +95,20 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- dataModal -->
+    <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-body p-4 text-center">
+                    <h5 class="mb-0">Delete this paper size?</h5>
+                    <p id="papersize2delete">You can cancel now.</p>
+                </div>
+                <div class="modal-footer flex-nowrap p-0">
+                    <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
+                    <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0" data-bs-dismiss="modal">No thanks</button>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- deleteModal -->
     <div id="add_data_Modal" class="modal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -191,19 +205,27 @@
                 }
            });
         });
-        $(document).on('click', '.delete_data', function(){
+        $(document).on('click', '.delete_data', function(){ // button that brings up modal
+            // input button name="delete" id="id_paper_size" class="delete_data"
             var id_paper_size = $(this).attr("id");
+            $('#deleteModal').modal('show');
+            $('#confirm-delete').data('id', id_paper_size);
+            $('#papersize2delete').text(id_paper_size);
+        });
+        $('#confirm-delete').click(function(){
+            // The confirm delete button
+            var id_paper_size = $(this).data('id');
             $.ajax({
                 url:"delete_records.php",
                 method:"POST",
                 data:{
-                    table_name:"paper_sizes",
-                    table_key_name:"id_paper_size",
-                    table_key:id_paper_size},
-                dataType:"json",
+                    table_name: "paper_sizes",
+                    table_key_name: "id_paper_size",
+                    table_key: id_paper_size
+                },
                 success:function(data){
-                    $('#paper_size_detail').html(data);
-                    $('#dataModal').modal('show');
+                    $('#insert_form')[0].reset();
+                    $('#paper_size_table').html(data);
                 }
            });
         });

@@ -187,7 +187,7 @@ if (isset($_SESSION['username'])) {
                     $('#name').val(data.name);
                     $('#description').val(data.description);
                     $('#family').val(data.family);
-                    $('#id_part_collection').val(data.id_part_collection);
+                    $('#is_part_collection').val(data.is_part_collection);
                     if ((data.enabled) == 1) {
                         $('#enabled').prop('checked',true);
                     }

@@ -1,11 +1,11 @@
 <?php
 require_once('includes/config.php');
 require_once('includes/functions.php');
-error_log("Running select_partcollections.php with id=". $_POST["id_part_collection"]);
-if (isset($_POST["id_part_collection"])) {
+error_log("Running select_partcollections.php with id=". $_POST["is_part_collection"]);
+if (isset($_POST["is_part_collection"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    $sql = "SELECT * FROM part_collections WHERE id_part_collection = '".$_POST["id_part_collection"]."'";
+    $sql = "SELECT * FROM part_collections WHERE is_part_collection = '".$_POST["is_part_collection"]."'";
     $res = mysqli_query($f_link, $sql);
     $output .= '
     <div class="table-responsive">
@@ -20,6 +20,9 @@ if (isset($_POST["id_part_collection"])) {
                 <td><label>Description</label></td>
                 <td>'.$rowList["description"].'</td>
             </tr>
+            <tr>
+                <td><label>Collection for</label></td>
+                <td>'.$rowList["catalog_number_key"].':'.$rowList["id_part_type_key"].'</td>
             <tr>
                 <td><label>Part type</label></td>
                 <td>'.$rowList["id_part_type"].'</td>

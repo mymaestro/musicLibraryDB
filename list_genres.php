@@ -119,7 +119,7 @@
                                 <label for="id_genre" class="col-form-label">ID*</label>
                             </div>
                             <div class="col-md-2">
-                                <input type="text" class="form-control" id="id_genre" name="id_genre" placeholder="X" required minlength="1" maxlength="4" size="4"/>
+                                <input type="text" class="form-control" id="id_genre" name="id_genre" placeholder="X" minlength="1" maxlength="4" size="4" required/>
                                 <input type="hidden" id="id_genre_hold" name="id_genre_hold" value=""/>
                             </div>
                         </div><hr />

@@ -65,6 +65,10 @@ if (isset($_POST["id_part_type"])) {
                 <td>'.$rowList["copies_count"].'</td>
             </tr>
             <tr>
+                <td><label>Parts in collection</label></td>
+                <td>'.$rowList["is_part_collection"].'</td>
+            </tr>
+            <tr>
                 <td><label>Image path</label></td>
                 <td>'.$rowList["image_path"].'</td>
             </tr>

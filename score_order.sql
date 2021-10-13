@@ -1,4 +1,4 @@
-INSERT INTO `part_types` (`id_part_type`, `collation`, `name`, `description`, `family`, `id_part_collection`, `enabled`) VALUES
+INSERT INTO `part_types` (`id_part_type`, `collation`, `name`, `description`, `family`, `is_part_collection`, `enabled`) VALUES
     (3, 30, 'Alto Flute', 'The alto flute has a deeper range and more powerful tone.', 'Woodwind', 1, 1),
     (4, 40, 'Oboe', 'The oboe is a type of double reed woodwind instrument.', 'Woodwind', 1, 1),
     (5, 50, 'English Horn', 'The English horn', 'Woodwind', 1, 1),

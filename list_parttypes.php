@@ -53,14 +53,14 @@
             $name = $rowList['name'];
             $family = $rowList['family'];
             $description = $rowList['description'];
-            $id_part_collection = $rowList['id_part_collection'];
+            $is_part_collection = $rowList['is_part_collection'];
             $enabled = $rowList['enabled'];
             echo '<tr>
                         <td>'.$collation.'</td>
                         <td>'.$name.'</td>
                         <td>'.$family.'</td>
                         <td>'.$description.'</td>
-                        <td>'.$id_part_collection.'</td>
+                        <td>'.$is_part_collection.'</td>
                         <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>';
             if ($u_admin) { echo '
                         <td><input type="button" name="delete" value="Delete" id="'.$id_part_type.'" class="btn btn-danger btn-sm delete_data" /></td>
@@ -170,7 +170,7 @@
                                 <textarea class="form-control" id="description" name="description" rows="3" maxlength="2048"></textarea>
                                 <br />
                                 <label for="link" class="col-form-label">Part type collection? (How many parts in the collection)</label>
-                                <input type="number" class="form-control" id="id_part_collection" name="id_part_collection">
+                                <input type="number" class="form-control" id="is_part_collection" name="is_part_collection">
                                 <br />
                                 <div class="form-check">
                                     <label for="enabled" class="form-check-label">Enabled</label>
@@ -210,7 +210,7 @@
                     $('#name').val(data.name);
                     $('#description').val(data.description);
                     $('#family').val(data.family);
-                    $('#id_part_collection').val(data.id_part_collection);
+                    $('#is_part_collection').val(data.is_part_collection);
                     if ((data.enabled) == 1) {
                         $('#enabled').prop('checked',true);
                     }

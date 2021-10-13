@@ -15,9 +15,9 @@ if(!empty($_POST)) {
     error_log("POST description=".$_POST["description"]);
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     error_log("POST enabled=".$enabled);
-    error_log("POST id_part_collection=".$_POST["id_part_collection"]);
-    error_log("POST id_part_collection=".$id_part_collection);
-    $id_part_collection =  mysqli_real_escape_string($f_link, $_POST["id_part_collection"]);
+    error_log("POST is_part_collection=".$_POST["is_part_collection"]);
+    error_log("POST is_part_collection=".$is_part_collection);
+    $is_part_collection =  mysqli_real_escape_string($f_link, $_POST["is_part_collection"]);
     $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
     $collation = mysqli_real_escape_string($f_link, $_POST['collation']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
@@ -34,14 +34,14 @@ if(!empty($_POST)) {
         description = '$description',
         collation = $collation,
         family = '$family',
-        id_part_collection = $id_part_collection,
+        is_part_collection = $is_part_collection,
         enabled = $enabled
         WHERE id_part_type='".$_POST["id_part_type"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO part_types(collation, name, description, family, id_part_collection, enabled)
-        VALUES($collation, '$name', '$description', '$family', $id_part_collection, $enabled);
+        INSERT INTO part_types(collation, name, description, family, is_part_collection, enabled)
+        VALUES($collation, '$name', '$description', '$family', $is_part_collection, $enabled);
         ";
         $message = 'Data Inserted';
     }

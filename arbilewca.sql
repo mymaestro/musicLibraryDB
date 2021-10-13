@@ -161,7 +161,7 @@ CREATE TABLE `parts` (
 --
 
 CREATE TABLE `part_collections` (
-  `id_part_collection` int(10) UNSIGNED NOT NULL COMMENT 'Primary identifier of a part collection',
+  `is_part_collection` int(10) UNSIGNED NOT NULL COMMENT 'Primary identifier of a part collection',
   `catalog_number_key` varchar(255) NOT NULL COMMENT 'Catalog number of the part ID',
   `id_part_type_key` int(10) UNSIGNED NOT NULL COMMENT 'Part ID that this collection belongs to',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The name of the type of part, for example Percussion 1',
@@ -182,7 +182,7 @@ CREATE TABLE `part_types` (
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The name of the type of part, for example Trumpet 1',
   `description` varchar(2048) DEFAULT NULL COMMENT 'Longer description of the type of part',
   `family` varchar(128) NOT NULL COMMENT 'Woodwind, brass, percussion, strings, etc.',
-  `id_part_collection` int(10) UNSIGNED DEFAULT NULL COMMENT 'If this part is more than one instrument this is the ID of the collection',
+  `is_part_collection` int(10) UNSIGNED DEFAULT NULL COMMENT 'If this part is more than one instrument this is the ID of the collection',
   `enabled` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Set to 1 to enable this part type'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table holds kinds/types of parts for parts and part collections.';
 
@@ -190,7 +190,7 @@ CREATE TABLE `part_types` (
 -- Dumping data for table `part_types`
 --
 
-INSERT INTO `part_types` (`id_part_type`, `collation`, `name`, `description`, `family`, `id_part_collection`, `enabled`) VALUES
+INSERT INTO `part_types` (`id_part_type`, `collation`, `name`, `description`, `family`, `is_part_collection`, `enabled`) VALUES
 (1, 10, 'Piccolo', 'The piccolo is a half-size flute, and a member of the woodwind family of musical instruments.', 'Woodwind', 0, 1),
 (2, 20, 'Flute', 'A flute is an aerophone or reedless wind instrument that produces its sound from the flow of air across an opening. ', 'Woodwind', 0, 1),
 (4, 40, 'Oboe', 'The oboe is a type of double reed woodwind instrument.', 'Woodwind', 0, 1),
@@ -339,7 +339,7 @@ ALTER TABLE `parts`
 -- Indexes for table `part_collections`
 --
 ALTER TABLE `part_collections`
-  ADD PRIMARY KEY (`id_part_collection`),
+  ADD PRIMARY KEY (`is_part_collection`),
   ADD KEY `id_part_type` (`id_part_type`),
   ADD KEY `catalog_number_key` (`catalog_number_key`),
   ADD KEY `id_part_type_key` (`id_part_type_key`),
@@ -372,7 +372,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `part_collections`
 --
 ALTER TABLE `part_collections`
-  MODIFY `id_part_collection` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary identifier of a part collection', AUTO_INCREMENT=2;
+  MODIFY `is_part_collection` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary identifier of a part collection', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `part_types`

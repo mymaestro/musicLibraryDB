@@ -26,7 +26,7 @@ if (isset($_POST["id_part_type"])) {
             </tr>
             <tr>
                 <td><label>Part collection</label></td>
-                <td>'.$rowList["id_part_collection"].'</td>
+                <td>'.$rowList["is_part_collection"].'</td>
             </tr>
             <tr>
                 <td><label>Enabled</label></td>

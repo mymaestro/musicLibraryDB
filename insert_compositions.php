@@ -49,7 +49,6 @@ if(!empty($_POST)) {
     $storage_location = mysqli_real_escape_string($f_link, $_POST['storage_location']);
     $listening_example_link = mysqli_real_escape_string($f_link, $_POST['listening_example_link']);
     $image_path = mysqli_real_escape_string($f_link, $_POST['image_path']);
-    $windrep_link = mysqli_real_escape_string($f_link, $_POST['windrep_link']);
     $checked_out = mysqli_real_escape_string($f_link, $_POST['checked_out']);
     $paper_size = mysqli_real_escape_string($f_link, $_POST['paper_size']);
 
@@ -101,6 +100,13 @@ if(!empty($_POST)) {
         $last_inventory_date = "'" . $last_inventory_date . "'";
     }
 
+    $windrep_link = mysqli_real_escape_string($f_link, $_POST['windrep_link']);
+    if (empty($windrep_link)) {
+        $windrep_link = "NULL";
+    } else {
+        $windrep_link = "'" . $windrep_link . "'";
+    }
+
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     error_log("POST enabled=".$enabled);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
@@ -131,7 +137,7 @@ if(!empty($_POST)) {
         paper_size = '$paper_size',
         last_inventory_date = $last_inventory_date,
         image_path = '$image_path',
-        windrep_link = '$windrep_link',
+        windrep_link = $windrep_link,
         enabled = $enabled
         WHERE catalog_number='".$_POST["catalog_number_hold"]."'";
         $message = 'Data Updated';

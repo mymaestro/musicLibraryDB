@@ -118,7 +118,7 @@
                                 <label for="id_ensemble" class="col-form-label">ID*</label>
                             </div>
                             <div class="col-md-2">
-                                <input type="text" class="form-control" id="id_ensemble" name="id_ensemble" placeholder="X" required/>
+                                <input type="text" class="form-control" id="id_ensemble" name="id_ensemble" placeholder="X" size="4" maxlength="4" required/>
                                 <input type="hidden" id="id_ensemble_hold" name="id_ensemble_hold" value="" />
                             </div>
                         </div><hr />

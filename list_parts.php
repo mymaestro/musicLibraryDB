@@ -142,7 +142,6 @@ if (isset($_SESSION['username'])) {
             </div><!-- accordion -->
         </div><!-- parts_table -->
     </div><!-- container -->
-
     <div id="dataModal" class="modal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -278,10 +277,10 @@ if (isset($_SESSION['username'])) {
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-2">
-                                        <label for="image_path" class="col-form-label">Parts in a part collection</label>
+                                    <div class="col-md-8">
+                                        <label for="image_path" class="col-form-label">If this part has more than one instrument, enter the number of instruments on the part.</label>
                                     </div>
-                                    <div class="col-md-10">
+                                    <div class="col-md-4">
                                         <input type="number" class="form-control" id="is_part_collection" name="is_part_collection" aria-label="Part collection" />
                                     </div>
                                 </div>
@@ -331,7 +330,7 @@ if (isset($_SESSION['username'])) {
                         $('#id_part_type_hold').val(data.id_part_type);
                         $('#name').val(data.name);
                         $('#description').val(data.description);
-                        $('#is_part_collection').val(data.is_parts_collection);
+                        $('#is_part_collection').val(data.is_part_collection);
                         $('#paper_size').val(data.paper_size);
                         $('#page_count').val(data.page_count);
                         $('#image_path').val(data.image_path);

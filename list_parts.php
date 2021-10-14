@@ -157,6 +157,20 @@ if (isset($_SESSION['username'])) {
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- dataModal -->
+    <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-body p-4 text-center">
+                    <h5 class="mb-0">Delete this part?</h5>
+                    <p id="part2delete">You can cancel now.</p>
+                </div>
+                <div class="modal-footer flex-nowrap p-0">
+                    <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
+                    <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0" data-bs-dismiss="modal">No thanks</button>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- deleteModal -->
     <div id="add_data_Modal" class="modal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -342,21 +356,28 @@ if (isset($_SESSION['username'])) {
                     }
                 });
             });
-            $(document).on('click', '.delete_data', function() {
+            $(document).on('click', '.delete_data', function(){ // button that brings up modal
+                // input button name="delete" id="id_part" class="delete_data"
                 var part_id = $(this).attr("id");
+                $('#deleteModal').modal('show');
+                $('#confirm-delete').data('id', part_id);
+                $('#part2delete').text(part_id);
+            });
+            $('#confirm-delete').click(function(){
+                // The confirm delete button
+                var part_id = $(this).data('id');
                 var catalog_number = part_id.split('-')[0];
                 var id_part_type = part_id.split('-')[1];
                 $.ajax({
-                    url: "delete_parts.php",
-                    method: "POST",
-                    data: {
+                    url:"delete_parts.php",
+                    method:"POST",
+                    data:{
                         catalog_number: catalog_number,
                         id_part_type: id_part_type
                     },
-                    dataType: "json",
-                    success: function(data) {
-                        $('#parts_table').html(data)
-                        $('#dataModal').modal('show');
+                    success:function(data){
+                        $('#insert_form')[0].reset();
+                        $('#parts_table').html(data);
                     }
                 });
             });

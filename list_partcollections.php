@@ -25,6 +25,25 @@
             </p>
         </div><!-- right -->
 <?php endif; ?>
+        <?php
+        if(!empty($_POST)) {
+            echo '<h4>You selected</h4>';
+            echo '<table>';
+            // loop over checked checkboxes
+            foreach($_POST as $key => $value) {
+                echo '<tr><td>'. $key . '</td>';
+                echo "    <td>". $value . "</td></tr>";
+            }
+            if(!empty($_POST['parttypes'])){
+                echo "<p>Part types selected:</p>";
+                echo "<ol>";
+                foreach($_POST['parttypes'] as $selected) {
+                    echo "<li>" . $selected . "</li>";
+                }
+                echo "</ol>";
+            }
+            echo '</table>';
+         }?>
         <div id="part_collection_table">
         <?php
         require_once('includes/config.php');
@@ -182,7 +201,7 @@
                                 $sql = "SELECT `id_part_type`, `name` FROM part_types WHERE `enabled` = 1 ORDER BY collation;";
                                 //error_log("Running " . $sql);
                                 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                                $opt = "<select class='form-select form-control' aria-label='Select part typee' id='id_part_type' name='id_part_type' size='17' multiple>";
+                                $opt = "<select class='form-select form-control' aria-label='Select part type' id='id_part_type' name='id_part_type' size='17' multiple>";
                                 while ($rowList = mysqli_fetch_array($res)) {
                                     $id_part_type = $rowList['id_part_type'];
                                     $part_type_name = $rowList['name'];

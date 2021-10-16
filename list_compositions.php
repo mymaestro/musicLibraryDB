@@ -123,11 +123,14 @@
                         <td>'.$ensemble.'</td>
                         <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>';
             if ($u_admin) { echo '
+                        <td><form method="post" id="instr_data_'.$catalog_number.'" action="composition_instrumentation.php"><input type="hidden" name="catalog_number" value="'.$catalog_number.'" />
+                        <input type="submit" name="compositions" value="Instrumentation" id="'.$catalog_number.'" class="btn btn-warning btn-sm instr_data" /></form></td>
                         <td><input type="button" name="delete" value="Delete" id="'.$catalog_number.'" class="btn btn-danger btn-sm delete_data" /></td>
                         <td><input type="button" name="edit" value="Edit" id="'.$catalog_number.'" class="btn btn-primary btn-sm edit_data" /></td>';
                         }
             echo '
-                        <td><input type="button" name="view" value="View" id="'.$catalog_number.'" class="btn btn-secondary btn-sm view_data" /></td>
+                        <td><input type="button" name="view" value="View" id="'.$catalog_number.'" class="btn btn-secondary btn-sm view_data" /></td>                        
+                        <td><input type="button" name="parts_data" value="View instrumentation" id="'.$catalog_number.'" class="btn btn-secondary btn-sm parts_data" /></td>                        
                     </tr>
                     ';
         }
@@ -150,6 +153,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body" id="composition_detail">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- view_data_modal -->
+    <div class="modal" id="parts_data_modal"><!-- view parts instrumentation -->
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Instrumentation details</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div><!-- modal-header -->
+                <div class="modal-body" id="instrumentation_detail">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -481,7 +499,7 @@
             var catalog_number = $(this).attr("id");
             $.ajax({
                 url:"fetch_compositions.php",
-                method:"POST",
+                type:"POST",
                 data:{catalog_number:catalog_number},
                 dataType:"json",
                 success:function(data){
@@ -531,7 +549,7 @@
             var catalog_number = $(this).data('id');
             $.ajax({
                 url:"delete_records.php",
-                method:"POST",
+                type:"POST",
                 data:{
                     table_name: "compositions",
                     table_key_name: "catalog_number",
@@ -561,7 +579,7 @@
             {
                 $.ajax({
                     url:"insert_compositions.php",
-                    method:"POST",
+                    type:"POST",
                     data:$('#insert_form').serialize(),
                     beforeSend:function(){
                         $('#insert').val("Inserting");
@@ -580,11 +598,26 @@
             {
                 $.ajax({
                     url:"select_compositions.php",
-                    method:"POST",
+                    type:"POST",
                     data:{catalog_number:catalog_number},
                     success:function(data){
                         $('#composition_detail').html(data);
                         $('#view_data_modal').modal('show');
+                    }
+                });
+            }
+        });
+        $(document).on('click', '.parts_data', function(){
+            var catalog_number = $(this).attr("id");
+            if(catalog_number != '')
+            {
+                $.ajax({
+                    url:"select_composition_parts.php",
+                    type:"POST",
+                    data:{catalog_number:catalog_number},
+                    success:function(data){
+                        $('#instrumentation_detail').html(data);
+                        $('#parts_data_modal').modal('show');
                     }
                 });
             }

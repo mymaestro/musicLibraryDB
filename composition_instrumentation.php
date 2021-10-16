@@ -3,7 +3,7 @@ session_start();
 define('PAGE_TITLE', 'Enter instrumentation');
 define('PAGE_NAME', 'Enter instrumentation');
 require_once("includes/header.php");
-error_log("RUNNING composition_instrumentation.php with parttypes=". $_POST["parttypes"]);
+error_log("RUNNING composition_instrumentation.php with catalog_num=". $_POST["catalog_number"]);
 $u_admin = FALSE;
 $u_user = FALSE;
 if (isset($_SESSION['username'])) {
@@ -11,6 +11,12 @@ if (isset($_SESSION['username'])) {
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
 }
+// Ways to get here:
+// 1. Directly from the menu. Select Composition by name, enter default parts, click submit (need form validation)
+// 2. From the compositions table. Same as 1, but with Catalog Number preselected
+// 3. Edit mode... same as 2, but read the parts table and pre-populate the parts selection
+// 4. User mode: Like 3 but view only
+
 // Fill the parts table with information from the rows in this form
 // Parts table:
 
@@ -26,7 +32,7 @@ if (isset($_SESSION['username'])) {
 //    `originals_count` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Set greater than 0 if originals of this part exist',
 //    `copies_count` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Set greater than 0 if copies of this part exist'
 //  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table holds parts.';
-
+  
 // It is expected that all the instrumentation (parts) for a composition will by default have the same
 // catalog_number, paper_size, and page_count
 // The code inserts a  
@@ -36,60 +42,49 @@ if (isset($_SESSION['username'])) {
     require_once("includes/navbar.php");
     require_once('includes/config.php');
     error_log("RUNNING composition_instrumentation.php");
+    require_once('includes/functions.php');
     ?>
-    <br />
-    <br />
-    <br />
     <div class="container">
         <h1 align="center"><?php echo ORGNAME ?> Add instrumentation</h1>
         <?php if ($u_admin) : ?>
-            <div align="right">
-                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
-                <br />
-            </div><!-- right -->
-        <?php endif; ?>
-        <?php
-        if(!empty($_POST)) {
-            echo '<h4>You selected</h4>';
-            echo '<table>';
-            // loop over checked checkboxes
-            foreach($_POST as $key => $value) {
-                echo '<tr><td>'. $key . '</td>';
-                echo "    <td>". $value . "</td></tr>";
-            }
-            if(!empty($_POST['parttypes'])){
-                echo "<p>Part types selected:</p>";
-                echo "<ol>";
-                foreach($_POST['parttypes'] as $selected) {
-                    echo "<li>" . $selected . "</li>";
-                }
-                echo "</ol>";
-            }
-            echo '</table>';
-         }?>
     <div id="instrumentation">
-        <form action="composition_instrumentation.php" method="post" id="instrumentation_form">
+        <form action="insert_instrumentation.php" method="post" id="instrumentation_form">
             <div class="row mb-3">
                 <div class="col-sm-2 col-form-label">
-                    <label for="catalog_number" class="form-label">Catalog number</label>
+                    <label for="catalog_number" class="form-label">Catalog number*</label>
                 </div>
                 <div class="col-md-4">
                     <!-- Choose from a composition in the database -->
                     <!-- Unless one is already provided in the _POST('catalog_number') -->
+                    <!-- check if we got here by instr button in list_compositions -->
                 <?php
-                    require_once('includes/functions.php');
                     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                    $sql = "SELECT `catalog_number`, `name` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
-                    //error_log("Running " . $sql);
-                    $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                    $opt = "<select class='form-select form-control' aria-label='Select composition' id='catalog_number' name='catalog_number' aria-describedby='catalog_numberHelp'>";
-                    while ($rowList = mysqli_fetch_array($res)) {
-                        $comp_catno = $rowList['catalog_number'];
-                        $comp_name = $rowList['name'];
-                        $opt .= "<option value='" . $comp_catno . "'>" . $comp_name . "</option>";
+                    // Clicked to get here
+                    // $_POST catalog_number=C123
+                    // $_POST compositions=Instrumentation
+                    if(!empty($_POST["catalog_number"])) {
+                        $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
+                        $sql = "SELECT `name` FROM compositions WHERE `enabled` = 1 AND `catalog_number` = '".$catalog_number."' ORDER BY name;";
+                        $opt = '<input type="hidden" name="catalog_number" value="'.$catalog_number.'" />';
+                        $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                        while ($rowList = mysqli_fetch_array($res)) {
+                            $comp_name = $rowList['name'];
+                            $opt .= $catalog_number . " - " .$comp_name;
+                        }
+                        mysqli_close($f_link);
+                    } else {
+                        $sql = "SELECT `catalog_number`, `name` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
+                        //error_log("Running " . $sql);
+                        $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                        $opt = "<select class='form-select form-control' aria-label='Select composition' id='catalog_number' name='catalog_number' aria-describedby='catalog_numberHelp'>";
+                        while ($rowList = mysqli_fetch_array($res)) {
+                            $comp_catno = $rowList['catalog_number'];
+                            $comp_name = $rowList['name'];
+                            $opt .= "<option value='" . $comp_catno . "'>" . $comp_name . "</option>";
+                        }
+                        $opt .= "</select>";
+                        mysqli_close($f_link);
                     }
-                    $opt .= "</select>";
-                    mysqli_close($f_link);
                     echo $opt;
                     //error_log("returned: " . $sql);
                     ?>
@@ -100,7 +95,7 @@ if (isset($_SESSION['username'])) {
             </div>
             <div class="row mb-3">
                 <div class="col-sm-2 col-form-label">
-                    <label for="paper_size" class="form-label">Paper size</label>
+                    <label for="paper_size" class="form-label">Paper size*</label>
                 </div>
                 <div class="col-sm-4">
                 <?php
@@ -126,10 +121,10 @@ if (isset($_SESSION['username'])) {
             </div>
             <div class="row mb-3">
                 <div class="col-sm-2 col-form-label">
-                    <label for="page_count" class="form-label">Page count</label>
+                    <label for="page_count" class="form-label">Page count*</label>
                 </div>
                 <div class="col-sm-4">
-                    <input type="number" class="form-control" id="page_count" name="page_count" aria-describedby="page_countHelp">
+                    <input type="number" class="form-control" id="page_count" name="page_count" aria-describedby="page_countHelp" required>
                 </div>
                 <div class="col-sm-6">
                     <div id="page_countHelp" class="form-text">How many pages per part (default).</div>                
@@ -137,8 +132,9 @@ if (isset($_SESSION['username'])) {
             </div>
             <hr />
             <div class="row mb-3">
-                <legend class="col-form-label col-sm-2 pt-0">Instrument parts</legend>
+                <div class="col-form-label col-sm-2 pt-0">Instrument parts*</div>
                 <div class="col-sm-10 offset-sm-2">
+                    <p>Select multiple parts by holding the Shift or Ctrl keys while clicking</p>
                 <!-- Read part types from part_types table -->
                 <?php
                     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -146,26 +142,28 @@ if (isset($_SESSION['username'])) {
                     $rowcount = 0;
                     //error_log("Running " . $sql);
                     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                    $opt = "<select class='form-select form-control' aria-label='Select part types' id='parttypes' name='parttypes[]' size='17' multiple>";
                     while ($rowList = mysqli_fetch_array($res)) {
                         $rowcount++;
                         $id_part_type = $rowList['id_part_type'];
                         $part_type_name = $rowList['name'];
-                        echo '<div class="form-check">';
-                        echo '<input class="form-check-input form-check-input-lg" type="checkbox" name="parttypes[]" id="parttypes' . $rowcount .'" value="'. $id_part_type .'">';
-                        echo '<label class="form-check-label" for="parttypes'.$rowcount .'">';
-                        echo '            '. $part_type_name;
-                        echo '</label>';
-                        echo '</div>';
+                        $opt .= "<option value='".$id_part_type ."'>" . $part_type_name . "</option>";
                     }
+                    $opt .= "</select>";
                     mysqli_close($f_link);
+                    echo $opt;
                     //error_log("returned: " . $sql);
                 ?>
             </div>
-            <div class="row mb-3" align="right">
-                <button class="btn btn-primary" type="submit">Submit</button>
+            <div class="row">
+                <div class="col-sm-4">
+                    <button class="btn btn-primary" type="submit" name="submit" value="add">Add parts</button>
+                </div>
             </div>
         </form>
+
     </div>
+    <?php endif; ?>
     <!-- jquery function to add/update database records -->
     <script>
     $(document).ready(function(){
@@ -211,7 +209,7 @@ if (isset($_SESSION['username'])) {
             else
             {
                 $.ajax({
-                    url:"insert_parttypes.php",
+                    url:"insert_parts.php",
                     method:"POST",
                     data:$('#insert_form').serialize(),
                     beforeSend:function(){

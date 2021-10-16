@@ -46,20 +46,20 @@
         require_once('includes/functions.php');
         echo '
             <div class="panel panel-default">
-               <div class="table-repsonsive">
-                    <table class="table table-hover">
+                <div class="table-repsonsive">
+                    <table class="table table-hover tablesort" id="cpdatatable">
                     <caption class="title">Available Compositions</caption>
                     <thead>
                     <tr>
-                        <th>Catalog number</th>
-                        <th>Name</th>
-                        <th>Composer</th>
-                        <th>Arranger</th>
-                        <th>Description</th>
-                        <th>Comments</th>
-                        <th>Genre</th>
-                        <th>Ensemble</th>
-                        <th>Enabled</th>
+                        <th data-tablesort-type="string">Catalog number <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Name <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Composer <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Arranger <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Description <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Comments <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Genre <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Enabled <i class="fa fa-sort" aria-hidden="true"></i></th>
                     </tr>
                     </thead>
                     <tbody>';
@@ -482,6 +482,7 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
+    <script src="js/auto-tables.js"></script>
 <!-- jquery function to add/update database records -->
     <script>
     $(document).ready(function() {

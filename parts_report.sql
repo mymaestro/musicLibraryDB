@@ -16,6 +16,9 @@ FROM `compositions`
 WHERE `parts`.`originals_count` = 0
 ORDER BY `compositions`.`name` ASC, `part_types`.`collation` ASC, `parts`.`id_part_type` ASC;
 
+
+--- Parts information
+
 SELECT p.catalog_number,
        c.name title,
        p.id_part_type,

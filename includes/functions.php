@@ -85,4 +85,11 @@ function f_fieldExists($link, $table, $column, $column_attr = "VARCHAR( 255 ) NU
     }
     return FALSE;
 }
+
+/* Custom error logging */
+function ferror_log($error){
+    if (DEBUG == 1) {
+        error_log($error);
+    }
+}
 ?>

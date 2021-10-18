@@ -3,7 +3,7 @@ session_start();
 define('PAGE_TITLE', 'Enter instrumentation');
 define('PAGE_NAME', 'Enter instrumentation');
 require_once("includes/header.php");
-error_log("RUNNING composition_instrumentation.php with catalog_num=". $_POST["catalog_number"]);
+require_once('includes/functions.php');
 $u_admin = FALSE;
 $u_user = FALSE;
 if (isset($_SESSION['username'])) {
@@ -11,6 +11,7 @@ if (isset($_SESSION['username'])) {
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
 }
+
 // Ways to get here:
 // 1. Directly from the menu. Select Composition by name, enter default parts, click submit (need form validation)
 // 2. From the compositions table. Same as 1, but with Catalog Number preselected
@@ -41,8 +42,7 @@ if (isset($_SESSION['username'])) {
     <?php
     require_once("includes/navbar.php");
     require_once('includes/config.php');
-    error_log("RUNNING composition_instrumentation.php");
-    require_once('includes/functions.php');
+    ferror_log("RUNNING composition_instrumentation.php");
     ?>
     <div class="container">
         <h1 align="center"><?php echo ORGNAME ?> Add instrumentation</h1>
@@ -74,7 +74,7 @@ if (isset($_SESSION['username'])) {
                         mysqli_close($f_link);
                     } else {
                         $sql = "SELECT `catalog_number`, `name` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
-                        //error_log("Running " . $sql);
+                        //ferror_log("Running " . $sql);
                         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
                         $opt = "<select class='form-select form-control' aria-label='Select composition' id='catalog_number' name='catalog_number' aria-describedby='catalog_numberHelp'>";
                         while ($rowList = mysqli_fetch_array($res)) {
@@ -86,7 +86,7 @@ if (isset($_SESSION['username'])) {
                         mysqli_close($f_link);
                     }
                     echo $opt;
-                    //error_log("returned: " . $sql);
+                    //ferror_log("returned: " . $sql);
                     ?>
                 </div>
                 <div class="col-sm-6">
@@ -101,7 +101,7 @@ if (isset($_SESSION['username'])) {
                 <?php
                     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                     $sql = "SELECT `id_paper_size`, `name` FROM paper_sizes WHERE `enabled` = 1 ORDER BY name;";
-                    //error_log("Running " . $sql);
+                    //ferror_log("Running " . $sql);
                     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
                     $opt = "<select class='form-select form-control' aria-label='Select paper size' id='paper_size' name='paper_size' aria-describedby='paper_sizeHelp'>";
                     while ($rowList = mysqli_fetch_array($res)) {
@@ -112,7 +112,7 @@ if (isset($_SESSION['username'])) {
                     $opt .= "</select>";
                     mysqli_close($f_link);
                     echo $opt;
-                    //error_log("returned: " . $sql);
+                    //ferror_log("returned: " . $sql);
                 ?>
                 </div>
                 <div class="col-sm-6">
@@ -140,7 +140,7 @@ if (isset($_SESSION['username'])) {
                     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                     $sql = "SELECT `id_part_type`, `name` FROM part_types WHERE `enabled` = 1 ORDER BY collation;";
                     $rowcount = 0;
-                    //error_log("Running " . $sql);
+                    //ferror_log("Running " . $sql);
                     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
                     $opt = "<select class='form-select form-control' aria-label='Select part types' id='parttypes' name='parttypes[]' size='17' multiple>";
                     while ($rowList = mysqli_fetch_array($res)) {
@@ -152,7 +152,7 @@ if (isset($_SESSION['username'])) {
                     $opt .= "</select>";
                     mysqli_close($f_link);
                     echo $opt;
-                    //error_log("returned: " . $sql);
+                    //ferror_log("returned: " . $sql);
                 ?>
             </div>
             <div class="row">
@@ -162,6 +162,14 @@ if (isset($_SESSION['username'])) {
             </div>
         </form>
 
+    </div>
+    <?php else: ?>
+    <div id="instrumentation_view">
+        <div class="row mb-3">
+            <div>
+                <p class="text-center">You must be an administrator to use this page</p>
+            </div>
+        </div>
     </div>
     <?php endif; ?>
     <!-- jquery function to add/update database records -->

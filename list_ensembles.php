@@ -2,6 +2,8 @@
   session_start();
   define('PAGE_TITLE', 'List ensembles');
   define('PAGE_NAME', 'Ensembles');
+  require_once('includes/config.php');
+  require_once('includes/functions.php');
   require_once("includes/header.php");
   $u_admin = FALSE;
   $u_user = FALSE;
@@ -14,7 +16,7 @@
 <body>
 <?php
   require_once("includes/navbar.php");
-  error_log("RUNNING list_ensembles2.php");
+  ferror_log("RUNNING list_ensembles2.php");
 ?>   <div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Ensembles</h2>
 <?php if($u_admin) : ?>
@@ -25,8 +27,6 @@
 <?php endif; ?>
         <div id="ensemble_table">
         <?php
-        require_once('includes/config.php');
-        require_once('includes/functions.php');
         echo '            <div class="panel panel-default">
                <div class="table-repsonsive">
                     <table class="table table-hover">
@@ -71,7 +71,7 @@
             </div><!-- class panel -->
            ';
         mysqli_close($f_link);
-        // error_log("returned: " . $sql);
+        // ferror_log("returned: " . $sql);
         ?>
     </div><!-- container -->
     <div id="dataModal" class="modal"><!-- view data -->

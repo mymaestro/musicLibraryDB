@@ -8,17 +8,17 @@ if(!empty($_POST)) {
     $output = '';
     $message = '';
     $timestamp = time();
-    error_log("THIS IS A TEST +=================--+++");
-    error_log("POST catalog_number=".$_POST["catalog_number"]);
-    error_log("POST id_part_type=".$_POST["id_part_type"]);
-    error_log("POST name=".$_POST["name"]);
-    error_log("POST description=".$_POST["description"]);
-    error_log("POST is_part_collection=".$_POST["is_part_collection"]);
-    error_log("POST paper_size=".$_POST["paper_size"]);
-    error_log("POST page_count=".$_POST["page_count"]);
-    error_log("POST image_path=".$_POST["image_path"]);
-    error_log("POST originals_count=".$_POST["originals_count"]);
-    error_log("POST copies_count=".$_POST["copies_count"]);
+    ferror_log("THIS IS A TEST +=================--+++");
+    ferror_log("POST catalog_number=".$_POST["catalog_number"]);
+    ferror_log("POST id_part_type=".$_POST["id_part_type"]);
+    ferror_log("POST name=".$_POST["name"]);
+    ferror_log("POST description=".$_POST["description"]);
+    ferror_log("POST is_part_collection=".$_POST["is_part_collection"]);
+    ferror_log("POST paper_size=".$_POST["paper_size"]);
+    ferror_log("POST page_count=".$_POST["page_count"]);
+    ferror_log("POST image_path=".$_POST["image_path"]);
+    ferror_log("POST originals_count=".$_POST["originals_count"]);
+    ferror_log("POST copies_count=".$_POST["copies_count"]);
     $catalog_number_hold = mysqli_real_escape_string($f_link, $_POST['catalog_number_hold']);
     $id_part_type_hold = mysqli_real_escape_string($f_link, $_POST['id_part_type_hold']);
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
@@ -62,10 +62,10 @@ if(!empty($_POST)) {
     if (!is_numeric($copies_count)) {
         $copies_count = "NULL";
     }
-    error_log("The REAL originals_count is ". $originals_count);
-    error_log("The REAL copies_count is ". $copies_count);
+    ferror_log("The REAL originals_count is ". $originals_count);
+    ferror_log("The REAL copies_count is ". $copies_count);
 
-    error_log("POST update=". $_POST["update"]);
+    ferror_log("POST update=". $_POST["update"]);
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE parts
@@ -88,7 +88,7 @@ if(!empty($_POST)) {
         ";
         $message = 'Data Inserted';
     }
-    error_log("Running SQL ". $sql);
+    ferror_log("Running SQL ". $sql);
     $referred = $_SERVER['HTTP_REFERER'];
     if(mysqli_query($f_link, $sql)) {
         $output .= '<label class="text-success">' . $message . '</label>';
@@ -103,7 +103,7 @@ if(!empty($_POST)) {
            ';
         echo '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
-        error_log("Error: " . $error_message);
+        ferror_log("Error: " . $error_message);
     }
  }
  ?>

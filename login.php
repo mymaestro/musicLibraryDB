@@ -17,11 +17,11 @@ error_log("RUNNING login.php with username=". $_POST["username"]);
 
 
 if(!isset($_SESSION['username']) || empty($_SESSION['username'])){  // Not logged in; show signin form
-    error_log("No session in place.");
+    ferror_log("No session in place.");
     $login_success = FALSE;  
     if(!empty($_POST)) { // Login request
-        error_log("Requesting password validation.");
-        error_log("POST username=".$_POST["username"]);
+        ferror_log("Requesting password validation.");
+        ferror_log("POST username=".$_POST["username"]);
         $username_err = $password_err = "";
         // Processing form data when form is submitted
 
@@ -51,16 +51,16 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username'])){  // Not logge
                             session_start();
                             $_SESSION['username'] = $username;
                             $_SESSION['roles'] = $roles;
-                            error_log("Session starting.");
-                            error_log("SESSION username = " . $_SESSION['username']);
-                            error_log("SESSION roles = " . $_SESSION['roles']);
+                            ferror_log("Session starting.");
+                            ferror_log("SESSION username = " . $_SESSION['username']);
+                            ferror_log("SESSION roles = " . $_SESSION['roles']);
                             $username_err = "Roles: " . $roles;
                             $password_err = "";
                             $login_success = TRUE;
                         } else {
                             // Display an error message if password is not valid
                             $password_err = 'The password you entered was not valid.';
-                            error_log("Password does not match database.");
+                            ferror_log("Password does not match database.");
                             // Unset all of the session variables
                             $_SESSION = array();
                             // Destroy the session

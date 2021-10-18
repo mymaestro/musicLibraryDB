@@ -8,12 +8,12 @@ if(!empty($_POST)) {
     $output = '';
     $message = '';
     $timestamp = time();
-    error_log("POST id_ensemble=".$_POST["id_ensemble"]);
-    error_log("POST name=".$_POST["name"]);
-    error_log("POST description=".$_POST["description"]);
-    error_log("POST link=".$_POST["link"]);
+    ferror_log("POST id_ensemble=".$_POST["id_ensemble"]);
+    ferror_log("POST name=".$_POST["name"]);
+    ferror_log("POST description=".$_POST["description"]);
+    ferror_log("POST link=".$_POST["link"]);
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
-    error_log("POST enabled=".$enabled);
+    ferror_log("POST enabled=".$enabled);
     $id_ensemble = mysqli_real_escape_string($f_link, $_POST['id_ensemble']);
     $id_ensemble_hold = mysqli_real_escape_string($f_link, $_POST['id_ensemble_hold']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
@@ -45,7 +45,7 @@ if(!empty($_POST)) {
         $referred = str_replace(array('?', $query), '', $referred);
         $output .= '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
-        error_log($output);
+        ferror_log($output);
     } else {
         $message = "Failed";
         $error_message = mysqli_error($f_link);
@@ -53,9 +53,9 @@ if(!empty($_POST)) {
            ';
         $output .= '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
-        error_log($output);
-        error_log("Command:" . $sql);
-        error_log("Error: " . $error_message);
+        ferror_log($output);
+        ferror_log("Command:" . $sql);
+        ferror_log("Error: " . $error_message);
     }
  }
  ?>

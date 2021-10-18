@@ -6,7 +6,7 @@ error_log("Running fetch_partcollections.php with id=". $_POST["is_part_collecti
 if(isset($_POST["is_part_collection"])) {
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $sql = "SELECT * FROM part_collections WHERE is_part_collection = '".$_POST["is_part_collection"]."'";
-    error_log("SQL: ". $sql);
+    ferror_log("SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     echo json_encode($rowList);

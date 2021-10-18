@@ -13,7 +13,7 @@ function f_getIP() {
                 // trim for safety measures
                 $ip = trim($ip);
                 // attempt to validate IP
-                error_log("Detected IP address: " . $ip);
+                ferror_log("Detected IP address: " . $ip);
                 if (f_validateIP($ip)) {
                     return $ip;
                 }
@@ -76,7 +76,7 @@ function f_fieldExists($link, $table, $column, $column_attr = "VARCHAR( 255 ) NU
     //error_log("SQL: $sql ". "returns ". $num_rows . " rows.");
     $exists = ( mysqli_num_rows($columns) )?TRUE:FALSE;
     if (!$exists) {
-        error_log("ALTER TABLE `$table` ADD `$column` $column_attr");
+        ferror_log("ALTER TABLE `$table` ADD `$column` $column_attr");
         if (mysqli_query($link, "ALTER TABLE `$table` ADD `$column` $column_attr")) {
             return TRUE;
         }

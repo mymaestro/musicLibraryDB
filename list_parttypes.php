@@ -2,6 +2,8 @@
   session_start();
   define('PAGE_TITLE', 'List part types');
   define('PAGE_NAME', 'PartTypes');
+  require_once('includes/config.php');
+  require_once('includes/functions.php');
   require_once("includes/header.php");
   $u_admin = FALSE;
   $u_user = FALSE;
@@ -14,7 +16,7 @@
 <body>
 <?php
   require_once("includes/navbar.php");
-  error_log("RUNNING list_parttypes.php");
+  ferror_log("RUNNING list_parttypes.php");
 ?>
     <br />
     <div class="container">
@@ -27,8 +29,6 @@
 <?php endif; ?>
         <div id="part_type_table">
         <?php
-        require_once('includes/config.php');
-        require_once('includes/functions.php');
         echo '            <div class="panel panel-default">
                <div class="table-repsonsive">
                     <table class="table table-hover">
@@ -77,7 +77,7 @@
             </div><!-- class panel -->
            ';
         mysqli_close($f_link);
-        // error_log("returned: " . $sql);
+        // ferror_log("returned: " . $sql);
         ?>
     </div><!-- container -->
 

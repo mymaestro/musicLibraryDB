@@ -8,7 +8,7 @@ $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
 $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
 if(isset($id_part_type) && (isset($catalog_number))) {
     $sql = "SELECT * FROM parts WHERE catalog_number = '" . $catalog_number . "' AND id_part_type = " . $id_part_type .";";
-    error_log("SQL: ". $sql);
+    ferror_log("SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     echo json_encode($rowList);

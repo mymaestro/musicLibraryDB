@@ -6,7 +6,7 @@ if (isset($_POST["id_paper_size"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $sql = "SELECT * FROM paper_sizes WHERE id_paper_size = '".$_POST["id_paper_size"]."'";
-    error_log("Running SQL: ". $sql);
+    ferror_log("Running SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $output .= '
     <div class="table-responsive">

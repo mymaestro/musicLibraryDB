@@ -26,7 +26,7 @@ if(isset($id_part_type) && (isset($catalog_number))) {
             $referred = str_replace(array('?', $query), '', $referred);
             echo '<p><a href="'.$referred.'">Return</a></p>';
             echo $output;
-            error_log("output: ". $output);
+            ferror_log("output: ". $output);
         } else {
             $message = "Delete failed";
             $error_message = mysqli_error($f_link);
@@ -34,19 +34,19 @@ if(isset($id_part_type) && (isset($catalog_number))) {
                    ';
             echo '<p><a href="'.$referred.'">Return</a></p>';
             echo $output;
-            error_log("Error: " . $error_message);
-            error_log("output: ". $output);
+            ferror_log("Error: " . $error_message);
+            ferror_log("output: ". $output);
         }
     } else {
         $created = date('Y-m-d H:i:s.u');
         $sql = "";
-        error_log("Delete SQL (N/A): " . $sql);
+        ferror_log("Delete SQL (N/A): " . $sql);
         $message = 'No data deleted';
         $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
           ';
         echo '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
-        error_log("Error: " . $error_message);
+        ferror_log("Error: " . $error_message);
     }
 }
 ?>

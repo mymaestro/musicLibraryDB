@@ -8,13 +8,13 @@ if(!empty($_POST)) {
     $output = '';
     $message = '';
     $timestamp = time();
-    error_log("POST id_paper_size=".$_POST["id_paper_size"]);
-    error_log("POST name=".$_POST["name"]);
-    error_log("POST description=".$_POST["description"]);
-    error_log("POST horizontal=".$_POST["horizontal"]);
-    error_log("POST vertical=".$_POST["vertical"]);
+    ferror_log("POST id_paper_size=".$_POST["id_paper_size"]);
+    ferror_log("POST name=".$_POST["name"]);
+    ferror_log("POST description=".$_POST["description"]);
+    ferror_log("POST horizontal=".$_POST["horizontal"]);
+    ferror_log("POST vertical=".$_POST["vertical"]);
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
-    error_log("POST enabled=".$enabled);
+    ferror_log("POST enabled=".$enabled);
     $id_paper_size = mysqli_real_escape_string($f_link, $_POST['id_paper_size']);
     $id_paper_size_hold = mysqli_real_escape_string($f_link, $_POST['id_paper_size_hold']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
@@ -23,7 +23,7 @@ if(!empty($_POST)) {
     $vertical = mysqli_real_escape_string($f_link, $_POST['vertical']);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
 
-    error_log("POST update=".$_POST["update"]);
+    ferror_log("POST update=".$_POST["update"]);
 
     if($_POST["update"] == "update") {
         $sql = "
@@ -43,7 +43,7 @@ if(!empty($_POST)) {
         ";
         $message = 'Data Inserted';
     }
-    error_log("Running SQL ". $sql);
+    ferror_log("Running SQL ". $sql);
     $referred = $_SERVER['HTTP_REFERER'];
     if(mysqli_query($f_link, $sql)) {
         $output .= '<label class="text-success">' . $message . '</label>';
@@ -58,7 +58,7 @@ if(!empty($_POST)) {
            ';
         echo '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
-        error_log("Error: " . $error_message);
+        ferror_log("Error: " . $error_message);
     }
  }
  ?>

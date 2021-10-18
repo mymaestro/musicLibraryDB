@@ -21,7 +21,7 @@ if (isset($_POST["catalog_number"])) {
             ON     p.paper_size = z.id_paper_size
             WHERE  p.catalog_number = '".$_POST["catalog_number"]."'
             ORDER BY t.collation;";
-    error_log("Running SQL: ". $sql);
+    ferror_log("Running SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $rowNum = 0;
     while($rowList = mysqli_fetch_array($res)) {

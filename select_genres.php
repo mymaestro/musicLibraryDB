@@ -6,7 +6,7 @@ if (isset($_POST["id_genre"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $sql = "SELECT * FROM genres WHERE id_genre = '".$_POST["id_genre"]."'";
-    error_log("Running SQL: ". $sql);
+    ferror_log("Running SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $output .= '
     <div class="table-responsive">

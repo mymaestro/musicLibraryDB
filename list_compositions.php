@@ -14,7 +14,9 @@
 <body>
 <?php
   require_once("includes/navbar.php");
-  error_log("RUNNING list_compositions.php");
+  require_once('includes/config.php');
+  require_once('includes/functions.php');
+ferror_log("RUNNING list_compositions.php");
 ?><div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Compositions</h2>
 <?php if($u_admin) : ?>
@@ -42,8 +44,6 @@
         </div>
         <div id="composition_table">
         <?php
-        require_once('includes/config.php');
-        require_once('includes/functions.php');
         echo '
             <div class="panel panel-default">
                 <div class="table-repsonsive">
@@ -65,7 +65,7 @@
                     <tbody>';
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         if (isset($_POST["submitButton"])) {
-            error_log("POST search=".$_POST["search"]);
+            ferror_log("POST search=".$_POST["search"]);
             $search = mysqli_real_escape_string($f_link, $_POST['search']);
             $sql = "SELECT c.catalog_number,
                            c.name,
@@ -141,7 +141,7 @@
             </div><!-- class panel -->
            ';
         mysqli_close($f_link);
-        // error_log("returned: " . $sql);
+        // ferror_log("returned: " . $sql);
         ?>
     </div><!-- container -->
 

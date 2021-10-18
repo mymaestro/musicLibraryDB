@@ -14,7 +14,7 @@ if (isset($_POST["report"])) {
          LEFT JOIN `part_types` ON `parts`.`id_part_type` = `part_types`.`id_part_type`
              WHERE `parts`.`originals_count` = 0
           ORDER BY `compositions`.`name` ASC, `part_types`.`collation` ASC, `parts`.`id_part_type` ASC;';
-    error_log("Running SQL: ". $sql);
+    ferror_log("Running SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $output .= '
     <div class="table-responsive">

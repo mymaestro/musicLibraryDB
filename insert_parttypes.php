@@ -8,15 +8,15 @@ if(!empty($_POST)) {
     $output = '';
     $message = '';
     $timestamp = time();
-    // error_log("POST id_part_type=".$_POST["id_part_type"]);
-    error_log("POST collation=".$_POST["collation"]);
-    error_log("POST name=".$_POST["name"]);
-    error_log("POST family=".$_POST["family"]);
-    error_log("POST description=".$_POST["description"]);
+    // ferror_log("POST id_part_type=".$_POST["id_part_type"]);
+    ferror_log("POST collation=".$_POST["collation"]);
+    ferror_log("POST name=".$_POST["name"]);
+    ferror_log("POST family=".$_POST["family"]);
+    ferror_log("POST description=".$_POST["description"]);
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
-    error_log("POST enabled=".$enabled);
-    error_log("POST is_part_collection=".$_POST["is_part_collection"]);
-    error_log("POST is_part_collection=".$is_part_collection);
+    ferror_log("POST enabled=".$enabled);
+    ferror_log("POST is_part_collection=".$_POST["is_part_collection"]);
+    ferror_log("POST is_part_collection=".$is_part_collection);
     $is_part_collection =  mysqli_real_escape_string($f_link, $_POST["is_part_collection"]);
     $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
     $collation = mysqli_real_escape_string($f_link, $_POST['collation']);
@@ -25,7 +25,7 @@ if(!empty($_POST)) {
     $family = mysqli_real_escape_string($f_link, $_POST['family']);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
 
-    error_log("POST update=".$_POST["update"]);
+    ferror_log("POST update=".$_POST["update"]);
 
     if($_POST["update"] == "update") {
         $sql = "
@@ -45,7 +45,7 @@ if(!empty($_POST)) {
         ";
         $message = 'Data Inserted';
     }
-    error_log("Running SQL ". $sql);
+    ferror_log("Running SQL ". $sql);
     $referred = $_SERVER['HTTP_REFERER'];
     if(mysqli_query($f_link, $sql)) {
         $output .= '<label class="text-success">' . $message . '</label>';
@@ -60,7 +60,7 @@ if(!empty($_POST)) {
            ';
         echo '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
-        error_log("Error: " . $error_message);
+        ferror_log("Error: " . $error_message);
     }
  }
  ?>

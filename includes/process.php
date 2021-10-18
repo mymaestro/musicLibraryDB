@@ -36,9 +36,9 @@
         $keys = implode(", ", (array_keys($_POST)));
         $values = implode("', '", (array_values($_POST)));
 
-        error_log("Entering data into table: ". $table);
-        error_log("Table keys: ". $keys);
-        error_log("Table values: ". $values);
+        ferror_log("Entering data into table: ". $table);
+        ferror_log("Table keys: ". $keys);
+        ferror_log("Table values: ". $values);
        
         /* extra data fields */
         $x_fields = 'timestamp, ip';

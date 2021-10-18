@@ -2,6 +2,8 @@
   session_start();
   define('PAGE_TITLE', 'List part type collections');
   define('PAGE_NAME', 'PartTypeCollections');
+  require_once('includes/config.php');
+  require_once('includes/functions.php');
   require_once("includes/header.php");
   $u_admin = FALSE;
   $u_user = FALSE;
@@ -14,7 +16,7 @@
 <body>
 <?php
   require_once("includes/navbar.php");
-  error_log("RUNNING list_partcollections.php");
+  ferror_log("RUNNING list_partcollections.php");
 ?>
     <div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Part Type Collections</h2>
@@ -46,8 +48,6 @@
          }?>
         <div id="part_collection_table">
         <?php
-        require_once('includes/config.php');
-        require_once('includes/functions.php');
         echo '            <div class="panel panel-default">
                <div class="table-repsonsive">
                     <table class="table table-hover">
@@ -98,7 +98,7 @@
             </div><!-- class panel -->
            ';
         mysqli_close($f_link);
-        // error_log("returned: " . $sql);
+        // ferror_log("returned: " . $sql);
         ?>
 </div><!-- container -->
     <div id="dataModal" class="modal"><!-- view data -->

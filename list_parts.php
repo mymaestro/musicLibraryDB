@@ -3,6 +3,8 @@ session_start();
 define('PAGE_TITLE', 'List parts');
 define('PAGE_NAME', 'Parts');
 require_once("includes/header.php");
+require_once('includes/config.php');
+require_once('includes/functions.php');
 $u_admin = FALSE;
 $u_user = FALSE;
 if (isset($_SESSION['username'])) {
@@ -14,7 +16,7 @@ if (isset($_SESSION['username'])) {
 <body>
     <?php
     require_once("includes/navbar.php");
-    error_log("RUNNING list_parts.php");
+    ferror_log("RUNNING list_parts.php");
     ?>
     <br />
     <div class="container">
@@ -28,8 +30,6 @@ if (isset($_SESSION['username'])) {
         <div id="parts_table">
             <div class="accordion accordion-flush" id="parts_accordion">
                 <?php
-                require_once('includes/config.php');
-                require_once('includes/functions.php');
                 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                 $sql = "SELECT p.catalog_number,
                                c.name title,
@@ -137,7 +137,7 @@ if (isset($_SESSION['username'])) {
                     </div><!-- accordion-item -->
                 ';
                 mysqli_close($f_link);
-                // error_log("returned: " . $sql);
+                // ferror_log("returned: " . $sql);
                 ?>
             </div><!-- accordion -->
         </div><!-- parts_table -->

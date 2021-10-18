@@ -16,7 +16,7 @@ if (isset($_SESSION['username'])) {
     <?php
     require_once("includes/navbar.php");
     require_once('includes/config.php');
-    error_log("RUNNING insert_instrumentation.php");
+    ferror_log("RUNNING insert_instrumentation.php");
     require_once('includes/functions.php');
     ?>
     <br />
@@ -57,7 +57,7 @@ if (isset($_SESSION['username'])) {
                         ";
                         $output .= '<tr><td>' . $catalog_number . '</td><td>' . $id_part_type .  '</td><td>';
                         $message = 'Data Inserted';
-                        error_log("Running SQL ". $sql);
+                        ferror_log("Running SQL ". $sql);
                         $referred = $_SERVER['HTTP_REFERER'];
                         if(mysqli_query($f_link, $sql)) {
                             $output .= '<span class="text-success">' . $message . '</span></td></tr>';
@@ -67,7 +67,7 @@ if (isset($_SESSION['username'])) {
                             $message = "Failed";
                             $error_message = mysqli_error($f_link);
                             $output .= '<span class="text-danger">' . $message . '. Error: ' . $error_message . '</span></td></tr>';
-                            error_log("Error: " . $error_message);
+                            ferror_log("Error: " . $error_message);
                         } // SQL complete
                     } // Loop parts
                     echo $output;

@@ -15,9 +15,9 @@ if(!empty($_POST)) {
     $table_key_name = $_POST["table_key_name"];
     $table_key = $_POST["table_key"];
 
-    error_log("table=". $table_name );
-    error_log("table key=". $table_key);
-    error_log("table key name=". $table_key_name);
+    ferror_log("table=". $table_name );
+    ferror_log("table key=". $table_key);
+    ferror_log("table key name=". $table_key_name);
     $referred = $_SERVER['HTTP_REFERER'];
     if($_POST["table_name"] != '') {
         $sql = "
@@ -30,7 +30,7 @@ if(!empty($_POST)) {
             $referred = str_replace(array('?', $query), '', $referred);
             $output .= '<p><a href="'.$referred.'">Return</a></p>';
             echo $output;
-            error_log("Delete SQL: " . $sql);
+            ferror_log("Delete SQL: " . $sql);
         } else {
             $message = "Delete failed";
             $error_message = mysqli_error($f_link);
@@ -38,14 +38,14 @@ if(!empty($_POST)) {
                ';
             $output .= '<p><a href="'.$referred.'">Return</a></p>';
             echo $output;
-            error_log("Command:" . $sql);
-            error_log("Error: " . $error_message);
+            ferror_log("Command:" . $sql);
+            ferror_log("Error: " . $error_message);
         }
     } else {
         $message = "Wrong table name";
         $created = date('Y-m-d H:i:s.u');
         $sql = "";
-        error_log("Delete SQL (N/A): " . $sql);
+        ferror_log("Delete SQL (N/A): " . $sql);
         $message = 'No data deleted';
     }
 error_log($output);

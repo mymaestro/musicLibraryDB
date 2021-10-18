@@ -73,7 +73,7 @@ function f_tableExists($link, $tablename, $database = false) {
 function f_fieldExists($link, $table, $column, $column_attr = "VARCHAR( 255 ) NULL") {
     $exists = false;
     $columns = mysqli_query($link, "SHOW COLUMNS FROM $table LIKE '".$column."'");
-    //error_log("SQL: $sql ". "returns ". $num_rows . " rows.");
+    //ferror_log("SQL: $sql ". "returns ". $num_rows . " rows.");
     $exists = ( mysqli_num_rows($columns) )?TRUE:FALSE;
     if (!$exists) {
         ferror_log("ALTER TABLE `$table` ADD `$column` $column_attr");

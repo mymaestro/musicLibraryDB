@@ -36,14 +36,14 @@
                     <caption class="title">Available recordings</caption>
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Catalog number</th>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>File name</th>
-                        <th>Concert</th>
-                        <th>Venue</th>
-                        <th>Enabled</th>
+                        <th data-tablesort-type="string">ID <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Catalog number <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Name <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="date">Date <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">File name <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Concert <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Venue <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Enabled <i class="fa fa-sort" aria-hidden="true"></i></th>
                     </tr>
                     </thead>
                     <tbody>';
@@ -64,7 +64,7 @@
                     <td>'. $catalog_number . '</td>
                     <td>'. $name . '</td>
                     <td>'. $date . '</td>
-                    <td><a href="'. ORGFILES . $link . '">'.$link.'</a></td>
+                    <td><a href="'. ORGFILES . $date . '/' . $link . '">'.$link.'</a></td>
                     <td>'. $concert . '</td>
                     <td>'. $venue . '</td>
                     <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>';
@@ -165,6 +165,7 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
+    <script src="js/auto-tables.js"></script>
 <!-- jquery function to add/update database records -->
     <script>
     $(document).ready(function(){

@@ -48,7 +48,7 @@ ferror_log("RUNNING list_compositions.php");
             <div class="panel panel-default">
                 <div class="table-repsonsive">
                     <table class="table table-hover tablesort" id="cpdatatable">
-                    <caption class="title">Available Compositions</caption>
+                    <caption class="title">Available compositions</caption>
                     <thead>
                     <tr>
                         <th data-tablesort-type="string">Catalog number <i class="fa fa-sort" aria-hidden="true"></i></th>

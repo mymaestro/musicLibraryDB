@@ -32,13 +32,14 @@
         echo '
             <div class="panel panel-default">
                <div class="table-repsonsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover tablesort" id="cpdatatable">
                     <caption class="title">Available recordings</caption>
                     <thead>
                     <tr>
-                        <th data-tablesort-type="string">ID <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Catalog number <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Name <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Composer <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="date">Date <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">File name <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Concert <i class="fa fa-sort" aria-hidden="true"></i></th>
@@ -48,11 +49,13 @@
                     </thead>
                     <tbody>';
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $sql = "SELECT * FROM recordings ORDER BY date;";
+        $sql = "SELECT * FROM recordings ORDER BY RAND();";
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
         while ($rowList = mysqli_fetch_array($res)) {
             $id_recording = $rowList["id_recording"];
+            $ensemble = $rowList["ensemble"];
             $catalog_number = $rowList["catalog_number"];
+            $composer = $rowList["composer"];
             $date = $rowList["date"];
             $name = $rowList["name"];
             $link = $rowList["link"];
@@ -60,9 +63,10 @@
             $venue = $rowList["venue"];
             $enabled = $rowList["enabled"];
             echo '<tr>
-                    <td>'. $id_recording . '</td>
+                    <td>'. $ensemble . '</td>
                     <td>'. $catalog_number . '</td>
                     <td>'. $name . '</td>
+                    <td>'. $composer . '</td>
                     <td>'. $date . '</td>
                     <td><a href="'. ORGFILES . $date . '/' . $link . '">'.$link.'</a></td>
                     <td>'. $concert . '</td>

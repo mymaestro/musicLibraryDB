@@ -55,7 +55,9 @@
                         <td>'.$title.'</td>
                         <td>'.$description.'</td>
                         <td>'.$link.'</td>
-                        <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>';
+                        <td><div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
+                        </div></td>';
             if ($u_admin) { echo '
                         <td><input type="button" name="delete" value="Delete" id="'.$id_ensemble.'" class="btn btn-danger btn-sm delete_data" /></td>
                         <td><input type="button" name="edit" value="Edit" id="'.$id_ensemble.'" class="btn btn-primary btn-sm edit_data" /></td>'; }

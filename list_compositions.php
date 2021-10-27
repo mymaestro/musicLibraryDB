@@ -121,7 +121,9 @@ ferror_log("RUNNING list_compositions.php");
                         <td>'.$comments.'</td>
                         <td>'.$genre.'</td>
                         <td>'.$ensemble.'</td>
-                        <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>';
+                        <td><div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
+                        </div></td>';
             if ($u_admin) { echo '
                         <td><form method="post" id="instr_data_'.$catalog_number.'" action="composition_instrumentation.php"><input type="hidden" name="catalog_number" value="'.$catalog_number.'" />
                         <input type="submit" name="compositions" value="Instrumentation" id="'.$catalog_number.'" class="btn btn-warning btn-sm instr_data" /></form></td>

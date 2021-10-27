@@ -21,18 +21,19 @@
     <br />
     <div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Recordings</h2>
-<?php if($u_admin) : ?>
         <div align="right">
+            <input type="text" class="tablesearch-input" data-tablesearch-table="#cpdatatable" placeholder="Search">
+<?php if($u_admin) : ?>
             <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
             <br />
-        </div><!-- right -->
 <?php endif; ?>
+        </div><!-- right -->
         <div id="recording_table">
         <?php
         echo '
             <div class="panel panel-default">
-               <div class="table-repsonsive">
-                    <table class="table table-hover tablesort" id="cpdatatable">
+            <div class="table-repsonsive">
+                    <table class="table table-hover tablesort tablesearch-table" id="cpdatatable">
                     <caption class="title">Available recordings</caption>
                     <thead>
                     <tr>
@@ -44,7 +45,7 @@
                         <th data-tablesort-type="string">File name <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Concert <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Venue <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th data-tablesort-type="string">Enabled <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th>Enabled</th>
                     </tr>
                     </thead>
                     <tbody>';
@@ -71,7 +72,9 @@
                     <td><a href="'. ORGFILES . $date . '/' . $link . '">'.$link.'</a></td>
                     <td>'. $concert . '</td>
                     <td>'. $venue . '</td>
-                    <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>';
+                    <td><div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
+                    </div></td>';
             if ($u_admin) { echo '
                         <td><input type="button" name="delete" value="Delete" id="'.$id_recording.'" class="btn btn-danger btn-sm delete_data" /></td>
                         <td><input type="button" name="edit" value="Edit" id="'.$id_recording.'" class="btn btn-primary btn-sm edit_data" /></td>'; }

@@ -42,7 +42,7 @@
                     </thead>
                     <tbody>';
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $sql = "SELECT * FROM ensembles ORDER BY name;";
+        $sql = "SELECT * FROM ensembles ORDER BY id_ensemble;";
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
         while ($rowList = mysqli_fetch_array($res)) {
             $id_ensemble = $rowList['id_ensemble'];

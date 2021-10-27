@@ -13,14 +13,32 @@ if (isset($_POST["id_recording"])) {
         <table class="table">';
     while($rowList = mysqli_fetch_array($res)) {
         $link = $rowList["link"];
+        $date = $rowList["date"];
         $output .= '
             <tr>
                 <td><h4 class="text-primary">'.$rowList["id_recording"].'</h4></td>
-                <td><h4 class="text-info">'.$rowList["name"].'</h4></td>
+                <td><h4 class="text-info">(' . $rowList["catalog_number"] . ') '.$rowList["name"].'</h4></td>
+            </tr>
+            <tr>
+                <td><label>Ensemble</label></td>
+                <td>'.$rowList["ensemble"] .'</td>
             </tr>
             <tr>
                 <td><label>File name</label></td>
-                <td><a href="'. ORGFILES . $link . '">'.$link.'</a></td>
+                <td><a href="'. ORGFILES . $date. '/'.$link . '">'.$link.'</a></td>
+            </tr>
+
+            <tr>
+                <td><label>Information</label></td>
+                <td>'.$rowList["concert"] .'</td>
+            </tr>
+            <tr>
+                <td><label>Composer</label></td>
+                <td>'.$rowList["composer"] .'</td>
+            </tr>
+            <tr>
+                <td><label>Arranger</label></td>
+                <td>'.$rowList["arranger"] .'</td>
             </tr>
             <tr>
                 <td><label>Date</label></td>

@@ -131,31 +131,105 @@
                   <div class="container-fluid">
                     <form method="post" id="insert_form">
                         <div class="row bg-light">
-                            <div class="col-md-3">
-                                <label for="id_recording" class="col-form-label">ID*</label>
+                            <div class="col-md-1">
+                                <label for="id_recording" class="col-form-label">ID</label>
                             </div>
-                            <div class="col-md-2">
-                                <input type="text" class="form-control" id="id_recording" name="id_recording" placeholder="X" minlength="1" maxlength="4" size="4" required/>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control" id="id_recording" name="id_recording" placeholder="X" minlength="1" maxlength="4" size="4" disabled/>
                                 <input type="hidden" id="id_recording_hold" name="id_recording_hold" value=""/>
                             </div>
-                        </div><hr />
-                        <div class="row bg-white">
-                            <div class="col-md-3">
-                                <label for="name" class="col-form-label">Recording name*</label>
+                            <div class="col-md-2">
+                                <label for="catalog_number" class="col-form-label">Catalog number*</label>
+                            </div>
+                            <div class="col-md-1">
+                                <p class="text-light" id="catalog_number_display" name="catalog_number_display">000</p>
                             </div>
                             <div class="col-md-7">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Musical comedy" required minlength="3" maxlength="255"/>
+                                <?php
+                                $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                                $sql = "SELECT `catalog_number`, `name` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
+                                //error_log("Running " . $sql);
+                                $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                                $opt = "<select class='form-select form-control' aria-label='Select composition' id='catalog_number' name='catalog_number'>";
+                                while ($rowList = mysqli_fetch_array($res)) {
+                                    $comp_catno = $rowList['catalog_number'];
+                                    $comp_name = $rowList['name'];
+                                    $opt .= "<option value='" . $comp_catno . "'>" . $comp_name . "</option>";
+                                }
+                                $opt .= "</select>";
+                                mysqli_close($f_link);
+                                echo $opt;
+                                //error_log("returned: " . $sql);
+                                ?>
+                                <input type="hidden" id="catalog_number_hold" name="catalog_number_hold" value="" />
+                                <p class="text-light">Some kind of recording</p>
                             </div>
                         </div><hr />
+                        <div class="row bg-light">
+                            <div class="col-md-2">
+                                <label for="ensemble" class="col-form-label">Ensemble*</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="ensemble" name="ensemble" placeholder="Austin Civic Wind Ensemble" required minlength="3" maxlength="255"/>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="name" class="col-form-label">Recording name*</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Musical comedy" required minlength="3" maxlength="255"/>
+                            </div>
+                        </div>
+                        <div class="row bg-white">
+                            <div class="col-md-2">
+                                <label for="date" class="col-form-control">Date*</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="date" class="form-control" id="date" name="date" placeholder="2000-12-25" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label for="link" class="col-form-control">File*</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="link" name="link" placeholder="01recordingOfGreatness.mp3" required minlength="5" maxlength="255" />
+                            </div>
+                        </div>
                         <div class="row bg-white">
                             <div class="col-md-12">
-                                <label for="description" class="col-form-label">Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="3" maxlength="255"></textarea>
+                                <p class="text-info text-center"><?php echo ORGFILES ?><span id="filedate">0000-00-00</span>/<span id="filebase">00file.mp3</span></p>
+                            </div>
+                        </div>
+                        <div class="row bg-light">
+                            <div class="col-md-2">
+                                <label for="composer" class="col-form-control">Composer</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="composer" name="composer" placeholder="Last, First"/>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="arranger" class="col-form-control">Arranger</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="arranger" name="arranger" placeholder="Last, First" />
+                            </div>
+                        </div>
+                        <div class="row bg-white">
+                            <div class="col-md-2">
+                                <label for="venue" class="col-form-control">Venue</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="venue" name="venue" placeholder="Band Hall" />
+                            </div>
+                        </div>
+                        <div class="row bg-light">
+                            <div class="col-md-12">
+                                <label for="concert" class="col-form-label">Description</label>
+                                <textarea class="form-control" id="concert" name="concert" rows="3" maxlength="255"></textarea>
                                 <br />
-                                <div class="form-check">
-                                    <label for="enabled" class="form-check-label">Enabled</label>
-                                    <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
-                                </div>
+                            </div>
+                        <div class="row bg-white">
+                            <div class="form-check">
+                                <label for="enabled" class="form-check-label">Enabled</label>
+                                <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
                             </div>
                         </div>
                   </div><!-- container-fluid -->
@@ -172,6 +246,12 @@
     <script src="js/auto-tables.js"></script>
 <!-- jquery function to add/update database records -->
     <script>
+    $("#link").change(function(){
+        $('#filebase').text($('#link').val());
+    });
+    $("#date").change(function(){
+        $('#filedate').text($('#date').val());
+    });
     $(document).ready(function(){
         $('#add').click(function(){
             $('#insert').val("Insert");
@@ -188,11 +268,20 @@
                 success:function(data){
                     $('#id_recording').val(data.id_recording);
                     $('#id_recording_hold').val(data.id_recording);
+                    $('#catalog_number').val(data.catalog_number);
                     $('#name').val(data.name);
-                    $('#description').val(data.description);
+                    $('#date').val(data.date);
+                    $('#ensemble').val(data.ensemble);
+                    $('#link').val(data.link);
+                    $('#concert').val(data.concert);
+                    $('#venue').val(data.venue);
+                    $('#composer').val(data.composer);
+                    $('#arranger').val(data.arranger);
                     if ((data.enabled) == 1) {
                         $('#enabled').prop('checked',true);
                     }
+                    $('#filebase').text(data.link);
+                    $('#filedate').text(data.date);
                     $('#insert').val("Update");
                     $('#update').val("update");
                     $('#add_data_Modal').modal('show');

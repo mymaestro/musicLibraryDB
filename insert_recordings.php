@@ -10,28 +10,41 @@ if(!empty($_POST)) {
     $timestamp = time();
     ferror_log("POST id_recording=".$_POST["id_recording"]);
     ferror_log("POST name=".$_POST["name"]);
-    ferror_log("POST description=".$_POST["description"]);
+    ferror_log("POST date=".$_POST["date"]);
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     ferror_log("POST enabled=".$enabled);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
     $id_recording = mysqli_real_escape_string($f_link, $_POST['id_recording']);
     $id_recording_hold = mysqli_real_escape_string($f_link, $_POST['id_recording_hold']);
+    $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
-    $description = mysqli_real_escape_string($f_link, $_POST['description']);
+    $date = mysqli_real_escape_string($f_link, $_POST['date']);
+    $ensemble = mysqli_real_escape_string($f_link, $_POST['ensemble']);
+    $link = mysqli_real_escape_string($f_link, $_POST['link']);
+    $concert = mysqli_real_escape_string($f_link, $_POST['concert']);
+    $venue = mysqli_real_escape_string($f_link, $_POST['venue']);
+    $composer = mysqli_real_escape_string($f_link, $_POST['composer']);
+    $arranger = mysqli_real_escape_string($f_link, $_POST['arranger']);
 
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE recordings 
-        SET id_recording = '$id_recording',
+        SET catalog_number = '$catalog_number',
         name ='$name',
-        description = '$description',
+        date = '$date',
+        ensemble = '$ensemble',
+        link = '$link',
+        concert = '$concert',
+        venue = '$venue',
+        composer = '$composer',
+        arranger = '$arranger',
         enabled = $enabled
         WHERE id_recording='".$_POST["id_recording_hold"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO recordings(id_recording, name, description, enabled)
-        VALUES('$id_recording', '$name', '$description', $enabled);
+        INSERT INTO recordings(name, catalog_number, date, ensemble, link, concert, venue, composer, arranger, enabled)
+        VALUES('$name', '$catalog_number', '$date', '$ensemble', '$link', '$concert', '$venue', '$composer', '$arranger', $enabled);
         ";
         $message = 'Data Inserted';
     }

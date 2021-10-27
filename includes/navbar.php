@@ -34,6 +34,7 @@ echo '   <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
                     <li><a class="dropdown-item" href="list_parttypes.php">Part types</a></li>
                     <li><a class="dropdown-item" href="list_partcollections.php">Part type collections</a></li>
                     <li><a class="dropdown-item" href="list_papersizes.php">Paper sizes</a></li>
+                    <li><a class="dropdown-item" href="list_recordings.php">Recordings</a></li>
                     </ul>
               </li>
           </ul>

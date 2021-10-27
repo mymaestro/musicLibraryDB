@@ -18,6 +18,11 @@ if(!empty($_POST)) {
     ferror_log("POST is_part_collection=".$_POST["is_part_collection"]);
     ferror_log("POST is_part_collection=".$is_part_collection);
     $is_part_collection =  mysqli_real_escape_string($f_link, $_POST["is_part_collection"]);
+    if (empty($is_part_collection)) {
+        $is_part_collection = "NULL";
+    } else {
+        $is_part_collection = "'" . $is_part_collection . "'";
+    }
     $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
     $collation = mysqli_real_escape_string($f_link, $_POST['collation']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);

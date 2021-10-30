@@ -28,8 +28,13 @@
         <div id="ensemble_table">
         <?php
         echo '            <div class="panel panel-default">
-               <div class="table-repsonsive">
-                    <table class="table table-hover">
+               <div class="table-repsonsive">';
+            if($u_admin){ 
+                echo '
+                <form action="enable_list.php" method="post" id="enable_list_form">';
+            }    
+        echo '
+          <table class="table table-hover">
                     <caption class="title">Available ensembles</caption>
                     <thead>
                     <tr>
@@ -51,12 +56,12 @@
             $link = $rowList['link'];
             $enabled = $rowList['enabled'];
             echo '<tr>
-                        <td>'.$id_ensemble.'</td>
+                        <td>'.$id_ensemble.'<input type="hidden" name="id_ensemble[]" value="'. $id_ensemble .'"></td>
                         <td>'.$title.'</td>
                         <td>'.$description.'</td>
                         <td>'.$link.'</td>
                         <td><div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
+                        <input class="form-check-input" name="enabled[]" type="checkbox" role="switch" id="typeEnabled" '. (($u_admin) ? "" : "disabled ") . (($enabled == 1) ? "checked" : "") .'>
                         </div></td>';
             if ($u_admin) { echo '
                         <td><input type="button" name="delete" value="Delete" id="'.$id_ensemble.'" class="btn btn-danger btn-sm delete_data" /></td>
@@ -68,7 +73,12 @@
         }
         echo '
                     </tbody>
-                    </table>
+                    </table>';
+                    if($u_admin){ 
+                        echo '
+                        </form>';
+                    }
+        echo '
                 </div><!-- table-responsive -->
             </div><!-- class panel -->
            ';

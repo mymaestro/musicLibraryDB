@@ -1,9 +1,9 @@
 <?php
 session_start();
-define('PAGE_TITLE', 'Enter instrumentation');
-define('PAGE_NAME', 'Enter instrumentation');
+define('PAGE_TITLE', 'Insert instrumentation');
+define('PAGE_NAME', 'Insert instrumentation');
 require_once("includes/header.php");
-error_log("RUNNING composition_instrumentation.php with catalog_num=". $_POST["catalog_number"]);
+error_log("RUNNING insert_instrumentation.php with catalog_num=". $_POST["catalog_number"]);
 $u_admin = FALSE;
 $u_user = FALSE;
 if (isset($_SESSION['username'])) {
@@ -16,12 +16,9 @@ if (isset($_SESSION['username'])) {
     <?php
     require_once("includes/navbar.php");
     require_once('includes/config.php');
-    ferror_log("RUNNING insert_instrumentation.php");
     require_once('includes/functions.php');
+    ferror_log("RUNNING insert_instrumentation.php");
     ?>
-    <br />
-    <br />
-    <br />
     <div class="container">
         <h1 align="center"><?php echo ORGNAME ?> Add instrumentation</h1>
         <?php if ($u_admin) : ?>

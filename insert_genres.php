@@ -1,10 +1,12 @@
 <?php
  //insert_genres.php
+define('PAGE_TITLE', 'Insert genres');
+define('PAGE_NAME', 'Insert genres');
 require_once('includes/config.php');
 require_once('includes/functions.php');
-error_log("RUNNING insert_genres.php with id_genre=". $_POST["id_genre"]);
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
+    ferror_log("RUNNING insert_genres.php with id_genre=". $_POST["id_genre"]);
     $output = '';
     $message = '';
     $timestamp = time();
@@ -52,5 +54,16 @@ if(!empty($_POST)) {
         echo $output;
         ferror_log("Error: " . $error_message);
     }
+ } else {
+    require_once("includes/header.php");
+    echo '<body>
+';
+    require_once("includes/navbar.php");
+    echo '
+    <div class="container">
+    <h2 align="center">'. ORGNAME . ' ' . PAGE_NAME . '</h2>
+    <div><p align="center" class="text-danger">You can get here only from the Genres menu.</p></div>';
+    require_once("includes/footer.php");
+    echo '</body>';
  }
  ?>

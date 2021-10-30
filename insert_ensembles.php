@@ -1,10 +1,12 @@
 <?php
  //insert_ensembles.php
+define('PAGE_TITLE', 'Insert ensembles');
+define('PAGE_NAME', 'Insert ensembles');
 require_once('includes/config.php');
 require_once('includes/functions.php');
-error_log("RUNNING insert_ensembles.php with id_ensemble=". $_POST["id_ensemble"]);
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
+    error_log("RUNNING insert_ensembles.php with id_ensemble=". $_POST["id_ensemble"]);
     $output = '';
     $message = '';
     $timestamp = time();
@@ -57,5 +59,16 @@ if(!empty($_POST)) {
         ferror_log("Command:" . $sql);
         ferror_log("Error: " . $error_message);
     }
+ } else {
+    require_once("includes/header.php");
+    echo '<body>
+';
+    require_once("includes/navbar.php");
+    echo '
+    <div class="container">
+    <h2 align="center">'. ORGNAME . ' ' . PAGE_NAME . '</h2>
+    <div><p align="center" class="text-danger">You should not be here.</p></div>';
+    require_once("includes/footer.php");
+    echo '</body>';
  }
  ?>

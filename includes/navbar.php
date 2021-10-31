@@ -28,11 +28,11 @@ echo '   <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
                     <ul class="dropdown-menu" aria-labelledby="nav_menu_dropdown">
                     <li><a class="dropdown-item" href="list_compositions.php">Compositions</a></li>
                     <li><a class="dropdown-item" href="list_parts.php">Parts</a></li>
+                    <li><a class="dropdown-item" href="list_partcollections.php">Part collections</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="list_ensembles.php">Ensembles</a></li>
                     <li><a class="dropdown-item" href="list_genres.php">Genres</a></li>
                     <li><a class="dropdown-item" href="list_parttypes.php">Part types</a></li>
-                    <li><a class="dropdown-item" href="list_partcollections.php">Part type collections</a></li>
                     <li><a class="dropdown-item" href="list_papersizes.php">Paper sizes</a></li>
                     <li><a class="dropdown-item" href="list_recordings.php">Recordings</a></li>
                     </ul>

@@ -145,24 +145,24 @@
                             </div>
                             <div class="col-md-7">
                                 <div class="form-check form-check-inline">
-                                    <label class="form-check-label" for="familywood">Woodwind </label>
-                                    <input type="radio" class="form-check-input" id="familywood" name="family" value="Woodwind" checked>
+                                    <label class="form-check-label" for="Woodwind">Woodwind </label>
+                                    <input type="radio" class="form-check-input" id="Woodwind" name="family" value="Woodwind">
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <label class="form-check-label" for="familybrass">Brass </label>
-                                    <input type="radio" class="form-check-input" id="familybrass" name="family" value="Brass">
+                                    <label class="form-check-label" for="Brass">Brass </label>
+                                    <input type="radio" class="form-check-input" id="Brass" name="family" value="Brass">
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <label class="form-check-label" for="familyperc">Percussion </label>
-                                    <input type="radio" class="form-check-input" id="familyperc" name="family" value="Percussion">
+                                    <label class="form-check-label" for="Percussion">Percussion </label>
+                                    <input type="radio" class="form-check-input" id="Percussion" name="family" value="Percussion">
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <label class="form-check-label" for="familystring">Strings </label>
-                                    <input type="radio" class="form-check-input" id="familystring" name="family" value="Strings">
+                                    <label class="form-check-label" for="Strings">Strings </label>
+                                    <input type="radio" class="form-check-input" id="Strings" name="family" value="Strings">
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <label class="form-check-label" for="familyother">Other </label>
-                                    <input type="radio" class="form-check-input" id="familyother" name="family" value="Other">
+                                    <label class="form-check-label" for="Other">Other </label>
+                                    <input type="radio" class="form-check-input" id="Other" name="family" value="Other">
                                 </div>
                             </div>
                         </div><hr />
@@ -211,7 +211,7 @@
                     $('#collation').val(data.collation);
                     $('#name').val(data.name);
                     $('#description').val(data.description);
-                    $('#family').val(data.family);
+                    $('#' + data.family).prop('checked', true);
                     $('#is_part_collection').val(data.is_part_collection);
                     if ((data.enabled) == 1) {
                         $('#enabled').prop('checked',true);
@@ -219,7 +219,6 @@
                     $('#insert').val("Update");
                     $('#update').val("update");
                     $('#add_data_Modal').modal('show');
-
                 }
            });
         });

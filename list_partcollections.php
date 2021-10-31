@@ -1,7 +1,7 @@
 <?php
   session_start();
-  define('PAGE_TITLE', 'List part type collections');
-  define('PAGE_NAME', 'PartTypeCollections');
+  define('PAGE_TITLE', 'List part collections');
+  define('PAGE_NAME', 'Part collections');
   require_once('includes/config.php');
   require_once('includes/functions.php');
   require_once("includes/header.php");
@@ -19,7 +19,7 @@
   ferror_log("RUNNING list_partcollections.php");
 ?>
     <div class="container">
-        <h2 align="center"><?php echo ORGNAME ?> Part Type Collections</h2>
+        <h2 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h2>
 <?php if($u_admin) : ?>
         <div align="right">
             <p>Before adding a part collection, there must be a part with a non-zero "parts in a collection" specified.

@@ -21,7 +21,7 @@ if (isset($_SESSION['username'])) {
     ?>
     <div class="container">
         <h1 align="center"><?php echo ORGNAME ?> Add instrumentation</h1>
-        <?php if ($u_admin) : ?>
+        <?php if ($u_user) : ?>
         <?php if(!empty($_POST)) {
             echo '<h4>You added the following parts:</h4>';
             if($_POST["submit"] == "add"){

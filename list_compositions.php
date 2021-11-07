@@ -19,7 +19,7 @@
 ferror_log("RUNNING list_compositions.php");
 ?><div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Compositions</h2>
-<?php if($u_admin) : ?>
+<?php if($u_user) : ?>
         <div align="right">
             <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
             <br />
@@ -124,7 +124,7 @@ ferror_log("RUNNING list_compositions.php");
                         <td><div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
                         </div></td>';
-            if ($u_admin) { echo '
+            if ($u_user) { echo '
                         <td><form method="post" id="instr_data_'.$catalog_number.'" action="composition_instrumentation.php"><input type="hidden" name="catalog_number" value="'.$catalog_number.'" />
                         <input type="submit" name="compositions" value="Instrumentation" id="'.$catalog_number.'" class="btn btn-warning btn-sm instr_data" /></form></td>
                         <td><input type="button" name="delete" value="Delete" id="'.$catalog_number.'" class="btn btn-danger btn-sm delete_data" /></td>

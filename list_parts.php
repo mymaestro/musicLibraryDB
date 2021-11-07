@@ -21,7 +21,7 @@ if (isset($_SESSION['username'])) {
     <br />
     <div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Instrument parts</h2>
-        <?php if ($u_admin) : ?>
+        <?php if ($u_user) : ?>
             <div align="right">
                 <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
                 <br />
@@ -122,7 +122,7 @@ if (isset($_SESSION['username'])) {
                                     <td>' . $is_part_collection . '</td>
                                     <td>' . $originals_count . '</td>
                                     <td>' . $copies_count . '</td>';
-                    if ($u_admin) {
+                    if ($u_user) {
                         echo '
                                     <td><input type="button" name="delete" value="Delete" id="' . $catalog_number . '-' . $id_part_type . '" class="btn btn-danger btn-sm delete_data" /></td>
                                     <td><input type="button" name="edit" value="Edit" id="' . $catalog_number . '-' . $id_part_type . '" class="btn btn-primary btn-sm edit_data" /></td>';

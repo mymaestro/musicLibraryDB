@@ -48,6 +48,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         mysqli_stmt_close($stmt);
     }
 
+    // Validate name
+    if(trim($_POST['name']) == FALSE){
+        $name_err = "Please enter your name.";     
+    } elseif(strlen(trim($_POST['name'])) < 3){
+        $name_err = "Your name must have at least 3 characters.";
+    } else {
+        $name = trim($_POST['name']);
+    }
+
     // Validate address
     if(trim($_POST['address']) == FALSE){
         $address_err = "Please enter a valid e-mail address.";     
@@ -56,7 +65,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } else {
         $address = trim($_POST['address']);
     }
-    
+
     // Validate password
     if(trim($_POST['password']) == FALSE){
         $password_err = "Please enter a password.";     
@@ -81,7 +90,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($address_err)) {
         
         // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password, address) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO users (username, name, password, address) VALUES (?, ?, ?)";
         ferror_log($sql);
          
         if($stmt = mysqli_prepare($f_link, $sql)){
@@ -143,6 +152,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <label>Confirm Password</label>
                 <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>">
                 <span class="help-block"><?php echo $confirm_password_err; ?></span>
+            </div>
+            <div class="form-group <?php echo (!empty($name_err)) ? 'has-error' : ''; ?>">
+                <label>Name (First Last)</label>
+                <input type="e-mail" name="address" class="form-control" value="<?php echo $name; ?>">
+                <span class="help-block"><?php echo $name_err; ?></span>
             </div>
             <div class="form-group <?php echo (!empty($address_err)) ? 'has-error' : ''; ?>">
                 <label>e-mail address</label>

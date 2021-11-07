@@ -6,33 +6,56 @@ require_once('includes/config.php');
 require_once('includes/functions.php');
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
-    error_log("RUNNING insert_partcollections.php with is_part_collection=". $_POST["is_part_collection"]);
     $output = '';
     $message = '';
     $timestamp = time();
-    // ferror_log("POST is_part_collection=".$_POST["is_part_collection"]);
+    ferror_log("RUNNING insert_partcollections.php with catalog_number_key=". $_POST["catalog_number_key"]);
+    ferror_log("POST id_part_type_key=".$_POST["id_part_type_key"]);
+    ferror_log("POST id_part_type=".$_POST["id_part_type"]);
     ferror_log("POST name=".$_POST["name"]);
     ferror_log("POST description=".$_POST["description"]);
-    ferror_log("POST id_part_type=".$_POST["id_part_type"]);
-    $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
-    $is_part_collection = mysqli_real_escape_string($f_link, $_POST['is_part_collection']);
-    $name = mysqli_real_escape_string($f_link, $_POST['name']);
-    $description = mysqli_real_escape_string($f_link, $_POST['description']);
+    ferror_log("POST enabled=".$_POST["enabled"]);
+    $catalog_number_key = mysqli_real_escape_string($f_link, $_POST['catalog_number_key']);
+    $id_part_type_key = mysqli_real_escape_string($f_link, $_POST['id_part_type_key']);
+
+    // OOPS id_part_type is an array!
+
     $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
-    $enabled = mysqli_real_escape_string($f_link, $enabled);
+    //$enabled = ((isset($_POST["enabled"])) ? 1 : 0);
+    //$enabled = mysqli_real_escape_string($f_link, $enabled);
+    $enabled = 0;
+
+    // Special handling for numbers and dates and columns that can be NULL
+    $name = mysqli_real_escape_string($f_link, $_POST['name']);
+    if (empty($name)) {
+        $name = "NULL";
+    } else {
+        $name = "'" . $name . "'";
+    }
+    
+    $description = mysqli_real_escape_string($f_link, $_POST['description']);
+    if (empty($description)) {
+        $description = "NULL";
+    } else {
+        $description = "'" . $description . "'";
+    }
 
     if($_POST["update"] == "update") {
         $sql = "UPDATE part_collections
-        SET name ='$name',
-        description = '$description',
-        id_part_type = '$id_part_type',
-        enabled = '$enabled'
-        WHERE is_part_collection='".$_POST["is_part_collection"]."'";
+        SET   catalog_number_key = '$catalog_number_key',
+              id_part_type_key = '$id_part_type_key',
+              id_part_type = '$id_part_type',
+              name ='$name',
+              description = '$description',
+              enabled = '$enabled'
+        WHERE catalog_number_key='".$catalog_number_key."'
+        AND   id_part_type_key='".$id_part_type_key."'
+        AND   id_part_type = '".$id_part_type."';";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO part_collections(name, description, id_part_type, enabled)
-        VALUES('$name', '$description', '$id_part_type', $enabled);
+        INSERT INTO part_collections(catalog_number_key, id_part_type_key, id_part_type, name, description, enabled)
+        VALUES('$catalog_number_key', '$id_part_type_key', '$id_part_type', '$name', '$description', $enabled);
         ";
         $message = 'Data Inserted';
     }

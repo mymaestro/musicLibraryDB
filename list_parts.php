@@ -61,6 +61,7 @@ if (isset($_SESSION['username'])) {
                     $title = $rowList['title'];
                     $id_part_type = $rowList['id_part_type'];
                     $part_type = $rowList['part_type'];
+                    $is_part_collection = $rowList['is_part_collection'];
                     $paper = $rowList['paper'];
                     $page_count = $rowList['page_count'];
                     $name = $rowList['name'];
@@ -96,6 +97,7 @@ if (isset($_SESSION['username'])) {
                                         <th>Description</th>
                                         <th>Paper size</th>
                                         <th>Pages</th>
+                                        <th>Collection</th>
                                         <th>Originals</th>
                                         <th>Copies</th>
                                     </tr>
@@ -117,6 +119,7 @@ if (isset($_SESSION['username'])) {
                                     <td>' . $description . '</td>
                                     <td>' . $paper . '</td>
                                     <td>' . $page_count . '</td>
+                                    <td>' . $is_part_collection . '</td>
                                     <td>' . $originals_count . '</td>
                                     <td>' . $copies_count . '</td>';
                     if ($u_admin) {

@@ -18,14 +18,14 @@
   require_once("includes/navbar.php");
   ferror_log("RUNNING list_partcollections.php");
 ?>
-    <div class="container">
-        <h2 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h2>
+<div class="container">
+    <h2 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h2>
 <?php if($u_admin) : ?>
-        <div align="right">
-            <p>Before adding a part collection, there must be a part with a non-zero "parts in a collection" specified.
-            <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
-            </p>
-        </div><!-- right -->
+    <div align="right">
+        <p>Before adding a part collection, there must be a part with more than one "parts in a collection" specified.
+        <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+        </p>
+    </div><!-- right -->
 <?php endif; ?>
         <?php
         if(!empty($_POST)) {
@@ -46,42 +46,39 @@
             }
             echo '</table>';
          }?>
-        <div id="part_collection_table">
+    <div id="part_collection_table">
         <?php
-        echo '            <div class="panel panel-default">
-               <div class="table-repsonsive">
-                    <table class="table table-hover">
-                    <caption class="title">Available part type collections</caption>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Catalog number</th>
-                        <th>Collection part type</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Part Type</th>
-                        <th>Enabled</th>
-                    </tr>
-                    </thead>
-                    <tbody>';
+        echo '        <div class="panel panel-default">
+        <div class="table-repsonsive">
+            <table class="table table-hover">
+                <caption class="title">Available part type collections</caption>
+                <thead>
+                <tr>
+                    <th>Catalog number</th>
+                    <th>Collection part type</th>
+                    <th>Part Type</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Enabled</th>
+                </tr>
+                </thead>
+                <tbody>';
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         $sql = "SELECT * FROM part_collections ORDER BY name;";
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
         while ($rowList = mysqli_fetch_array($res)) {
-            $is_part_collection = $rowList['is_part_collection'];
             $catalog_number_key = $rowList['catalog_number_key'];
             $id_part_type_key = $rowList['id_part_type_key'];
+            $id_part_type = $rowList['id_part_type'];
             $name = $rowList['name'];
             $description = $rowList['description'];
-            $id_part_type = $rowList['id_part_type'];
             $enabled = $rowList['enabled'];
             echo '<tr>
-                        <td>'.$is_part_collection.'</td>
                         <td>'.$catalog_number_key.'</td>
                         <td>'.$id_part_type_key.'</td>
+                        <td>'.$id_part_type.'</td>
                         <td>'.$name.'</td>
                         <td>'.$description.'</td>
-                        <td>'.$id_part_type.'</td>
                         <td><div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
                         </div></td>';
@@ -95,14 +92,14 @@
         }
         echo '
                     </tbody>
-                    </table>
-                </div><!-- table-responsive -->
-            </div><!-- class panel -->
+                </table>
+            </div><!-- table-responsive -->
+        </div><!-- class panel -->
            ';
         mysqli_close($f_link);
         // ferror_log("returned: " . $sql);
         ?>
-</div><!-- container -->
+</div><!-- part_collection_table -->
     <div id="dataModal" class="modal"><!-- view data -->
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -117,7 +114,7 @@
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
-    </div><!-- dataModal -->
+    </div><!-- dataModal view data -->
     <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
         <div class="modal-dialog" role="document">
             <div class="modal-content rounded-4 shadow">
@@ -144,10 +141,10 @@
                         <input type="hidden" name="is_part_collection" id="is_part_collection" value="0" />
                         <div class="row bg-white">
                             <div class="col-md-3">
-                                <label for="name" class="col-form-label">Part type collection name*</label>
+                                <label for="name" class="col-form-label">Part type collection name</label>
                             </div>
                             <div class="col-md-7">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Percussion 44" required/>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Percussion 44"/>
                             </div>
                         </div>
                         <div class="row bg-light">
@@ -158,10 +155,10 @@
                         </div>
                         <div class="row bg-white">
                             <div class="col-md-3">
-                                <label for="id_part_type_key" class="col-form-label">Part (from parts table)*</label>
+                                <label for="id_part" class="col-form-label">Part (from parts table)*</label>
                             </div>
                             <div class="col-md-9">
-                                <!-- Read part types from part_types table -->
+                                <!-- Read compositions, parts, part types from each table -->
                                 <?php
                                 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                                 $sql = "SELECT  p.catalog_number,
@@ -177,7 +174,7 @@
                                         ORDER BY catalog_number, y.collation;";
                                 //error_log("Running " . $sql);
                                 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                                $opt = "<select class='form-select form-control' aria-label='Select parts' id='id_part_type_key' name='id_part_type_key'>";
+                                $opt = "<select class='form-select form-control' aria-label='Select parts' id='id_part' name='id_part'>";
                                 while ($rowList = mysqli_fetch_array($res)) {
                                     $catalog_number_key = $rowList['catalog_number'];
                                     $title = $rowList['title'];
@@ -243,7 +240,7 @@
             $('#insert_form')[0].reset();
         });
         $(document).on('click', '.edit_data', function(){
-            var is_part_collection = $(this).attr("id");
+            var catalog_number_key = $(this).attr("id");
             $.ajax({
                 url:"fetch_partcollections.php",
                 method:"POST",
@@ -289,30 +286,35 @@
         });
         $('#insert_form').on("submit", function(event){
             event.preventDefault();
-            if($('#title').val() == "")
-            {
-                alert("Title is required");
-            }
-            else if($('#is_part_collection').val() == '')
-            {
-                alert("Part type ID is required");
-            }
-            else
-            {
-                $.ajax({
-                    url:"insert_partcollections.php",
-                    method:"POST",
-                    data:$('#insert_form').serialize(),
-                    beforeSend:function(){
-                        $('#insert').val("Inserting");
-                    },
-                    success:function(data){
-                        $('#insert_form')[0].reset();
-                        $('#add_data_Modal').modal('hide');
-                        $('#part_collection_table').html(data);
-                    }
-                });
-            }
+            var id_partcollection = $('#id_part').val();
+            alert(id_partcollection);
+            var catalog_number_key = id_partcollection.split(':')[0];
+            var id_part_type_key = id_partcollection.split(':')[1];
+            var name = $('#name').val();
+            var description = $('#description').val();
+            var id_part_type = $('#id_part_type').val();
+            var update = $('#update').val();
+            alert(id_part_type);
+            $.ajax({
+                url:"insert_partcollections.php",
+                method:"POST",
+                data:{
+                    catalog_number_key: catalog_number_key,
+                    id_part_type_key: id_part_type_key,
+                    id_part_type: id_part_type,
+                    name: name,
+                    description: description,
+                    update: update
+                },
+                beforeSend:function(){
+                    $('#insert').val("Inserting");
+                },
+                success:function(data){
+                    $('#insert_form')[0].reset();
+                    $('#add_data_Modal').modal('hide');
+                    $('#part_collection_table').html(data);
+                }
+            });
         });
         $(document).on('click', '.view_data', function(){
             var is_part_collection = $(this).attr("id");

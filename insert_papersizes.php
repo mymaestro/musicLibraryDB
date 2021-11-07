@@ -36,7 +36,7 @@ if(!empty($_POST)) {
         horizontal = '$horizontal',
         vertical = '$vertical',
         enabled = '$enabled'
-        WHERE id_paper_size='".$_POST["id_paper_size_hold"]."'";
+        WHERE id_paper_size='".$id_paper_size_hold."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "

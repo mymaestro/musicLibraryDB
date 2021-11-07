@@ -4,7 +4,7 @@
 require_once('includes/config.php');
 require_once('includes/functions.php');
 
-error_log("Running delete_parts.php with id=". $_POST["catalog_number"] . ":" . $_POST["id_part_type"]);
+ferror_log("Running delete_parts.php with id=". $_POST["catalog_number"] . ":" . $_POST["id_part_type"]);
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
 $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);

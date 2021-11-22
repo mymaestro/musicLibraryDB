@@ -2,7 +2,7 @@
 require_once('includes/config.php');
 require_once('includes/functions.php');
 error_log("Running select_users.php with id_users=". $_POST["id_users"]);
-if (isset($_POST["id_user"])) {
+if (isset($_POST["id_users"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $sql = "SELECT * FROM users WHERE id_users = '".$_POST["id_users"]."'";

@@ -1,0 +1,10 @@
+To: gill@fishparts.net
+Subject: Your Music Library password reset request.
+From: php@fishparts.net
+Reply-To: php@fishparts.net
+Content-type: text/html
+X-Mailer: PHP/1.2.3.4
+
+<p>We received a request to reset your music library password. If you did not make this request, you can ignore this email.</p>
+<p>User name bob here is your password link: </p>
+<a href="https://fishparts.net">https://fishparts.net</a></p>

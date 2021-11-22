@@ -1,5 +1,4 @@
 <?php
-  session_start();
   define('PAGE_TITLE', 'List recordings');
   define('PAGE_NAME', 'Recordings');
   require_once("includes/header.php");
@@ -10,15 +9,12 @@
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
   }
-?>
-<body>
-<?php
-  require_once("includes/navbar.php");
   require_once('includes/config.php');
+  require_once("includes/navbar.php");
   require_once('includes/functions.php');
   ferror_log("RUNNING list_recordings.php");
 ?>
-    <br />
+<main role="main">
     <div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Recordings</h2>
         <div align="right">
@@ -246,119 +242,121 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
-    <script src="js/auto-tables.js"></script>
+</main>
+<?php require_once("includes/footer.php");?>
+<!-- script to sort and filter table views -->
+<script src="js/auto-tables.js"></script>
 <!-- jquery function to add/update database records -->
-    <script>
-    $("#link").change(function(){
-        $('#filebase').text($('#link').val());
+<script>
+$("#link").change(function(){
+    $('#filebase').text($('#link').val());
+});
+$("#date").change(function(){
+    $('#filedate').text($('#date').val());
+});
+$(document).ready(function(){
+    $('#add').click(function(){
+        $('#insert').val("Insert");
+        $('#update').val("add");
+        $('#insert_form')[0].reset();
     });
-    $("#date").change(function(){
-        $('#filedate').text($('#date').val());
-    });
-    $(document).ready(function(){
-        $('#add').click(function(){
-            $('#insert').val("Insert");
-            $('#update').val("add");
-            $('#insert_form')[0].reset();
-        });
-        $(document).on('click', '.edit_data', function(){
-            var id_recording = $(this).attr("id");
-            $.ajax({
-                url:"fetch_recordings.php",
-                method:"POST",
-                data:{id_recording:id_recording},
-                dataType:"json",
-                success:function(data){
-                    $('#id_recording').val(data.id_recording);
-                    $('#id_recording_hold').val(data.id_recording);
-                    $('#catalog_number').val(data.catalog_number);
-                    $('#name').val(data.name);
-                    $('#date').val(data.date);
-                    $('#ensemble').val(data.ensemble);
-                    $('#link').val(data.link);
-                    $('#concert').val(data.concert);
-                    $('#venue').val(data.venue);
-                    $('#composer').val(data.composer);
-                    $('#arranger').val(data.arranger);
-                    if ((data.enabled) == 1) {
-                        $('#enabled').prop('checked',true);
-                    }
-                    $('#filebase').text(data.link);
-                    $('#filedate').text(data.date);
-                    $('#insert').val("Update");
-                    $('#update').val("update");
-                    $('#add_data_Modal').modal('show');
+    $(document).on('click', '.edit_data', function(){
+        var id_recording = $(this).attr("id");
+        $.ajax({
+            url:"fetch_recordings.php",
+            method:"POST",
+            data:{id_recording:id_recording},
+            dataType:"json",
+            success:function(data){
+                $('#id_recording').val(data.id_recording);
+                $('#id_recording_hold').val(data.id_recording);
+                $('#catalog_number').val(data.catalog_number);
+                $('#name').val(data.name);
+                $('#date').val(data.date);
+                $('#ensemble').val(data.ensemble);
+                $('#link').val(data.link);
+                $('#concert').val(data.concert);
+                $('#venue').val(data.venue);
+                $('#composer').val(data.composer);
+                $('#arranger').val(data.arranger);
+                if ((data.enabled) == 1) {
+                    $('#enabled').prop('checked',true);
                 }
-           });
+                $('#filebase').text(data.link);
+                $('#filedate').text(data.date);
+                $('#insert').val("Update");
+                $('#update').val("update");
+                $('#add_data_Modal').modal('show');
+            }
         });
-        $(document).on('click', '.delete_data', function(){ // button that brings up modal
-            // input button name="delete" id="id_recording" class="delete_data"
-            var id_recording = $(this).attr("id");
-            $('#deleteModal').modal('show');
-            $('#confirm-delete').data('id', id_recording);
-            $('#recording2delete').text(id_recording);
+    });
+    $(document).on('click', '.delete_data', function(){ // button that brings up modal
+        // input button name="delete" id="id_recording" class="delete_data"
+        var id_recording = $(this).attr("id");
+        $('#deleteModal').modal('show');
+        $('#confirm-delete').data('id', id_recording);
+        $('#recording2delete').text(id_recording);
+    });
+    $('#confirm-delete').click(function(){
+        // The confirm delete button
+        var id_recording = $(this).data('id');
+        $.ajax({
+            url:"delete_records.php",
+            method:"POST",
+            data:{
+                table_name: "recordings",
+                table_key_name: "id_recording",
+                table_key: id_recording
+            },
+            success:function(data){
+                $('#insert_form')[0].reset();
+                $('#recording_table').html(data);
+            }
         });
-        $('#confirm-delete').click(function(){
-            // The confirm delete button
-            var id_recording = $(this).data('id');
+    });
+    $('#insert_form').on("submit", function(event){
+        event.preventDefault();
+        if($('#name').val() == "")
+        {
+            alert("Recording name is required");
+        }
+        else if($('#id_recording').val() == '')
+        {
+            alert("Recording ID is required");
+        }
+        else
+        {
             $.ajax({
-                url:"delete_records.php",
+                url:"insert_recordings.php",
                 method:"POST",
-                data:{
-                    table_name: "recordings",
-                    table_key_name: "id_recording",
-                    table_key: id_recording
+                data:$('#insert_form').serialize(),
+                beforeSend:function(){
+                    $('#insert').val("Inserting");
                 },
                 success:function(data){
                     $('#insert_form')[0].reset();
+                    $('#add_data_Modal').modal('hide');
                     $('#recording_table').html(data);
                 }
-           });
-        });
-        $('#insert_form').on("submit", function(event){
-            event.preventDefault();
-            if($('#name').val() == "")
-            {
-                alert("Recording name is required");
-            }
-            else if($('#id_recording').val() == '')
-            {
-                alert("Recording ID is required");
-            }
-            else
-            {
-                $.ajax({
-                    url:"insert_recordings.php",
-                    method:"POST",
-                    data:$('#insert_form').serialize(),
-                    beforeSend:function(){
-                        $('#insert').val("Inserting");
-                    },
-                    success:function(data){
-                        $('#insert_form')[0].reset();
-                        $('#add_data_Modal').modal('hide');
-                        $('#recording_table').html(data);
-                    }
-                });
-            }
-        });
-        $(document).on('click', '.view_data', function(){
-            var id_recording = $(this).attr("id");
-            if(id_recording != '')
-            {
-                $.ajax({
-                    url:"select_recordings.php",
-                    method:"POST",
-                    data:{id_recording:id_recording},
-                    success:function(data){
-                        $('#recording_detail').html(data);
-                        $('#dataModal').modal('show');
-                    }
-                });
-            }
-        });
+            });
+        }
     });
-    </script>
-<?php
-  require_once("includes/footer.php");
-?>
+    $(document).on('click', '.view_data', function(){
+        var id_recording = $(this).attr("id");
+        if(id_recording != '')
+        {
+            $.ajax({
+                url:"select_recordings.php",
+                method:"POST",
+                data:{id_recording:id_recording},
+                success:function(data){
+                    $('#recording_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

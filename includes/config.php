@@ -5,11 +5,12 @@
 # (C) Copyright Austin Civic Wind Ensemble 2020, 2021. All rights reserved.
 #############################################################################
 */
-define('ORGNAME', '4Winds');
-define('ORGDESC', 'Four Winds Wind Ensemble');
-define('ORGHOME', 'https://acwe.org');
+define('ORGNAME', '4th Wind');
+define('ORGDESC', 'Fourth Wind Wind Ensemble');
+define('ORGHOME', 'http://localhost/~gill/musicLibraryDB/');
 define('ORGFILES', 'https://acwe.org/files/recordings/'); // with trailing slash
-define('ORGLOGO', 'images/logo_23x32.png');
+define('ORGLOGO', 'images/logo_large.png');
+define('ORGMAIL', 'bandgeek@acwe.org');
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'arbilewca');
 define('DB_USER', 'librarian');

@@ -1,23 +1,19 @@
 <?php
-  session_start();
-  define('PAGE_TITLE', 'List compositions');
-  define('PAGE_NAME', 'Compositions');
-  require_once("includes/header.php");
-  $u_admin = FALSE;
-  $u_user = FALSE;
-  if (isset($_SESSION['username'])) {
+define('PAGE_TITLE', 'List compositions');
+define('PAGE_NAME', 'Compositions');
+require_once("includes/header.php");
+$u_admin = FALSE;
+$u_user = FALSE;
+if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
-  }
+}
+require_once('includes/config.php');
+require_once("includes/navbar.php");
 ?>
-<body>
-<?php
-  require_once("includes/navbar.php");
-  require_once('includes/config.php');
-  require_once('includes/functions.php');
-ferror_log("RUNNING list_compositions.php");
-?><div class="container">
+<main role="main" class="container">
+<div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Compositions</h2>
 <?php if($u_user) : ?>
         <div align="right">
@@ -63,6 +59,7 @@ ferror_log("RUNNING list_compositions.php");
                     </tr>
                     </thead>
                     <tbody>';
+        require_once('includes/functions.php');               
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         if (isset($_POST["submitButton"])) {
             ferror_log("POST search=".$_POST["search"]);
@@ -484,149 +481,150 @@ ferror_log("RUNNING list_compositions.php");
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
-    <script src="js/auto-tables.js"></script>
+</main>
+<?php require_once("includes/footer.php"); ?>
+<script src="js/auto-tables.js"></script>
 <!-- jquery function to add/update database records -->
-    <script>
-    $(document).ready(function() {
-        $('#windrep').click(function() {
-            var searchURL = 'https://www.windrep.org/index.php?search=' + $('#name').val();
-            window.open(searchURL);
-            return false;
-        });
-        $('#add').click(function(){
-            $('#insert').val("Insert");
-            $('#update').val("add");
-            $('#insert_form')[0].reset();
-        });
-        $(document).on('click', '.edit_data', function(){
-            var catalog_number = $(this).attr("id");
-            $.ajax({
-                url:"fetch_compositions.php",
-                type:"POST",
-                data:{catalog_number:catalog_number},
-                dataType:"json",
-                success:function(data){
-                    $('#catalog_number').val(data.catalog_number);
-                    $('#catalog_number_hold').val(data.catalog_number);
-                    $('#name').val(data.name);
-                    $('#description').val(data.description);
-                    $('#composer').val(data.composer);
-                    $('#arranger').val(data.arranger);
-                    $('#editor').val(data.editor);
-                    $('#publisher').val(data.publisher);
-                    $('#genre').val(data.genre);
-                    $('#ensemble').val(data.ensemble);
-                    $('#grade').val(data.grade);
-                    $('#last_performance_date').val(data.last_performance_date);
-                    $('#duration_start').val(data.duration_start);
-                    $('#duration_end').val(data.duration_end);
-                    $('#comments').val(data.comments);
-                    $('#performance_notes').val(data.performance_notes);
-                    $('#storage_location').val(data.storage_location);
-                    $('#date_acquired').val(data.date_acquired);
-                    $('#cost').val(data.cost);
-                    $('#listening_example_link').val(data.listening_example_link);
-                    $('#checked_out').val(data.checked_out);
-                    $('#paper_size').val(data.paper_size);
-                    $('#image_path').val(data.image_path);
-                    $('#windrep_link').val(data.windrep_link);
-                    $('#last_inventory_date').val(data.last_inventory_date);
-                    if ((data.enabled) == 1) {
-                        $('#enabled').prop('checked',true);
-                    }
-                    $('#insert').val("Update");
-                    $('#update').val("update");
-                    $('#add_data_Modal').modal('show');
+<script>
+$(document).ready(function() {
+    $('#windrep').click(function() {
+        var searchURL = 'https://www.windrep.org/index.php?search=' + $('#name').val();
+        window.open(searchURL);
+        return false;
+    });
+    $('#add').click(function(){
+        $('#insert').val("Insert");
+        $('#update').val("add");
+        $('#insert_form')[0].reset();
+    });
+    $(document).on('click', '.edit_data', function(){
+        var catalog_number = $(this).attr("id");
+        $.ajax({
+            url:"fetch_compositions.php",
+            type:"POST",
+            data:{catalog_number:catalog_number},
+            dataType:"json",
+            success:function(data){
+                $('#catalog_number').val(data.catalog_number);
+                $('#catalog_number_hold').val(data.catalog_number);
+                $('#name').val(data.name);
+                $('#description').val(data.description);
+                $('#composer').val(data.composer);
+                $('#arranger').val(data.arranger);
+                $('#editor').val(data.editor);
+                $('#publisher').val(data.publisher);
+                $('#genre').val(data.genre);
+                $('#ensemble').val(data.ensemble);
+                $('#grade').val(data.grade);
+                $('#last_performance_date').val(data.last_performance_date);
+                $('#duration_start').val(data.duration_start);
+                $('#duration_end').val(data.duration_end);
+                $('#comments').val(data.comments);
+                $('#performance_notes').val(data.performance_notes);
+                $('#storage_location').val(data.storage_location);
+                $('#date_acquired').val(data.date_acquired);
+                $('#cost').val(data.cost);
+                $('#listening_example_link').val(data.listening_example_link);
+                $('#checked_out').val(data.checked_out);
+                $('#paper_size').val(data.paper_size);
+                $('#image_path').val(data.image_path);
+                $('#windrep_link').val(data.windrep_link);
+                $('#last_inventory_date').val(data.last_inventory_date);
+                if ((data.enabled) == 1) {
+                    $('#enabled').prop('checked',true);
                 }
-           });
-        });
-        $(document).on('click', '.delete_data', function(){ // button that brings up modal
-            // input button name="delete" id="catalog_number" class="delete_data"
-            var catalog_number = $(this).attr("id");
-            $('#deleteModal').modal('show');
-            $('#confirm-delete').data('id', catalog_number);
-            $('#ensemble2delete').text(catalog_number);
-        });
-        $('#confirm-delete').click(function(){
-            // The confirm delete button
-            var catalog_number = $(this).data('id');
-            $.ajax({
-                url:"delete_records.php",
-                type:"POST",
-                data:{
-                    table_name: "compositions",
-                    table_key_name: "catalog_number",
-                    table_key: catalog_number
-                },
-                success:function(data){
-                    $('#insert_form')[0].reset();
-                    $('#composition_table').html(data);
-                }
-           });
-        });
-        $('#insert_form').on("submit", function(event){
-            event.preventDefault();
-            if($('#name').val() == "")
-            {
-                alert("Title is required");
-            }
-            else if($('#catalog_number').val() == '')
-            {
-                alert("Catalog number is required");
-            }
-            else if($('#composer').val() == '')
-            {
-                alert("Composer is required");
-            }
-            else
-            {
-                $.ajax({
-                    url:"insert_compositions.php",
-                    type:"POST",
-                    data:$('#insert_form').serialize(),
-                    beforeSend:function(){
-                        $('#insert').val("Inserting");
-                    },
-                    success:function(data){
-                        $('#insert_form')[0].reset();
-                        $('#add_data_Modal').modal('hide');
-                        $('#composition_table').html(data);
-                    }
-                });
-            }
-        });
-        $(document).on('click', '.view_data', function(){
-            var catalog_number = $(this).attr("id");
-            if(catalog_number != '')
-            {
-                $.ajax({
-                    url:"select_compositions.php",
-                    type:"POST",
-                    data:{catalog_number:catalog_number},
-                    success:function(data){
-                        $('#composition_detail').html(data);
-                        $('#view_data_modal').modal('show');
-                    }
-                });
-            }
-        });
-        $(document).on('click', '.parts_data', function(){
-            var catalog_number = $(this).attr("id");
-            if(catalog_number != '')
-            {
-                $.ajax({
-                    url:"select_composition_parts.php",
-                    type:"POST",
-                    data:{catalog_number:catalog_number},
-                    success:function(data){
-                        $('#instrumentation_detail').html(data);
-                        $('#parts_data_modal').modal('show');
-                    }
-                });
+                $('#insert').val("Update");
+                $('#update').val("update");
+                $('#add_data_Modal').modal('show');
             }
         });
     });
-    </script>
-<?php
-  require_once("includes/footer.php");
-?>
+    $(document).on('click', '.delete_data', function(){ // button that brings up modal
+        // input button name="delete" id="catalog_number" class="delete_data"
+        var catalog_number = $(this).attr("id");
+        $('#deleteModal').modal('show');
+        $('#confirm-delete').data('id', catalog_number);
+        $('#ensemble2delete').text(catalog_number);
+    });
+    $('#confirm-delete').click(function(){
+        // The confirm delete button
+        var catalog_number = $(this).data('id');
+        $.ajax({
+            url:"delete_records.php",
+            type:"POST",
+            data:{
+                table_name: "compositions",
+                table_key_name: "catalog_number",
+                table_key: catalog_number
+            },
+            success:function(data){
+                $('#insert_form')[0].reset();
+                $('#composition_table').html(data);
+            }
+        });
+    });
+    $('#insert_form').on("submit", function(event){
+        event.preventDefault();
+        if($('#name').val() == "")
+        {
+            alert("Title is required");
+        }
+        else if($('#catalog_number').val() == '')
+        {
+            alert("Catalog number is required");
+        }
+        else if($('#composer').val() == '')
+        {
+            alert("Composer is required");
+        }
+        else
+        {
+            $.ajax({
+                url:"insert_compositions.php",
+                type:"POST",
+                data:$('#insert_form').serialize(),
+                beforeSend:function(){
+                    $('#insert').val("Inserting");
+                },
+                success:function(data){
+                    $('#insert_form')[0].reset();
+                    $('#add_data_Modal').modal('hide');
+                    $('#composition_table').html(data);
+                }
+            });
+        }
+    });
+    $(document).on('click', '.view_data', function(){
+        var catalog_number = $(this).attr("id");
+        if(catalog_number != '')
+        {
+            $.ajax({
+                url:"select_compositions.php",
+                type:"POST",
+                data:{catalog_number:catalog_number},
+                success:function(data){
+                    $('#composition_detail').html(data);
+                    $('#view_data_modal').modal('show');
+                }
+            });
+        }
+    });
+    $(document).on('click', '.parts_data', function(){
+        var catalog_number = $(this).attr("id");
+        if(catalog_number != '')
+        {
+            $.ajax({
+                url:"select_composition_parts.php",
+                type:"POST",
+                data:{catalog_number:catalog_number},
+                success:function(data){
+                    $('#instrumentation_detail').html(data);
+                    $('#parts_data_modal').modal('show');
+                }
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

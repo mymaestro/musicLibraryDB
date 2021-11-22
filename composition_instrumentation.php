@@ -1,9 +1,7 @@
 <?php
-session_start();
 define('PAGE_TITLE', 'Enter instrumentation');
 define('PAGE_NAME', 'Enter instrumentation');
 require_once("includes/header.php");
-require_once('includes/functions.php');
 $u_admin = FALSE;
 $u_user = FALSE;
 if (isset($_SESSION['username'])) {
@@ -11,6 +9,8 @@ if (isset($_SESSION['username'])) {
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
 }
+require_once('includes/config.php');
+require_once("includes/navbar.php");
 
 // Ways to get here:
 // 1. Directly from the menu. Select Composition by name, enter default parts, click submit (need form validation)
@@ -38,15 +38,10 @@ if (isset($_SESSION['username'])) {
 // catalog_number, paper_size, and page_count
 // The code inserts a  
 ?>
-<body>
-    <?php
-    require_once("includes/navbar.php");
-    require_once('includes/config.php');
-    ferror_log("RUNNING composition_instrumentation.php");
-    ?>
+<main role="main" class="container">
     <div class="container">
-        <h1 align="center"><?php echo ORGNAME ?> Add instrumentation</h1>
-        <?php if ($u_admin) : ?>
+        <h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1>
+        <?php if ($u_user) : ?>
     <div id="instrumentation">
         <form action="insert_instrumentation.php" method="post" id="instrumentation_form">
             <div class="row mb-3">
@@ -58,6 +53,7 @@ if (isset($_SESSION['username'])) {
                     <!-- Unless one is already provided in the _POST('catalog_number') -->
                     <!-- check if we got here by instr button in list_compositions -->
                 <?php
+                    require_once('includes/functions.php');
                     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                     // Clicked to get here
                     // $_POST catalog_number=C123
@@ -161,78 +157,77 @@ if (isset($_SESSION['username'])) {
                 </div>
             </div>
         </form>
-
     </div>
     <?php else: ?>
     <div id="instrumentation_view">
         <div class="row mb-3">
-            <div>
-                <p class="text-center">You must be an administrator to use this page</p>
-            </div>
+            <p class="text-center">You must be logged in as a user to see this page</p>
+        </div>
         </div>
     </div>
     <?php endif; ?>
-    <!-- jquery function to add/update database records -->
-    <script>
-    $(document).ready(function(){
-        $('#add').click(function(){
-            $('#insert').val("Insert");
-            $('#update').val("add");
-            $('#instrumentation_form')[0].reset();
-        });
-        $(document).on('click', '.edit_data', function(){
-            var id_part_type = $(this).attr("id");
-            $.ajax({
-                url:"fetch_partscomp.php",
-                method:"POST",
-                data:{id_part_type:id_part_type},
-                dataType:"json",
-                success:function(data){
-                    $('#id_part_type').val(data.id_part_type);
-                    $('#collation').val(data.collation);
-                    $('#name').val(data.name);
-                    $('#description').val(data.description);
-                    $('#family').val(data.family);
-                    $('#is_part_collection').val(data.is_part_collection);
-                    if ((data.enabled) == 1) {
-                        $('#enabled').prop('checked',true);
-                    }
-                    $('#insert').val("Update");
-                    $('#update').val("update");
-                    $('#add_data_Modal').modal('show');
-
+</main>
+<?php require_once("includes/footer.php");?>
+<!-- jquery function to add/update database records -->
+<script>
+$(document).ready(function(){
+    $('#add').click(function(){
+        $('#insert').val("Insert");
+        $('#update').val("add");
+        $('#instrumentation_form')[0].reset();
+    });
+    $(document).on('click', '.edit_data', function(){
+        var id_part_type = $(this).attr("id");
+        $.ajax({
+            url:"fetch_partscomp.php",
+            method:"POST",
+            data:{id_part_type:id_part_type},
+            dataType:"json",
+            success:function(data){
+                $('#id_part_type').val(data.id_part_type);
+                $('#collation').val(data.collation);
+                $('#name').val(data.name);
+                $('#description').val(data.description);
+                $('#family').val(data.family);
+                $('#is_part_collection').val(data.is_part_collection);
+                if ((data.enabled) == 1) {
+                    $('#enabled').prop('checked',true);
                 }
-           });
-        });
-        $('#insert_form').on("submit", function(event){
-            event.preventDefault();
-            if($('#name').val() == "")
-            {
-                alert("Part type name is required");
-            }
-            else if($('#collation').val() == '')
-            {
-                alert("Sort order is required");
-            }
-            else
-            {
-                $.ajax({
-                    url:"insert_parts.php",
-                    method:"POST",
-                    data:$('#insert_form').serialize(),
-                    beforeSend:function(){
-                        $('#insert').val("Inserting");
-                    },
-                    success:function(data){
-                        $('#insert_form')[0].reset();
-                        $('#add_data_Modal').modal('hide');
-                        $('#part_type_table').html(data);
-                    }
-                });
+                $('#insert').val("Update");
+                $('#update').val("update");
+                $('#add_data_Modal').modal('show');
+
             }
         });
     });
-    </script>
-<?php
-require_once("includes/footer.php");
-?>
+    $('#insert_form').on("submit", function(event){
+        event.preventDefault();
+        if($('#name').val() == "")
+        {
+            alert("Part type name is required");
+        }
+        else if($('#collation').val() == '')
+        {
+            alert("Sort order is required");
+        }
+        else
+        {
+            $.ajax({
+                url:"insert_parts.php",
+                method:"POST",
+                data:$('#insert_form').serialize(),
+                beforeSend:function(){
+                    $('#insert').val("Inserting");
+                },
+                success:function(data){
+                    $('#insert_form')[0].reset();
+                    $('#add_data_Modal').modal('hide');
+                    $('#part_type_table').html(data);
+                }
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

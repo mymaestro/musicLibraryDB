@@ -1,24 +1,20 @@
 <?php
-session_start();
-define('PAGE_TITLE', 'List parts');
-define('PAGE_NAME', 'Parts');
-require_once("includes/header.php");
-require_once('includes/config.php');
-require_once('includes/functions.php');
-$u_admin = FALSE;
-$u_user = FALSE;
-if (isset($_SESSION['username'])) {
-    $username = $_SESSION['username'];
-    $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
-    $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
-}
-?>
-<body>
-    <?php
+    define('PAGE_TITLE', 'List parts');
+    define('PAGE_NAME', 'Parts');
+    require_once("includes/header.php");
+    $u_admin = FALSE;
+    $u_user = FALSE;
+    if (isset($_SESSION['username'])) {
+        $username = $_SESSION['username'];
+        $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
+        $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
+    }
+    require_once('includes/config.php');
     require_once("includes/navbar.php");
+    require_once('includes/functions.php');
     ferror_log("RUNNING list_parts.php");
-    ?>
-    <br />
+?>
+<main role="main">
     <div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Instrument parts</h2>
         <?php if ($u_user) : ?>
@@ -320,113 +316,115 @@ if (isset($_SESSION['username'])) {
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
-    <!-- jquery function to add/update database records -->
-    <script>
-        $(document).ready(function() {
-            $('#add').click(function() {
-                $('#insert').val("Insert");
-                $('#update').val("add");
-                $('#insert_form')[0].reset();
+
+</main>
+<?php require_once("includes/footer.php");?>
+<!-- jquery function to add/update database records -->
+<script>
+    $(document).ready(function() {
+        $('#add').click(function() {
+            $('#insert').val("Insert");
+            $('#update').val("add");
+            $('#insert_form')[0].reset();
+        });
+        $(document).on('click', '.edit_data', function() {
+            var part_id = $(this).attr("id");
+            var catalog_number = part_id.split('-')[0];
+            var id_part_type = part_id.split('-')[1];
+            $.ajax({
+                url: "fetch_parts.php",
+                method: "POST",
+                data: {
+                    id_part_type: id_part_type,
+                    catalog_number: catalog_number
+                },
+                dataType: "json",
+                success: function(data) {
+                    $('#catalog_number').val(data.catalog_number);
+                    $('#catalog_number_hold').val(data.catalog_number);
+                    $('#id_part_type').val(data.id_part_type);
+                    $('#id_part_type_hold').val(data.id_part_type);
+                    $('#name').val(data.name);
+                    $('#description').val(data.description);
+                    $('#is_part_collection').val(data.is_part_collection);
+                    $('#paper_size').val(data.paper_size);
+                    $('#page_count').val(data.page_count);
+                    $('#image_path').val(data.image_path);
+                    $('#originals_count').val(data.originals_count);
+                    $('#copies_count').val(data.copies_count);
+                    $('#insert').val("Update");
+                    $('#update').val("update");
+                    $('#add_data_Modal').modal('show');
+                }
             });
-            $(document).on('click', '.edit_data', function() {
-                var part_id = $(this).attr("id");
-                var catalog_number = part_id.split('-')[0];
-                var id_part_type = part_id.split('-')[1];
+        });
+        $(document).on('click', '.delete_data', function(){ // button that brings up modal
+            // input button name="delete" id="id_part" class="delete_data"
+            var part_id = $(this).attr("id");
+            $('#deleteModal').modal('show');
+            $('#confirm-delete').data('id', part_id);
+            $('#part2delete').text(part_id);
+        });
+        $('#confirm-delete').click(function(){
+            // The confirm delete button
+            var part_id = $(this).data('id');
+            var catalog_number = part_id.split('-')[0];
+            var id_part_type = part_id.split('-')[1];
+            $.ajax({
+                url:"delete_parts.php",
+                method:"POST",
+                data:{
+                    catalog_number: catalog_number,
+                    id_part_type: id_part_type
+                },
+                success:function(data){
+                    $('#insert_form')[0].reset();
+                    $('#parts_table').html(data);
+                }
+            });
+        });
+        $('#insert_form').on("submit", function(event) {
+            event.preventDefault();
+            if ($('#id_part_type').val() == "") {
+                alert("Part type ID is required");
+            } else if ($('#catalog_number').val() == '') {
+                alert("Catalog number is required");
+            } else {
                 $.ajax({
-                    url: "fetch_parts.php",
+                    url: "insert_parts.php",
+                    method: "POST",
+                    data: $('#insert_form').serialize(),
+                    beforeSend: function() {
+                        $('#insert').val("Inserting");
+                    },
+                    success: function(data) {
+                        $('#insert_form')[0].reset();
+                        $('#add_data_Modal').modal('hide');
+                        $('#parts_table').html(data);
+                    }
+                });
+            }
+        });
+        $(document).on('click', '.view_data', function() {
+            var part_id = $(this).attr("id");
+            var catalog_number = part_id.split('-')[0];
+            var id_part_type = part_id.split('-')[1];
+            if (id_part_type != '') {
+                $.ajax({
+                    url: "select_parts.php",
                     method: "POST",
                     data: {
                         id_part_type: id_part_type,
                         catalog_number: catalog_number
                     },
-                    dataType: "json",
                     success: function(data) {
-                        $('#catalog_number').val(data.catalog_number);
-                        $('#catalog_number_hold').val(data.catalog_number);
-                        $('#id_part_type').val(data.id_part_type);
-                        $('#id_part_type_hold').val(data.id_part_type);
-                        $('#name').val(data.name);
-                        $('#description').val(data.description);
-                        $('#is_part_collection').val(data.is_part_collection);
-                        $('#paper_size').val(data.paper_size);
-                        $('#page_count').val(data.page_count);
-                        $('#image_path').val(data.image_path);
-                        $('#originals_count').val(data.originals_count);
-                        $('#copies_count').val(data.copies_count);
-                        $('#insert').val("Update");
-                        $('#update').val("update");
-                        $('#add_data_Modal').modal('show');
+                        $('#part_detail').html(data);
+                        $('#dataModal').modal('show');
                     }
                 });
-            });
-            $(document).on('click', '.delete_data', function(){ // button that brings up modal
-                // input button name="delete" id="id_part" class="delete_data"
-                var part_id = $(this).attr("id");
-                $('#deleteModal').modal('show');
-                $('#confirm-delete').data('id', part_id);
-                $('#part2delete').text(part_id);
-            });
-            $('#confirm-delete').click(function(){
-                // The confirm delete button
-                var part_id = $(this).data('id');
-                var catalog_number = part_id.split('-')[0];
-                var id_part_type = part_id.split('-')[1];
-                $.ajax({
-                    url:"delete_parts.php",
-                    method:"POST",
-                    data:{
-                        catalog_number: catalog_number,
-                        id_part_type: id_part_type
-                    },
-                    success:function(data){
-                        $('#insert_form')[0].reset();
-                        $('#parts_table').html(data);
-                    }
-                });
-            });
-            $('#insert_form').on("submit", function(event) {
-                event.preventDefault();
-                if ($('#id_part_type').val() == "") {
-                    alert("Part type ID is required");
-                } else if ($('#catalog_number').val() == '') {
-                    alert("Catalog number is required");
-                } else {
-                    $.ajax({
-                        url: "insert_parts.php",
-                        method: "POST",
-                        data: $('#insert_form').serialize(),
-                        beforeSend: function() {
-                            $('#insert').val("Inserting");
-                        },
-                        success: function(data) {
-                            $('#insert_form')[0].reset();
-                            $('#add_data_Modal').modal('hide');
-                            $('#parts_table').html(data);
-                        }
-                    });
-                }
-            });
-            $(document).on('click', '.view_data', function() {
-                var part_id = $(this).attr("id");
-                var catalog_number = part_id.split('-')[0];
-                var id_part_type = part_id.split('-')[1];
-                if (id_part_type != '') {
-                    $.ajax({
-                        url: "select_parts.php",
-                        method: "POST",
-                        data: {
-                            id_part_type: id_part_type,
-                            catalog_number: catalog_number
-                        },
-                        success: function(data) {
-                            $('#part_detail').html(data);
-                            $('#dataModal').modal('show');
-                        }
-                    });
-                }
-            });
+            }
         });
-    </script>
-    <?php
-    require_once("includes/footer.php");
-    ?>
+    });
+</script>
+</body>
+</html>

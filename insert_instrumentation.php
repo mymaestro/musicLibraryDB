@@ -1,9 +1,7 @@
 <?php
-session_start();
 define('PAGE_TITLE', 'Insert instrumentation');
 define('PAGE_NAME', 'Insert instrumentation');
 require_once("includes/header.php");
-error_log("RUNNING insert_instrumentation.php with catalog_num=". $_POST["catalog_number"]);
 $u_admin = FALSE;
 $u_user = FALSE;
 if (isset($_SESSION['username'])) {
@@ -11,16 +9,16 @@ if (isset($_SESSION['username'])) {
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
 }
+require_once('includes/config.php');
+require_once("includes/navbar.php");
 ?>
-<body>
+<main role="main">
     <?php
-    require_once("includes/navbar.php");
-    require_once('includes/config.php');
     require_once('includes/functions.php');
-    ferror_log("RUNNING insert_instrumentation.php");
+    ferror_log("RUNNING insert_instrumentation.php with catalog_num=". $_POST["catalog_number"]);
     ?>
     <div class="container">
-        <h1 align="center"><?php echo ORGNAME ?> Add instrumentation</h1>
+        <h1 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
         <?php if ($u_user) : ?>
         <?php if(!empty($_POST)) {
             echo '<h4>You added the following parts:</h4>';
@@ -74,6 +72,7 @@ if (isset($_SESSION['username'])) {
             } // Submit function was "add"
          }?>
         <?php endif; ?>
+</main>
 </body>
 <?php
 require_once("includes/footer.php");

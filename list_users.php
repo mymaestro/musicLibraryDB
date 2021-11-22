@@ -1,9 +1,6 @@
 <?php
-  session_start();
   define('PAGE_TITLE', 'List users');
   define('PAGE_NAME', 'Users');
-  require_once('includes/config.php');
-  require_once('includes/functions.php');
   require_once("includes/header.php");
   $u_admin = FALSE;
   $u_user = FALSE;
@@ -12,12 +9,13 @@
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
   }
-?>
-<body>
-<?php
+  require_once('includes/config.php');
   require_once("includes/navbar.php");
+  require_once('includes/functions.php');
   ferror_log("RUNNING list_users.php");
-?>   <div class="container">
+?>
+<main role="main">
+   <div class="container">
         <h2 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h2>
 <?php if($u_admin) : ?>
         <div align="right">
@@ -133,33 +131,43 @@
                     <form method="post" id="insert_form">
                         <div class="row bg-light">
                             <div class="col-md-3">
-                                <label for="id_user" class="col-form-label">ID*</label>
+                                <label for="id_users" class="col-form-label">ID*</label>
                             </div>
                             <div class="col-md-2">
-                                <input type="text" class="form-control" id="id_user" name="id_user" placeholder="X" size="4" maxlength="4" required/>
-                                <input type="hidden" id="id_user_hold" name="id_user_hold" value="" />
+                                <input type="number" class="form-control" id="id_users" name="id_users" placeholder="999" min="1" max="999" required/>
+                                <input type="hidden" id="id_users_hold" name="id_users_hold" value="" />
                             </div>
-                        </div><hr />
+                        </div>
                         <div class="row bg-white">
                             <div class="col-md-3">
-                                <label for="name" class="col-form-label">User name*</label>
+                                <label for="username" class="col-form-label">User name*</label>
                             </div>
                             <div class="col-md-7">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Vuvuzela choir" required/>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="bigdog" required/>
                             </div>
-                        </div><hr />
+                        </div>
+                        <div class="row bg-light">
+                            <div class="col-md-3">
+                                <label for="name" class="col-form-label">Real name*</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="First Last" required/>
+                            </div>
+                        </div>
                         <div class="row bg-white">
-                            <div class="col-md-12">
-                                <label for="description" class="col-form-label">Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                                <br />
-                                <label for="link" class="col-form-label">Link</label>
-                                <input type="text" class="form-control" id="link" name="link">
-                                <br />
-                                <div class="form-check">
-                                    <label for="enabled" class="form-check-label">Enabled</label>
-                                    <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
-                                </div>
+                            <div class="col-md-3">
+                                <label for="address" class="col-form-label">e-mail address*</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="email" class="form-control" id="address" name="address" placeholder="musician@example.com" required/>
+                            </div>
+                        </div>
+                        <div class="row bg-light">
+                            <div class="col-md-3">
+                                <label for="roles" class="col-form-label">Roles</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" id="roles" name="roles" placeholder="administrator user" required/>
                             </div>
                         </div>
                   </div><!-- container-fluid -->
@@ -173,105 +181,104 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
+</main>
+<?php require_once("includes/footer.php");?>
 <!-- jquery function to add/update database records -->
-    <script>
-    $(document).ready(function(){
-        $('#add').click(function(){
-            $('#insert').val("Insert");
-            $('#update').val("add");
-            $('#insert_form')[0].reset();
-        });
-        $(document).on('click', '.edit_data', function(){
-            var id_user = $(this).attr("id");
-            $.ajax({
-                url:"fetch_users.php",
-                method:"POST",
-                data:{id_user:id_user},
-                dataType:"json",
-                success:function(data){
-                    $('#id_user').val(data.id_user);
-                    $('#id_user_hold').val(data.id_user);
-                    $('#name').val(data.name);
-                    $('#description').val(data.description);
-                    $('#link').val(data.link);
-                    if ((data.enabled) == 1) {
-                        $('#enabled').prop('checked',true);
-                    }
-                    $('#insert').val("Update");
-                    $('#update').val("update");
-                    $('#add_data_Modal').modal('show');
+<script>
+$(document).ready(function(){
+    $('#add').click(function(){
+        $('#insert').val("Insert");
+        $('#update').val("add");
+        $('#insert_form')[0].reset();
+    });
+    $(document).on('click', '.edit_data', function(){
+        var id_users = $(this).attr("id");
+        $.ajax({
+            url:"fetch_users.php",
+            method:"POST",
+            data:{id_users:id_users},
+            dataType:"json",
+            success:function(data){
+                $('#id_users').val(data.id_users);
+                $('#id_users_hold').val(data.id_users);
+                $('#username').val(data.username);
+                $('#name').val(data.name);
+                $('#address').val(data.address);
+                $('#roles').val(data.roles);
+                $('#insert').val("Update");
+                $('#update').val("update");
+                $('#add_data_Modal').modal('show');
 
-                }
-           });
-        });
-        $(document).on('click', '.delete_data', function(){ // button that brings up modal
-            // input button name="delete" id="id_user" class="delete_data"
-            var id_user = $(this).attr("id");
-            $('#deleteModal').modal('show');
-            $('#confirm-delete').data('id', id_user);
-            $('#user2delete').text(id_user);
-        });
-        $('#confirm-delete').click(function(){
-            // The confirm delete button
-            var id_user = $(this).data('id');
-            $.ajax({
-                url:"delete_records.php",
-                method:"POST",
-                data:{
-                    table_name: "users",
-                    table_key_name: "id_user",
-                    table_key: id_user
-                },
-                success:function(data){
-                    $('#insert_form')[0].reset();
-                    $('#user_table').html(data);
-                }
-           });
-        });
-        $('#insert_form').on("submit", function(event){
-            event.preventDefault();
-            if($('#title').val() == "")
-            {
-                alert("Title is required");
-            }
-            else if($('#id_user').val() == '')
-            {
-                alert("user ID is required");
-            }
-            else
-            {
-                $.ajax({
-                    url:"insert_users.php",
-                    method:"POST",
-                    data:$('#insert_form').serialize(),
-                    beforeSend:function(){
-                        $('#insert').val("Inserting");
-                    },
-                    success:function(data){
-                        $('#insert_form')[0].reset();
-                        $('#add_data_Modal').modal('hide');
-                        $('#user_table').html(data);
-                    }
-                });
-            }
-        });
-        $(document).on('click', '.view_data', function(){
-            var id_user = $(this).attr("id");
-            if(id_user != '')
-            {
-                $.ajax({
-                    url:"select_users.php",
-                    method:"POST",
-                    data:{id_user:id_user},
-                    success:function(data){
-                        $('#user_detail').html(data);
-                        $('#dataModal').modal('show');
-                    }
-                });
             }
         });
     });
-    </script>
-<?php
-  require_once("includes/footer.php");
-?>
+    $(document).on('click', '.delete_data', function(){ // button that brings up modal
+        // input button name="delete" id="id_users" class="delete_data"
+        var id_users = $(this).attr("id");
+        $('#deleteModal').modal('show');
+        $('#confirm-delete').data('id', id_users);
+        $('#user2delete').text(id_users);
+    });
+    $('#confirm-delete').click(function(){
+        // The confirm delete button
+        var id_users = $(this).data('id');
+        $.ajax({
+            url:"delete_records.php",
+            method:"POST",
+            data:{
+                table_name: "users",
+                table_key_name: "id_users",
+                table_key: id_users
+            },
+            success:function(data){
+                $('#insert_form')[0].reset();
+                $('#user_table').html(data);
+            }
+        });
+    });
+    $('#insert_form').on("submit", function(event){
+        event.preventDefault();
+        if($('#title').val() == "")
+        {
+            alert("Title is required");
+        }
+        else if($('#id_users').val() == '')
+        {
+            alert("user ID is required");
+        }
+        else
+        {
+            $.ajax({
+                url:"insert_users.php",
+                method:"POST",
+                data:$('#insert_form').serialize(),
+                beforeSend:function(){
+                    $('#insert').val("Inserting");
+                },
+                success:function(data){
+                    $('#insert_form')[0].reset();
+                    $('#add_data_Modal').modal('hide');
+                    $('#user_table').html(data);
+                }
+            });
+        }
+    });
+    $(document).on('click', '.view_data', function(){
+        var id_users = $(this).attr("id");
+        if(id_users != '')
+        {
+            $.ajax({
+                url:"select_users.php",
+                method:"POST",
+                data:{id_users:id_users},
+                success:function(data){
+                    $('#user_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

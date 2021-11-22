@@ -1,9 +1,6 @@
 <?php
-  session_start();
   define('PAGE_TITLE', 'List ensembles');
   define('PAGE_NAME', 'Ensembles');
-  require_once('includes/config.php');
-  require_once('includes/functions.php');
   require_once("includes/header.php");
   $u_admin = FALSE;
   $u_user = FALSE;
@@ -12,13 +9,13 @@
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
   }
-?>
-<body>
-<?php
+  require_once('includes/config.php');
   require_once("includes/navbar.php");
-  ferror_log("RUNNING list_ensembles2.php");
-?>   <div class="container">
-        <h2 align="center"><?php echo ORGNAME ?> Ensembles</h2>
+  require_once('includes/functions.php');
+?>
+<main>
+  <div class="container">
+        <h2 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h2>
 <?php if($u_user) : ?>
         <div align="right">
             <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
@@ -167,105 +164,106 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
+</main>
+<?php require_once("includes/footer.php"); ?>
 <!-- jquery function to add/update database records -->
-    <script>
-    $(document).ready(function(){
-        $('#add').click(function(){
-            $('#insert').val("Insert");
-            $('#update').val("add");
-            $('#insert_form')[0].reset();
-        });
-        $(document).on('click', '.edit_data', function(){
-            var id_ensemble = $(this).attr("id");
-            $.ajax({
-                url:"fetch_ensembles.php",
-                method:"POST",
-                data:{id_ensemble:id_ensemble},
-                dataType:"json",
-                success:function(data){
-                    $('#id_ensemble').val(data.id_ensemble);
-                    $('#id_ensemble_hold').val(data.id_ensemble);
-                    $('#name').val(data.name);
-                    $('#description').val(data.description);
-                    $('#link').val(data.link);
-                    if ((data.enabled) == 1) {
-                        $('#enabled').prop('checked',true);
-                    }
-                    $('#insert').val("Update");
-                    $('#update').val("update");
-                    $('#add_data_Modal').modal('show');
+<script>
+$(document).ready(function(){
+    $('#add').click(function(){
+        $('#insert').val("Insert");
+        $('#update').val("add");
+        $('#insert_form')[0].reset();
+    });
+    $(document).on('click', '.edit_data', function(){
+        var id_ensemble = $(this).attr("id");
+        $.ajax({
+            url:"fetch_ensembles.php",
+            method:"POST",
+            data:{id_ensemble:id_ensemble},
+            dataType:"json",
+            success:function(data){
+                $('#id_ensemble').val(data.id_ensemble);
+                $('#id_ensemble_hold').val(data.id_ensemble);
+                $('#name').val(data.name);
+                $('#description').val(data.description);
+                $('#link').val(data.link);
+                if ((data.enabled) == 1) {
+                    $('#enabled').prop('checked',true);
+                }
+                $('#insert').val("Update");
+                $('#update').val("update");
+                $('#add_data_Modal').modal('show');
 
-                }
-           });
-        });
-        $(document).on('click', '.delete_data', function(){ // button that brings up modal
-            // input button name="delete" id="id_ensemble" class="delete_data"
-            var id_ensemble = $(this).attr("id");
-            $('#deleteModal').modal('show');
-            $('#confirm-delete').data('id', id_ensemble);
-            $('#ensemble2delete').text(id_ensemble);
-        });
-        $('#confirm-delete').click(function(){
-            // The confirm delete button
-            var id_ensemble = $(this).data('id');
-            $.ajax({
-                url:"delete_records.php",
-                method:"POST",
-                data:{
-                    table_name: "ensembles",
-                    table_key_name: "id_ensemble",
-                    table_key: id_ensemble
-                },
-                success:function(data){
-                    $('#insert_form')[0].reset();
-                    $('#ensemble_table').html(data);
-                }
-           });
-        });
-        $('#insert_form').on("submit", function(event){
-            event.preventDefault();
-            if($('#title').val() == "")
-            {
-                alert("Title is required");
-            }
-            else if($('#id_ensemble').val() == '')
-            {
-                alert("Ensemble ID is required");
-            }
-            else
-            {
-                $.ajax({
-                    url:"insert_ensembles.php",
-                    method:"POST",
-                    data:$('#insert_form').serialize(),
-                    beforeSend:function(){
-                        $('#insert').val("Inserting");
-                    },
-                    success:function(data){
-                        $('#insert_form')[0].reset();
-                        $('#add_data_Modal').modal('hide');
-                        $('#ensemble_table').html(data);
-                    }
-                });
-            }
-        });
-        $(document).on('click', '.view_data', function(){
-            var id_ensemble = $(this).attr("id");
-            if(id_ensemble != '')
-            {
-                $.ajax({
-                    url:"select_ensembles.php",
-                    method:"POST",
-                    data:{id_ensemble:id_ensemble},
-                    success:function(data){
-                        $('#ensemble_detail').html(data);
-                        $('#dataModal').modal('show');
-                    }
-                });
             }
         });
     });
-    </script>
-<?php
-  require_once("includes/footer.php");
-?>
+    $(document).on('click', '.delete_data', function(){ // button that brings up modal
+        // input button name="delete" id="id_ensemble" class="delete_data"
+        var id_ensemble = $(this).attr("id");
+        $('#deleteModal').modal('show');
+        $('#confirm-delete').data('id', id_ensemble);
+        $('#ensemble2delete').text(id_ensemble);
+    });
+    $('#confirm-delete').click(function(){
+        // The confirm delete button
+        var id_ensemble = $(this).data('id');
+        $.ajax({
+            url:"delete_records.php",
+            method:"POST",
+            data:{
+                table_name: "ensembles",
+                table_key_name: "id_ensemble",
+                table_key: id_ensemble
+            },
+            success:function(data){
+                $('#insert_form')[0].reset();
+                $('#ensemble_table').html(data);
+            }
+        });
+    });
+    $('#insert_form').on("submit", function(event){
+        event.preventDefault();
+        if($('#title').val() == "")
+        {
+            alert("Title is required");
+        }
+        else if($('#id_ensemble').val() == '')
+        {
+            alert("Ensemble ID is required");
+        }
+        else
+        {
+            $.ajax({
+                url:"insert_ensembles.php",
+                method:"POST",
+                data:$('#insert_form').serialize(),
+                beforeSend:function(){
+                    $('#insert').val("Inserting");
+                },
+                success:function(data){
+                    $('#insert_form')[0].reset();
+                    $('#add_data_Modal').modal('hide');
+                    $('#ensemble_table').html(data);
+                }
+            });
+        }
+    });
+    $(document).on('click', '.view_data', function(){
+        var id_ensemble = $(this).attr("id");
+        if(id_ensemble != '')
+        {
+            $.ajax({
+                url:"select_ensembles.php",
+                method:"POST",
+                data:{id_ensemble:id_ensemble},
+                success:function(data){
+                    $('#ensemble_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

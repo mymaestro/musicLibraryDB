@@ -14,17 +14,15 @@ if(!empty($_POST)) {
     ferror_log("POST username=".$_POST["username"]);
     ferror_log("POST name=".$_POST["name"]);
     ferror_log("POST address=".$_POST["address"]);
+    ferror_log("POST roles=".$_POST["roles"]);
         
     $id_users = mysqli_real_escape_string($f_link, $_POST['id_users']);
     $id_users_hold = mysqli_real_escape_string($f_link, $_POST['id_users_hold']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
     $username = mysqli_real_escape_string($f_link, $_POST['username']);
     $address = mysqli_real_escape_string($f_link, $_POST['address']);
-
-    $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
-
-    $enabled = mysqli_real_escape_string($f_link, $enabled);
-
+    $roles = mysqli_real_escape_string($f_link, $_POST['roles']);
+    
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE users 

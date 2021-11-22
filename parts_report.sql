@@ -38,3 +38,19 @@ LEFT JOIN part_types t ON t.id_part_type = p.id_part_type
 LEFT JOIN paper_sizes z ON z.id_paper_size = p.paper_size
 WHERE  p.catalog_number = 'C123'
 AND    p.id_part_type = 40;
+
+
+--- Part collections information
+SELECT     k.catalog_number_key,
+           c.name title,
+           k.id_part_type_key,
+           s.name collection_name,
+           k.id_part_type,
+           t.name part_name,
+           k.name,
+           k.description
+FROM       part_collections k
+LEFT JOIN  compositions c ON c.catalog_number = k.catalog_number_key
+LEFT JOIN  part_types s ON s.id_part_type = k.id_part_type_key
+LEFT JOIN  part_types t ON t.id_part_type = k.id_part_type
+ORDER BY   title, s.collation, t.collation;

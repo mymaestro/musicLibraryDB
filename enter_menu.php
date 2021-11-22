@@ -1,5 +1,4 @@
 <?php
-  session_start();
   define('PAGE_TITLE', 'Enter');
   define('PAGE_NAME', 'enter');
   require_once("includes/header.php");
@@ -10,12 +9,9 @@
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
   }
-?>
-<body>
-<?php
+  require_once("includes/config.php");
   require_once("includes/navbar.php");
 ?>
-<br />
 <main role="main" class="container">
 	<div class="jumbotron">
 		<h2 class="display-4">Enter library materials</h2>
@@ -96,6 +92,6 @@
 		</div>
 	</div>
 </main>
-<?php
-  require_once("includes/footer.php");
-?>
+<?php require_once("includes/footer.php");?>
+</body>
+</html>

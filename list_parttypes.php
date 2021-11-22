@@ -1,9 +1,6 @@
 <?php
-  session_start();
   define('PAGE_TITLE', 'List part types');
-  define('PAGE_NAME', 'PartTypes');
-  require_once('includes/config.php');
-  require_once('includes/functions.php');
+  define('PAGE_NAME', 'Part types');
   require_once("includes/header.php");
   $u_admin = FALSE;
   $u_user = FALSE;
@@ -12,13 +9,12 @@
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
   }
-?>
-<body>
-<?php
+  require_once('includes/config.php');
+  require_once('includes/functions.php');
   require_once("includes/navbar.php");
   ferror_log("RUNNING list_parttypes.php");
 ?>
-    <br />
+<main role="main">
     <div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Part Types</h2>
 <?php if($u_user) : ?>
@@ -191,105 +187,106 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
+</main>
+<?php require_once("includes/footer.php");?>
 <!-- jquery function to add/update database records -->
-    <script>
-    $(document).ready(function(){
-        $('#add').click(function(){
-            $('#insert').val("Insert");
-            $('#update').val("add");
-            $('#insert_form')[0].reset();
-        });
-        $(document).on('click', '.edit_data', function(){
-            var id_part_type = $(this).attr("id");
-            $.ajax({
-                url:"fetch_parttypes.php",
-                method:"POST",
-                data:{id_part_type:id_part_type},
-                dataType:"json",
-                success:function(data){
-                    $('#id_part_type').val(data.id_part_type);
-                    $('#collation').val(data.collation);
-                    $('#name').val(data.name);
-                    $('#description').val(data.description);
-                    $('#' + data.family).prop('checked', true);
-                    $('#is_part_collection').val(data.is_part_collection);
-                    if ((data.enabled) == 1) {
-                        $('#enabled').prop('checked',true);
-                    }
-                    $('#insert').val("Update");
-                    $('#update').val("update");
-                    $('#add_data_Modal').modal('show');
+<script>
+$(document).ready(function(){
+    $('#add').click(function(){
+        $('#insert').val("Insert");
+        $('#update').val("add");
+        $('#insert_form')[0].reset();
+    });
+    $(document).on('click', '.edit_data', function(){
+        var id_part_type = $(this).attr("id");
+        $.ajax({
+            url:"fetch_parttypes.php",
+            method:"POST",
+            data:{id_part_type:id_part_type},
+            dataType:"json",
+            success:function(data){
+                $('#id_part_type').val(data.id_part_type);
+                $('#collation').val(data.collation);
+                $('#name').val(data.name);
+                $('#description').val(data.description);
+                $('#' + data.family).prop('checked', true);
+                $('#is_part_collection').val(data.is_part_collection);
+                if ((data.enabled) == 1) {
+                    $('#enabled').prop('checked',true);
                 }
-           });
-        });
-        $(document).on('click', '.delete_data', function(){ // button that brings up modal
-            // input button name="delete" id="id_part_type" class="delete_data"
-            var id_part_type = $(this).attr("id");
-            $('#deleteModal').modal('show');
-            $('#confirm-delete').data('id', id_part_type);
-            $('#part_type2delete').text(id_part_type);
-        });
-        $('#confirm-delete').click(function(){
-            // The confirm delete button
-            var id_part_type = $(this).data('id');
-            $.ajax({
-                url:"delete_records.php",
-                method:"POST",
-                data:{
-                    table_name: "part_types",
-                    table_key_name: "id_part_type",
-                    table_key: id_part_type
-                },
-                success:function(data){
-                    $('#insert_form')[0].reset();
-                    $('#part_type_table').html(data);
-                }
-           });
-        });
-        $('#insert_form').on("submit", function(event){
-            event.preventDefault();
-            if($('#name').val() == "")
-            {
-                alert("Part type name is required");
-            }
-            else if($('#collation').val() == '')
-            {
-                alert("Sort order is required");
-            }
-            else
-            {
-                $.ajax({
-                    url:"insert_parttypes.php",
-                    method:"POST",
-                    data:$('#insert_form').serialize(),
-                    beforeSend:function(){
-                        $('#insert').val("Inserting");
-                    },
-                    success:function(data){
-                        $('#insert_form')[0].reset();
-                        $('#add_data_Modal').modal('hide');
-                        $('#part_type_table').html(data);
-                    }
-                });
-            }
-        });
-        $(document).on('click', '.view_data', function(){
-            var id_part_type = $(this).attr("id");
-            if(id_part_type != '')
-            {
-                $.ajax({
-                    url:"select_parttypes.php",
-                    method:"POST",
-                    data:{id_part_type:id_part_type},
-                    success:function(data){
-                        $('#part_type_detail').html(data);
-                        $('#dataModal').modal('show');
-                    }
-                });
+                $('#insert').val("Update");
+                $('#update').val("update");
+                $('#add_data_Modal').modal('show');
             }
         });
     });
-    </script>
-<?php
-  require_once("includes/footer.php");
-?>
+    $(document).on('click', '.delete_data', function(){ // button that brings up modal
+        // input button name="delete" id="id_part_type" class="delete_data"
+        var id_part_type = $(this).attr("id");
+        $('#deleteModal').modal('show');
+        $('#confirm-delete').data('id', id_part_type);
+        $('#part_type2delete').text(id_part_type);
+    });
+    $('#confirm-delete').click(function(){
+        // The confirm delete button
+        var id_part_type = $(this).data('id');
+        $.ajax({
+            url:"delete_records.php",
+            method:"POST",
+            data:{
+                table_name: "part_types",
+                table_key_name: "id_part_type",
+                table_key: id_part_type
+            },
+            success:function(data){
+                $('#insert_form')[0].reset();
+                $('#part_type_table').html(data);
+            }
+        });
+    });
+    $('#insert_form').on("submit", function(event){
+        event.preventDefault();
+        if($('#name').val() == "")
+        {
+            alert("Part type name is required");
+        }
+        else if($('#collation').val() == '')
+        {
+            alert("Sort order is required");
+        }
+        else
+        {
+            $.ajax({
+                url:"insert_parttypes.php",
+                method:"POST",
+                data:$('#insert_form').serialize(),
+                beforeSend:function(){
+                    $('#insert').val("Inserting");
+                },
+                success:function(data){
+                    $('#insert_form')[0].reset();
+                    $('#add_data_Modal').modal('hide');
+                    $('#part_type_table').html(data);
+                }
+            });
+        }
+    });
+    $(document).on('click', '.view_data', function(){
+        var id_part_type = $(this).attr("id");
+        if(id_part_type != '')
+        {
+            $.ajax({
+                url:"select_parttypes.php",
+                method:"POST",
+                data:{id_part_type:id_part_type},
+                success:function(data){
+                    $('#part_type_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

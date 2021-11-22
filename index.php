@@ -1,7 +1,5 @@
 <?php
-  session_start();
-  require_once('includes/config.php'); 
-  define('PAGE_TITLE',  ORGDESC . ' Music Library');
+  define('PAGE_TITLE','Music Library');
   define('PAGE_NAME', 'home');
   require_once("includes/header.php");
   $u_admin = FALSE;
@@ -11,17 +9,12 @@
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
   }
-?>
-<body>
-<?php
+  require_once('includes/config.php'); 
   require_once("includes/navbar.php");
-  require_once('includes/config.php');
-  require_once('includes/functions.php');
-  $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 ?>
-<br />
 <main role="main" class="container">
 	<div class="jumbotron">
+		<img class="d-block mx-auto mb-4" src="<?php echo ORGLOGO ?>" alt="<?php echo ORGDESC ?>" height="256">
 		<h1 class="display-4"><?php echo ORGDESC ?></h1>
 		<p class="lead">Music Library</p>
 		<br />
@@ -38,7 +31,7 @@
 				<div class="card-body">
 					<h5 class="card-title">Enter</h5>
 					<p class="card-text">Provide information about the music in the library.</p>
-					<p class="card-text"><small class="text-muted">Requires administrator logon.</small></p>
+					<p class="card-text"><small class="text-muted">Requires user logon.</small></p>
 					<a href="enter_menu.php" class="btn btn-sm btn-primary">New</a>
 				</div>
 			</div>
@@ -54,15 +47,17 @@
 		</div>
 		<br />
 		<?php
-		 $sql = "SELECT name, composer FROM compositions ORDER BY RAND() LIMIT 1;";
-		 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-		 while ($rowList = mysqli_fetch_array($res)) {
-			 $name = $rowList['name'];
-			 $composer = $rowList['composer'];
-			 echo "<p>Today's pick: <strong><em>".$name.'</em></strong> by '.$composer.'</p>';
-		 } ?>
+		require_once('includes/functions.php');
+		$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+		$sql = "SELECT name, composer FROM compositions ORDER BY RAND() LIMIT 1;";
+		$res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+		while ($rowList = mysqli_fetch_array($res)) {
+			$name = $rowList['name'];
+			$composer = $rowList['composer'];
+			echo "<p>Today's pick: <strong><em>".$name.'</em></strong> by '.$composer.'</p>';
+		}?>
 	</div>
 </main>
-<?php
-  require_once("includes/footer.php");
-?>
+<?php require_once("includes/footer.php");?>
+</body>
+</html>

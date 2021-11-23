@@ -25,28 +25,46 @@ require_once('includes/navbar.php');
     <div class="row g-5">
         <div class="col-md-7">
 <?php
-$selector = $_GET["selector"];
-$validator = $_GET["validator"];
+if(isset($_GET["selector"])) {
+    $selector = $_GET["selector"];
+} else {
+    $selector = '';
+}
+
+if(isset($_GET["validator"])) {
+    $validator = $_GET["validator"];
+} else {
+    $validator = "";
+}
 
 if (empty($selector) || empty($validator)) {
-    echo '     <p class="lead text-center">Request failed.</p>';
+    echo '     <p class="lead text-center">You must provide the code sent to you by e-mail to change your password.</p>';
 } else {
     if (ctype_xdigit($selector) !== false && ctype_xdigit($validator) !== false) {
         ?>
             <p class="lead">Please enter your new password.</p>
-
-            <div class="col-6">
-                <form action="includes/reset_password.php" method="post">
-                <input type="hidden" name="selector" value="<?php echo $selector ?>">
-                <input type="hidden" name="validator" value="<?php echo $validator ?>">
-                <label for="password" class="col-form-label">Password*</label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="password" required>
-                <span class="help-block"></span>                            
+            <div class="row">
+                <div class="col-6">
+                    <form action="" method="post" id="password_form">
+                    <input type="hidden" name="selector" value="<?php echo $selector ?>">
+                    <input type="hidden" name="validator" value="<?php echo $validator ?>">
+                    <label for="password" class="col-form-label">Password*</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="password" data-bs-content="Enter a password" required>
+                    <span class="help-block"></span>                            
+                </div>
+                <div class="col-6">
+                    <p>Password must be greater than 8 characters, and must have 1 number, 1 uppercase letter, 1 lowercase letter, and one special character.<p>
+                </div>
             </div>
-            <div class="col-6">
-                <label for="confirm_password" class="col-form-label">Repeat password*</label>
-                <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Repeat password" required>
-                <span class="help-block"></span>                            
+            <div class="row">
+                <div class="col-6">
+                    <label for="confirm_password" class="col-form-label">Repeat password*</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Repeat password" data-bs-content="Repeat the password" required>
+                    <span class="help-block"></span>                            
+                </div>
+                <div class="col-6">
+                    <p id="status-info"></p>
+                </div>
             </div>
             <hr class="my-4">
             <div class="col-12">
@@ -72,5 +90,56 @@ if (empty($selector) || empty($validator)) {
 </main>
 </div>
 <?php require_once('includes/footer.php'); ?>
+<script>
+    $(document).ready(function(){
+        $('#password_form').on("submit", function(event){
+            event.preventDefault();
+            if($('#password').val() != $('#confirm_password').val())
+            {
+                alert("Password and confirm password must match");
+            }
+            else
+            {
+                $.ajax({
+                    url:"includes/reset_password.php",
+                    method:"POST",
+                    data:$('#password_form').serialize(),
+                    beforeSend:function(){
+                        $('#insert').val("Inserting");
+                    },
+                    success:function(data){
+                        $('#password_form')[0].reset();
+                        var text;
+                        switch(data) {
+                            case "success":
+                                $("#status-info").addClass("text-success");
+                                $("#status-info").html('Password updated.');
+                                break;
+                            case "empty":
+                                $("#status-info").addClass("text-danger");
+                                $("#status-info").html('Password fields must not be empty.');
+                                break;
+                            case "expired":
+                                $("#status-info").addClass("text-danger");
+                                $("#status-info").html('Invalid token selector or token expired.');
+                                break;
+                            case "strength":
+                                $("#status-info").addClass("text-danger");
+                                $("#status-info").html('Password does not meet strength requirements.');
+                                break;
+                            case "dberror":
+                                $("#status-info").addClass("text-danger");
+                                $("#status-info").html('Database error!');
+                                break;
+                            default:
+                                $("#status-info").addClass("text-danger");
+                                $("#status-info").html('Unknown error occurred. Try again later.');
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
 </body>
 </html>

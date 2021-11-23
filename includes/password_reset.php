@@ -55,7 +55,7 @@ if (isset($_POST["reset-request-submit"])) {
             $to = $address;
             $subject = 'Your ' .ORGNAME . ' password reset request.';
             $message = '<p>We received a request to reset your ' . ORGNAME . ' music library password. If you did not make this request, you can ignore this email.</p>';
-            $message .= "<p>User name $username here is your password link: </p>";
+            $message .= "<p>Here is your password link: </p>";
             $message .= '<a href="' . $url . '">'. $url . '</a></p>';
             $headers = "From: ". ORGNAME . "<" .ORGMAIL . ">\r\n";
             $headers .= "Reply-To: ". ORGMAIL . "\r\n";

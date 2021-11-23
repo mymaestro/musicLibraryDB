@@ -32,7 +32,6 @@ if(isset($_GET["reset"])) {
         <div class="col-md-7">
             <?php if($result == "new") : ?>
             <p class="lead">Please submit this form to reset your password.</p>
-
             <div class="col-12">
                 <form action="includes/password_reset.php" method="post">
                 <label for="username" class="col-form-label">Username*</label>
@@ -55,7 +54,6 @@ if(isset($_GET["reset"])) {
             <?php endif; ?>
             <?php if($result == "fail") : ?>
             <p class="lead">Address or username not found. Please submit this form to reset your password.</p>
-
             <div class="col-12">
                 <form action="includes/password_reset.php" method="post">
                 <label for="username" class="col-form-label">Username*</label>
@@ -84,11 +82,8 @@ if(isset($_GET["reset"])) {
             </div>
         </div>
     </div>
-
 </main>
 </div>
 <?php require_once('includes/footer.php'); ?>
 </body>
 </html>
-
-

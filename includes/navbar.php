@@ -17,7 +17,7 @@
                         <ul class="dropdown-menu" aria-labelledby="nav_menu_dropdown">
                         <li><a class="dropdown-item" href="compositions.php">Compositions</a></li>
                         <li><a class="dropdown-item" href="parts.php">Parts</a></li>
-                        <li><a class="dropdown-item" href="list_partcollections.php">Part collections</a></li>
+                        <li><a class="dropdown-item" href="partcollections.php">Part collections</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="ensembles.php">Ensembles</a></li>
                         <li><a class="dropdown-item" href="genres.php">Genres</a></li>

@@ -76,7 +76,7 @@
 					<p class="card-text"><small class="text-muted">Percussion 1 or Horn 1 & 2</small></p>
 				</div>
 				<div class="card-footer">
-					<a href="list_partcollections.php" class="card-link">Collections</a>
+					<a href="partcollections.php" class="card-link">Collections</a>
 				</div>
 			</div>
 		    <div class="card">

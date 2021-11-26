@@ -46,7 +46,7 @@
           <dd>Search types of parts. Examples are Flute 1 or Tuba</dd>
         <dt><a href="partcollections.php">Part type collections</a></dt>
           <dd>Search types of parts that are collections. A "collection" part type contains two or more instruments on one part. For example, "percussion 1" contains "Cymbal" and "Bass drum"</dd>
-        <dt><a href="list_papersizes.php">Paper sizes</a></dt>
+        <dt><a href="papersizes.php">Paper sizes</a></dt>
           <dd>Search sizes of parts. This is a lookup table for which size of paper the parts are printed, for example Folio, march or book</dd>
         <dt>Recordings</dt>
           <dd>A catalog of performance recordings of each composition</dd>

@@ -86,7 +86,7 @@
 					<p class="card-text"><small class="text-muted">Folio, march or book</small></p>
 				</div>
 				<div class="card-footer">
-					<a href="list_papersizes.php" class="card-link">Part paper sizes</a>
+					<a href="papersizes.php" class="card-link">Part paper sizes</a>
 				</div>
 			</div>
 		</div>

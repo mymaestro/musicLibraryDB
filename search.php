@@ -22,7 +22,7 @@
         <dt>Compositions</dt>
           <dd>Search compositions in the music library. This table holds the data about the music in the library. You find here the title, composer, arranger, publish date, etc.</dd>
           <div id="search_form">
-              <form action="list_compositions.php" method="POST">
+              <form action="compositions.php" method="POST">
                   <div class="row g-3 align-items-center">
                       <div class="col-auto">
                           <button type="submit" name="submitButton" class="btn btn-primary">Search</button>

@@ -24,7 +24,7 @@
 					<p class="card-text">Work with compositions in the music library.</p>
 				</div>
 				<div class="card-footer">
-					<a href="list_compositions.php" class="card-link">Compositions</a>
+					<a href="compositions.php" class="card-link">Compositions</a>
 				</div>
 			</div>
 			<div class="card">

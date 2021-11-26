@@ -12,7 +12,7 @@
   require_once('includes/config.php');
   require_once('includes/functions.php');
   require_once("includes/navbar.php");
-  ferror_log("RUNNING list_parttypes.php");
+  ferror_log("RUNNING parttypes.php");
 ?>
 <main role="main">
     <div class="container">

@@ -42,7 +42,7 @@
           <dd>List ensembles. Bands and smaller ensembles</dd>
         <dt><a href="genres.php">Genres</a></dt>
           <dd>Search genres. Types of music genre such as "March" or "Symphonic transcription" or "Showtune"</dd>
-        <dt><a href="list_parttypes.php">Part types</a></dt>
+        <dt><a href="parttypes.php">Part types</a></dt>
           <dd>Search types of parts. Examples are Flute 1 or Tuba</dd>
         <dt><a href="partcollections.php">Part type collections</a></dt>
           <dd>Search types of parts that are collections. A "collection" part type contains two or more instruments on one part. For example, "percussion 1" contains "Cymbal" and "Bass drum"</dd>

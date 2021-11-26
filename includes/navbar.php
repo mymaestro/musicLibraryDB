@@ -21,7 +21,7 @@
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="ensembles.php">Ensembles</a></li>
                         <li><a class="dropdown-item" href="genres.php">Genres</a></li>
-                        <li><a class="dropdown-item" href="list_parttypes.php">Part types</a></li>
+                        <li><a class="dropdown-item" href="parttypes.php">Part types</a></li>
                         <li><a class="dropdown-item" href="list_papersizes.php">Paper sizes</a></li>
                         <li><a class="dropdown-item" href="list_recordings.php">Recordings</a></li><?php if (isset($_SESSION['username'])) if (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ) echo '
                         <li><a class="dropdown-item" href="list_users.php">Users</a></li>

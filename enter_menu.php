@@ -66,7 +66,7 @@
 					<p class="card-text"><small class="text-muted">Flute 1 or Tuba</small></p>
 				</div>
 				<div class="card-footer">
-					<a href="list_parttypes.php" class="card-link">Part types</a>
+					<a href="parttypes.php" class="card-link">Part types</a>
 				</div>
 			</div>
 			<div class="card">

@@ -56,7 +56,7 @@
 					<p class="card-text"><small class="text-muted">Types of music genre.</small></p>
 				</div>
 				<div class="card-footer">
-					<a href="list_genres.php" class="card-link">Genres</a>
+					<a href="Sgenres.php" class="card-link">Genres</a>
 				</div>
 			</div>
 			<div class="card">

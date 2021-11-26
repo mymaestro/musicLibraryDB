@@ -40,7 +40,7 @@
           </div>
         <dt><a href="ensembles.php">Ensembles</a></dt>
           <dd>List ensembles. Bands and smaller ensembles</dd>
-        <dt><a href="list_genres.php">Genres</a></dt>
+        <dt><a href="genres.php">Genres</a></dt>
           <dd>Search genres. Types of music genre such as "March" or "Symphonic transcription" or "Showtune"</dd>
         <dt><a href="list_parttypes.php">Part types</a></dt>
           <dd>Search types of parts. Examples are Flute 1 or Tuba</dd>

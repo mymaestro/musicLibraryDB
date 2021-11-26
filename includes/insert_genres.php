@@ -55,15 +55,15 @@ if(!empty($_POST)) {
         ferror_log("Error: " . $error_message);
     }
  } else {
-    require_once("includes/header.php");
+    require_once("header.php");
     echo '<body>
 ';
-    require_once("includes/navbar.php");
+    require_once("navbar.php");
     echo '
     <div class="container">
     <h2 align="center">'. ORGNAME . ' ' . PAGE_NAME . '</h2>
     <div><p align="center" class="text-danger">You can get here only from the Genres menu.</p></div>';
-    require_once("includes/footer.php");
+    require_once("footer.php");
     echo '</body>';
  }
  ?>

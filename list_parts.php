@@ -332,7 +332,7 @@
             var catalog_number = part_id.split('-')[0];
             var id_part_type = part_id.split('-')[1];
             $.ajax({
-                url: "fetch_parts.php",
+                url: "includes/fetch_parts.php",
                 method: "POST",
                 data: {
                     id_part_type: id_part_type,
@@ -371,7 +371,7 @@
             var catalog_number = part_id.split('-')[0];
             var id_part_type = part_id.split('-')[1];
             $.ajax({
-                url:"delete_parts.php",
+                url:"includes/delete_parts.php",
                 method:"POST",
                 data:{
                     catalog_number: catalog_number,
@@ -391,7 +391,7 @@
                 alert("Catalog number is required");
             } else {
                 $.ajax({
-                    url: "insert_parts.php",
+                    url: "includes/insert_parts.php",
                     method: "POST",
                     data: $('#insert_form').serialize(),
                     beforeSend: function() {
@@ -411,7 +411,7 @@
             var id_part_type = part_id.split('-')[1];
             if (id_part_type != '') {
                 $.ajax({
-                    url: "select_parts.php",
+                    url: "includes/select_parts.php",
                     method: "POST",
                     data: {
                         id_part_type: id_part_type,

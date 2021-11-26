@@ -164,7 +164,7 @@ $(document).ready(function(){
     $(document).on('click', '.edit_data', function(){
         var id_genre = $(this).attr("id");
         $.ajax({
-            url:"fetch_genres.php",
+            url:"includes/fetch_genres.php",
             method:"POST",
             data:{id_genre:id_genre},
             dataType:"json",
@@ -193,7 +193,7 @@ $(document).ready(function(){
         // The confirm delete button
         var id_genre = $(this).data('id');
         $.ajax({
-            url:"delete_records.php",
+            url:"includes/delete_records.php",
             method:"POST",
             data:{
                 table_name: "genres",
@@ -219,7 +219,7 @@ $(document).ready(function(){
         else
         {
             $.ajax({
-                url:"insert_genres.php",
+                url:"includes/insert_genres.php",
                 method:"POST",
                 data:$('#insert_form').serialize(),
                 beforeSend:function(){
@@ -238,7 +238,7 @@ $(document).ready(function(){
         if(id_genre != '')
         {
             $.ajax({
-                url:"select_genres.php",
+                url:"includes/select_genres.php",
                 method:"POST",
                 data:{id_genre:id_genre},
                 success:function(data){

@@ -43,7 +43,7 @@ require_once("includes/navbar.php");
         <h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1>
         <?php if ($u_user) : ?>
     <div id="instrumentation">
-        <form action="insert_instrumentation.php" method="post" id="instrumentation_form">
+        <form action="includes/insert_instrumentation.php" method="post" id="instrumentation_form">
             <div class="row mb-3">
                 <div class="col-sm-2 col-form-label">
                     <label for="catalog_number" class="form-label">Catalog number*</label>
@@ -179,7 +179,7 @@ $(document).ready(function(){
     $(document).on('click', '.edit_data', function(){
         var id_part_type = $(this).attr("id");
         $.ajax({
-            url:"fetch_partscomp.php",
+            url:"includes/fetch_partscomp.php",
             method:"POST",
             data:{id_part_type:id_part_type},
             dataType:"json",
@@ -213,7 +213,7 @@ $(document).ready(function(){
         else
         {
             $.ajax({
-                url:"insert_parts.php",
+                url:"includes/insert_parts.php",
                 method:"POST",
                 data:$('#insert_form').serialize(),
                 beforeSend:function(){

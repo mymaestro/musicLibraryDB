@@ -305,7 +305,7 @@ $(document).ready(function(){
         var id_part_type_key = id_partcollection.split(':')[1];
         var id_part_type = id_partcollection.split(':')[2];
         $.ajax({
-            url:"fetch_partcollections.php",
+            url:"includes/fetch_partcollections.php",
             method:"POST",
             data:{
                 catalog_number_key: catalog_number_key,
@@ -339,7 +339,7 @@ $(document).ready(function(){
         // The confirm delete button
         var is_part_collection = $(this).data('id');
         $.ajax({
-            url:"delete_records.php",
+            url:"includes/delete_records.php",
             method:"POST",
             data:{
                 table_name: "part_collections",
@@ -364,7 +364,7 @@ $(document).ready(function(){
         var update = $('#update').val();
         alert(id_part_type);
         $.ajax({
-            url:"insert_partcollections.php",
+            url:"includes/insert_partcollections.php",
             method:"POST",
             data:{
                 catalog_number_key: catalog_number_key,
@@ -389,7 +389,7 @@ $(document).ready(function(){
         if(is_part_collection != '')
         {
             $.ajax({
-                url:"select_partcollections.php",
+                url:"includes/select_partcollections.php",
                 method:"POST",
                 data:{is_part_collection:is_part_collection},
                 success:function(data){

@@ -263,7 +263,7 @@ $(document).ready(function(){
     $(document).on('click', '.edit_data', function(){
         var id_recording = $(this).attr("id");
         $.ajax({
-            url:"fetch_recordings.php",
+            url:"includes/fetch_recordings.php",
             method:"POST",
             data:{id_recording:id_recording},
             dataType:"json",
@@ -301,7 +301,7 @@ $(document).ready(function(){
         // The confirm delete button
         var id_recording = $(this).data('id');
         $.ajax({
-            url:"delete_records.php",
+            url:"includes/delete_records.php",
             method:"POST",
             data:{
                 table_name: "recordings",
@@ -320,14 +320,14 @@ $(document).ready(function(){
         {
             alert("Recording name is required");
         }
-        else if($('#id_recording').val() == '')
+        else if($('#ensemble').val() == '')
         {
-            alert("Recording ID is required");
+            alert("Ensemble is required");
         }
         else
         {
             $.ajax({
-                url:"insert_recordings.php",
+                url:"includes/insert_recordings.php",
                 method:"POST",
                 data:$('#insert_form').serialize(),
                 beforeSend:function(){
@@ -346,7 +346,7 @@ $(document).ready(function(){
         if(id_recording != '')
         {
             $.ajax({
-                url:"select_recordings.php",
+                url:"includes/select_recordings.php",
                 method:"POST",
                 data:{id_recording:id_recording},
                 success:function(data){

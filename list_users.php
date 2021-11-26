@@ -194,7 +194,7 @@ $(document).ready(function(){
     $(document).on('click', '.edit_data', function(){
         var id_users = $(this).attr("id");
         $.ajax({
-            url:"fetch_users.php",
+            url:"includes/fetch_users.php",
             method:"POST",
             data:{id_users:id_users},
             dataType:"json",
@@ -223,7 +223,7 @@ $(document).ready(function(){
         // The confirm delete button
         var id_users = $(this).data('id');
         $.ajax({
-            url:"delete_records.php",
+            url:"includes/delete_records.php",
             method:"POST",
             data:{
                 table_name: "users",
@@ -249,7 +249,7 @@ $(document).ready(function(){
         else
         {
             $.ajax({
-                url:"insert_users.php",
+                url:"includes/insert_users.php",
                 method:"POST",
                 data:$('#insert_form').serialize(),
                 beforeSend:function(){
@@ -268,7 +268,7 @@ $(document).ready(function(){
         if(id_users != '')
         {
             $.ajax({
-                url:"select_users.php",
+                url:"includes/select_users.php",
                 method:"POST",
                 data:{id_users:id_users},
                 success:function(data){

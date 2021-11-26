@@ -500,7 +500,7 @@ $(document).ready(function() {
     $(document).on('click', '.edit_data', function(){
         var catalog_number = $(this).attr("id");
         $.ajax({
-            url:"fetch_compositions.php",
+            url:"includes/fetch_compositions.php",
             type:"POST",
             data:{catalog_number:catalog_number},
             dataType:"json",
@@ -550,7 +550,7 @@ $(document).ready(function() {
         // The confirm delete button
         var catalog_number = $(this).data('id');
         $.ajax({
-            url:"delete_records.php",
+            url:"includes/delete_records.php",
             type:"POST",
             data:{
                 table_name: "compositions",
@@ -580,7 +580,7 @@ $(document).ready(function() {
         else
         {
             $.ajax({
-                url:"insert_compositions.php",
+                url:"includes/insert_compositions.php",
                 type:"POST",
                 data:$('#insert_form').serialize(),
                 beforeSend:function(){
@@ -599,7 +599,7 @@ $(document).ready(function() {
         if(catalog_number != '')
         {
             $.ajax({
-                url:"select_compositions.php",
+                url:"includes/select_compositions.php",
                 type:"POST",
                 data:{catalog_number:catalog_number},
                 success:function(data){
@@ -614,7 +614,7 @@ $(document).ready(function() {
         if(catalog_number != '')
         {
             $.ajax({
-                url:"select_composition_parts.php",
+                url:"includes/select_composition_parts.php",
                 type:"POST",
                 data:{catalog_number:catalog_number},
                 success:function(data){

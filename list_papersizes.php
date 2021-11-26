@@ -185,7 +185,7 @@ $(document).ready(function(){
     $(document).on('click', '.edit_data', function(){
         var id_paper_size = $(this).attr("id");
         $.ajax({
-            url:"fetch_papersizes.php",
+            url:"includes/fetch_papersizes.php",
             method:"POST",
             data:{id_paper_size:id_paper_size},
             dataType:"json",
@@ -216,7 +216,7 @@ $(document).ready(function(){
         // The confirm delete button
         var id_paper_size = $(this).data('id');
         $.ajax({
-            url:"delete_records.php",
+            url:"includes/delete_records.php",
             method:"POST",
             data:{
                 table_name: "paper_sizes",
@@ -238,7 +238,7 @@ $(document).ready(function(){
         else
         {
             $.ajax({
-                url:"insert_papersizes.php",
+                url:"includes/insert_papersizes.php",
                 method:"POST",
                 data:$('#insert_form').serialize(),
                 beforeSend:function(){
@@ -257,7 +257,7 @@ $(document).ready(function(){
         if(id_paper_size != '')
         {
             $.ajax({
-                url:"select_papersizes.php",
+                url:"includes/select_papersizes.php",
                 method:"POST",
                 data:{id_paper_size:id_paper_size},
                 success:function(data){

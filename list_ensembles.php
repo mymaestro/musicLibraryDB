@@ -177,7 +177,7 @@ $(document).ready(function(){
     $(document).on('click', '.edit_data', function(){
         var id_ensemble = $(this).attr("id");
         $.ajax({
-            url:"fetch_ensembles.php",
+            url:"includes/fetch_ensembles.php",
             method:"POST",
             data:{id_ensemble:id_ensemble},
             dataType:"json",
@@ -208,7 +208,7 @@ $(document).ready(function(){
         // The confirm delete button
         var id_ensemble = $(this).data('id');
         $.ajax({
-            url:"delete_records.php",
+            url:"includes/delete_records.php",
             method:"POST",
             data:{
                 table_name: "ensembles",
@@ -234,7 +234,7 @@ $(document).ready(function(){
         else
         {
             $.ajax({
-                url:"insert_ensembles.php",
+                url:"includes/insert_ensembles.php",
                 method:"POST",
                 data:$('#insert_form').serialize(),
                 beforeSend:function(){
@@ -253,7 +253,7 @@ $(document).ready(function(){
         if(id_ensemble != '')
         {
             $.ajax({
-                url:"select_ensembles.php",
+                url:"includes/select_ensembles.php",
                 method:"POST",
                 data:{id_ensemble:id_ensemble},
                 success:function(data){

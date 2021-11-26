@@ -200,7 +200,7 @@ $(document).ready(function(){
     $(document).on('click', '.edit_data', function(){
         var id_part_type = $(this).attr("id");
         $.ajax({
-            url:"fetch_parttypes.php",
+            url:"includes/fetch_parttypes.php",
             method:"POST",
             data:{id_part_type:id_part_type},
             dataType:"json",
@@ -231,7 +231,7 @@ $(document).ready(function(){
         // The confirm delete button
         var id_part_type = $(this).data('id');
         $.ajax({
-            url:"delete_records.php",
+            url:"includes/delete_records.php",
             method:"POST",
             data:{
                 table_name: "part_types",
@@ -257,7 +257,7 @@ $(document).ready(function(){
         else
         {
             $.ajax({
-                url:"insert_parttypes.php",
+                url:"includes/insert_parttypes.php",
                 method:"POST",
                 data:$('#insert_form').serialize(),
                 beforeSend:function(){
@@ -276,7 +276,7 @@ $(document).ready(function(){
         if(id_part_type != '')
         {
             $.ajax({
-                url:"select_parttypes.php",
+                url:"includes/select_parttypes.php",
                 method:"POST",
                 data:{id_part_type:id_part_type},
                 success:function(data){

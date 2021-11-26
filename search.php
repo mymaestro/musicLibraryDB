@@ -38,7 +38,7 @@
                   </div>
               </form>
           </div>
-        <dt><a href="list_ensembles.php">Ensembles</a></dt>
+        <dt><a href="ensembles.php">Ensembles</a></dt>
           <dd>List ensembles. Bands and smaller ensembles</dd>
         <dt><a href="list_genres.php">Genres</a></dt>
           <dd>Search genres. Types of music genre such as "March" or "Symphonic transcription" or "Showtune"</dd>

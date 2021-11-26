@@ -46,7 +46,7 @@
 					<p class="card-text"><small class="text-muted">Bands and smaller ensembles</small></p>
 				</div>
 				<div class="card-footer">
-					<a href="list_ensembles.php" class="card-link">Ensembles</a>
+					<a href="ensembles.php" class="card-link">Ensembles</a>
 				</div>
 			</div>
 			<div class="card">

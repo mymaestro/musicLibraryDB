@@ -358,14 +358,12 @@ require_once("includes/navbar.php");
                                 <small id="last_performance_dateHelp" class="form-text text-muted">The date this piece was last performed</small>
                             </div>
                             <div class="col-md-2">
-                                <!-- duration_start datetime  'Time the piece starts - to calculate duration' -->
-                                <!-- duration_end datetime  'The time the piece ends - to calculate duration' -->
-                                <label for="duration_start" class="col-form-label">Duration (start/end time)</label>
+                                <!-- duration 'Performance duration in seconds' -->
+                                <label for="duration" class="col-form-label">Duration (seconds)</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="time" step="1" class="form-control" id="duration_start" name="duration_start" />
-                                <input type="time" step="1" class="form-control" id="duration_end" name="duration_end" />
-                                <small id="durationHelp" class="form-text text-muted">Start and end times to calculate performance duration</small>
+                                <input type="number" step="1" class="form-control" id="duration" name="duration" min="0" max="99999"/>
+                                <small id="durationHelp" class="form-text text-muted">Performance duration, in seconds./small>
                             </div>
                         </div>
                         <div class="row bg-white">
@@ -517,8 +515,7 @@ $(document).ready(function() {
                 $('#ensemble').val(data.ensemble);
                 $('#grade').val(data.grade);
                 $('#last_performance_date').val(data.last_performance_date);
-                $('#duration_start').val(data.duration_start);
-                $('#duration_end').val(data.duration_end);
+                $('#duration').val(data.duration);
                 $('#comments').val(data.comments);
                 $('#performance_notes').val(data.performance_notes);
                 $('#storage_location').val(data.storage_location);

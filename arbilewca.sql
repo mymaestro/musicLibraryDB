@@ -12,6 +12,7 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -55,6 +56,10 @@ CREATE TABLE `compositions` (
   `enabled` int(11) UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Set greater than 0 if this composition can be played'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table keeps compositions.';
 
+ALTER TABLE compositions RENAME COLUMN duration_start TO duration;
+ALTER TABLE `compositions` CHANGE `duration` `duration` VARCHAR(2048) NULL DEFAULT NULL COMMENT 'Performance duration in seconds';
+ALTER TABLE `compositions` CHANGE `duration` `duration` INT(11) NULL DEFAULT NULL COMMENT 'Performance duration in seconds';
+ALTER TABLE `compositions` DROP COLUMN `duration_end`;
 --
 -- Dumping data for table `compositions`
 --

@@ -23,8 +23,7 @@ if(!empty($_POST)) {
     ferror_log("POST ensemble=".$_POST["ensemble"]);
     ferror_log("POST grade=".$_POST["grade"]);
     ferror_log("POST last_performance_date=".$_POST["last_performance_date"]);
-    ferror_log("POST duration_start=".$_POST["duration_start"]);
-    ferror_log("POST duration_end=".$_POST["duration_end"]);
+    ferror_log("POST duration=".$_POST["duration"]);
     ferror_log("POST comments=".$_POST["comments"]);
     ferror_log("POST performance_notes=".$_POST["performance_notes"]);
     ferror_log("POST storage_location=".$_POST["storage_location"]);
@@ -69,20 +68,11 @@ if(!empty($_POST)) {
         $last_performance_date = "'" . $last_performance_date . "'";
     }
 
-    $duration_start = mysqli_real_escape_string($f_link, $_POST['duration_start']);
-    if (empty($duration_start)) {
-        $duration_start = "NULL";
-    } else {
-        $duration_start = "'" . $duration_start . "'";
+    $duration = mysqli_real_escape_string($f_link, $_POST['duration']);
+    if (empty($duration)) {
+        $duration = "NULL";
     }
     
-    $duration_end = mysqli_real_escape_string($f_link, $_POST['duration_end']);
-    if (empty($duration_end)) {
-        $duration_end = "NULL";
-    } else {
-        $duration_end = "'" . $duration_end . "'";
-    }
-
     $date_acquired = mysqli_real_escape_string($f_link, $_POST['date_acquired']);
     if (empty($date_acquired)) {
         $date_acquired = "NULL";
@@ -127,8 +117,7 @@ if(!empty($_POST)) {
         ensemble = '$ensemble', 
         grade = $grade,
         last_performance_date = $last_performance_date,
-        duration_start = $duration_start,
-        duration_end = $duration_end,
+        duration = $duration,
         comments = '$comments',
         performance_notes = '$performance_notes',
         storage_location = '$storage_location',
@@ -145,8 +134,8 @@ if(!empty($_POST)) {
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration_start, duration_end, comments, performance_notes, storage_location, date_acquired, cost, listening_example_link, checked_out, paper_size, image_path, windrep_link, last_inventory_date, enabled)
-        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, $last_performance_date, $duration_start, $duration_end, '$comments', '$performance_notes', '$storage_location', $date_acquired, $cost, '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$winrep_link', $last_inventory_date, $enabled);
+        INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration, comments, performance_notes, storage_location, date_acquired, cost, listening_example_link, checked_out, paper_size, image_path, windrep_link, last_inventory_date, enabled)
+        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, $last_performance_date, $duration, '$comments', '$performance_notes', '$storage_location', $date_acquired, $cost, '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$winrep_link', $last_inventory_date, $enabled);
         ";
         $message = 'Data Inserted';
     }

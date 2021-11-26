@@ -12,11 +12,11 @@
   require_once('includes/config.php');
   require_once("includes/navbar.php");
   require_once('includes/functions.php');
-  ferror_log("RUNNING list_recordings.php");
+  ferror_log("RUNNING recordings.php");
 ?>
 <main role="main">
     <div class="container">
-        <h2 align="center"><?php echo ORGNAME ?> Recordings</h2>
+        <h2 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h2>
         <div align="right">
             <input type="text" class="tablesearch-input" data-tablesearch-table="#cpdatatable" placeholder="Search">
 <?php if($u_user) : ?>

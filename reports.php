@@ -16,7 +16,7 @@
   <div class="container">
     <h1><?php echo ORGDESC . ' '?>Music Library Reports</h1>
     <p>Missing parts <input type="button" name="view" value="View" id="report_missing_parts" class="btn btn-secondary btn-sm missing_parts" /></p>
-    <p>List <a href="list_recordings.php">Recordings</a></p>
+    <p>List <a href="recordings.php">Recordings</a></p>
     <p>Enter <a href="composition_instrumentation.php">composition instrumentations</a></p>
     <div class="modal" id="view_data_modal">
           <div class="modal-dialog modal-lg">

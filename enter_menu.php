@@ -33,7 +33,7 @@
 					<p class="card-text">Work with instrument parts.</p>
 				</div>
 				<div class="card-footer">
-					<a href="list_parts.php" class="card-link">Parts</a>
+					<a href="parts.php" class="card-link">Parts</a>
 				</div>
 			</div>
 		</div>
@@ -56,7 +56,7 @@
 					<p class="card-text"><small class="text-muted">Types of music genre.</small></p>
 				</div>
 				<div class="card-footer">
-					<a href="Sgenres.php" class="card-link">Genres</a>
+					<a href="genres.php" class="card-link">Genres</a>
 				</div>
 			</div>
 			<div class="card">

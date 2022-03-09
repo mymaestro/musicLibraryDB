@@ -307,10 +307,8 @@ require_once("includes/navbar.php");
                                 $opt .= "</select>";
                                 mysqli_close($f_link);
                                 echo $opt;
-                                //error_log("returned: " . $sql);
                                 ?>   
-<!--                                <input type="text" class="form-control" id="ensemble" name="ensemble" placeholder="Z" maxlength="4"/> -->
-                                <small id="ensembleHelp" class="form-text text-muted">This will be a selection from the Ensembles table</small>
+                                <small id="ensembleHelp" class="form-text text-muted">Select from the Ensembles table</small>
                             </div>
                         </div>
                         <div class="row bg-white">
@@ -319,7 +317,7 @@ require_once("includes/navbar.php");
                                 <label for="grade" class="col-form-label">Grade level (1-7)</label>
                             </div>
                             <div class="col-md-4">
-                                1<input type="range" class="form-range" min="1" max="7" step="0.5" id="range"/>7
+                                1<input type="range" name="grade" class="form-range" min="1" max="7" step="0.5" id="grade"/>7
                                 <small id="gradeHelp" class="form-text text-muted">Level of difficulty (1-7 in 1/2 grade increments)</small>
                             </div>
                             <div class="col-md-2">
@@ -343,8 +341,6 @@ require_once("includes/navbar.php");
                                 echo $opt;
                                 //error_log("returned: " . $sql);
                                 ?> 
-<!--
-                                <input type="text" class="form-control" id="paper_size" name="paper_size" placeholder="Z" maxlength="4"/> -->
                                 <small id="paper_sizeHelp" class="form-text text-muted">What size of paper are the parts on? Select from the paper_sizes options.</small>
                             </div>
                         </div>
@@ -361,9 +357,21 @@ require_once("includes/navbar.php");
                                 <!-- duration 'Performance duration in seconds' -->
                                 <label for="duration" class="col-form-label">Duration (seconds)</label>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-sm-1">
+                                <input type="number" step="1" class="form-control" id="duration_hours" name="duration_hours" min="0" max="12"/>
+                                <small id="durationHourHelp" class="form-text text-muted">Hr</small>
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="number" step="1" class="form-control" id="duration_minutes" name="duration_minutes" min="0" max="59"/>:
+                                <small id="durationMinHelp" class="form-text text-muted">Min</small>
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="number" step="1" class="form-control" id="duration_seconds" name="duration_seconds" min="0" max="59"/>:
+                                <small id="durationSecHelp" class="form-text text-muted">Sec</small>
+                            </div>
+                            <div class="col-sm-1">
                                 <input type="number" step="1" class="form-control" id="duration" name="duration" min="0" max="99999"/>
-                                <small id="durationHelp" class="form-text text-muted">Performance duration, in seconds./small>
+                                <small id="durationHelp" class="form-text text-muted">Performance duration, in seconds.</small>
                             </div>
                         </div>
                         <div class="row bg-white">
@@ -621,7 +629,27 @@ $(document).ready(function() {
             });
         }
     });
+    $('#duration_hours').on("input", function() {
+        $('#duration').val(computeDurationSecs());
+    });
+    $('#duration_minutes').on("input", function() {
+        $('#duration').val(computeDurationSecs());
+    });
+    $('#duration_seconds').on("input", function() {
+        $('#duration').val(computeDurationSecs());
+    });
 });
+
+function computeDurationSecs() {
+    var durationSecs = 0;
+    var hours = $('#duration_hours').val();
+    var minutes = $('#duration_minutes').val();
+    var seconds = $('#duration_seconds').val();
+    if(!isNaN(hours) && hours.length !== 0)   durationSecs += parseInt(hours) * 3600;
+    if(!isNaN(minutes) && minutes.length !== 0) durationSecs += parseInt(minutes) * 60;
+    if(!isNaN(seconds) && seconds.length !== 0) durationSecs += parseInt(seconds);
+    return durationSecs;
+}
 </script>
 </body>
 </html>

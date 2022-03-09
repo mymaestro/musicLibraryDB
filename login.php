@@ -35,6 +35,11 @@
         </div>
         <button type="submit" id="form_button" name="form_button" value="signin" class="w-100 btn btn-primary btn-md">Sign in</button>
         <p id="login-message" align="center">Enter your user name and password.</p>
+
+        <div class="text-center">
+            <p><a href="login_reset.php">Forgot your password?</a></p>
+            <p>Not a member? <a href="login_register.php">Register</a></p>
+        </div>
     </form>
     </div><!-- container -->
 </main>

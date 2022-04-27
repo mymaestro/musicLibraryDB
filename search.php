@@ -38,6 +38,7 @@
                   </div>
               </form>
           </div>
+          <dd>Show me <a href="compositions.php">everything</a> in the library</dd>
         <dt><a href="ensembles.php">Ensembles</a></dt>
           <dd>List ensembles. Bands and smaller ensembles</dd>
         <dt><a href="genres.php">Genres</a></dt>

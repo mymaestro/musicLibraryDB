@@ -48,12 +48,8 @@ if(!empty($_POST)) {
         ferror_log("Delete SQL (N/A): " . $sql);
         $message = 'No data deleted';
     }
-
-
-
-
-    <?php if ($u_admin) : ?>
-        <?php if(!empty($_POST)) {
+    if ($u_admin) :
+        if(!empty($_POST)) {
             echo '<h4>You added the following parts:</h4>';
             if($_POST["submit"] == "add"){
                 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -103,9 +99,8 @@ if(!empty($_POST)) {
                     echo '<p><a href="'.$referred.'">Return</a></p>';
                 } // Part types array is not empty
             } // Submit function was "add"
-         }?>
-        <?php endif; ?>
-
+         }
+        endif;
 
 error_log($output);
 //echo json_encode($message);

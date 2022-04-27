@@ -7,13 +7,13 @@
 */
 define('ORGNAME', '4th Wind');
 define('ORGDESC', 'Fourth Wind Wind Ensemble');
-define('ORGHOME', 'http://musicLibraryDB.com/');
-define('ORGFILES', 'https://musicLibraryDB.com/files/recordings/'); // with trailing slash
+define('ORGHOME', 'http://localhost/~gill/musicLibraryDB/html/');
+define('ORGFILES', 'https://localhost/~gill/musicLibraryDB/html/files/recordings/'); // with trailing slash
 define('ORGLOGO', 'images/logo_large.png');
 define('ORGMAIL', 'librarian@musicLibraryDB.com');
-define('DB_HOST', 'db.musicLibraryDB.com');
+define('DB_HOST', 'localhost');
 define('DB_NAME', 'musicLibraryDB');
-define('DB_USER', 'librarian');
+define('DB_USER', 'musicLibraryDB');
 define('DB_PASS', 'superS3cretPa$$wo4d');
 define('DB_CHARSET', 'utf8');
 define('REGION', 'HOME');

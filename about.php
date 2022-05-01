@@ -15,7 +15,32 @@
 <main role="main" class="container">
   <div class="container">
     <h1>About the Music Library</h1>
-    <h3>Tables</h3>
+    <p>The music library is an application you can use to keep track of the sheet music in your library. While intended for full-size concert bands, brass bands, wind ensembles, and orchestras, the music database can be tailored to fit the complexity of any size library.
+
+    <h1>Music Library access requirements</h1>
+    <p>This application uses responsive front-end designs built on <a href="https://getbootstrap.com/">Bootstrap</a>.</p>
+    <div class="bd-callout bd-callout-info">
+      <blockquote>The most current, and the three previously released versions of Chrome, Edge, and Firefox, are supported.
+      A secure connection using TLS v1.1 or v1.2, which the above browsers include by default, is required.
+      </blockquote>
+    </div>
+    <h3>Pages</h3>
+    <p>These are the pages you can find in this application:</p>
+    <h4>Main pages</h4>
+    <dl>
+      <dt>Home</dt>
+        <dd>The Music Library <a href="index.php">Home page</a> contains the organization title and links to the three main pages of the application: <a href="#search.php">Search</a>, <a href="#enter_menu.php">Enter</a>, and <a href="#reports.php">Reports</a>. At the bottom of the home page, you see a randomly selected title and composer of a piece from the library.</dd>
+      <dt><a name="search.php">Search</a></dt>
+        <dd>On the <a href="search.php">Search</a> page, you can enter text queries to find compositions in the library.</dd>
+      <dt><a name="enter_menu.php">Enter</a></dt>
+        <dd>The <a href="enter_menu.php">Enter</a> page provides a menu of links to other pages where you can list and input library data</dd>
+    </dl>
+    <h4>List/entry pages</h4>
+    <dl>
+      <dt>Compositions</dt>
+      <dd>On the <a href="compositions.php">Compositions</a> page, you see a list of all the compositions in the library. From the list, you can search 
+    </dl>
+    <h3>Database tables</h3>
     <p>These are the tables that are used in the music library database.
       <dl>
         <dt>Compositions</dt>
@@ -37,27 +62,6 @@
       </dl>
     </p>
     <p>Go check out the Wind Repertory Project at https://www.windrep.org/</p>
-    <h1>Music Library access requirements</h1>
-    <p>On this page, you can find the minimum requirements that are needed to effectively use the library.</p>
-    <h3>Operating Systems</h3>
-    <p>You can access the environment from any operating system that supports any of the following browsers. This includes most versions of Microsoft Windows, Apple OS X, macOS, and most major Linux distributions.</p>
-    <h3>Browsers</h3>
-    <p>You must run a modern web browser that supports WebSocket technology. This includes:</p>
-    <ul>
-      <li>Google Chrome</li>
-      <li>Microsoft Edge (Windows 10 only)</li>
-      <li>Mozilla Firefox</li>
-      <li>Microsoft Internet Explorer 11</li>
-      <li>Apple Safari</li>
-    </ul>
-    <div class="bd-callout bd-callout-info">
-      <h5>Notes</h5>
-      <blockquote>The most current, and the three previously released versions of Chrome, Edge, and Firefox, are supported.
-      A secure connection using TLS v1.1 or v1.2, which the above browsers include by default, is required.
-      Internet Explorer in compatibility view is not supported. For more information about disabling compatibility view, see the Microsoft article: Fix site display problems with Compatibility View.
-      Because Chrome supports the WebP image format, Chrome users should see a significant reduction in bandwidth usage when accessing VMs with the browser client.
-      </blockquote>
-    </div>
   </div>
 </main>
 <?php require_once("includes/footer.php");?>

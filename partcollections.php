@@ -357,8 +357,8 @@ $(document).ready(function(){
         var id_partcollection = $('#id_part').val();
         alert(id_partcollection);
         var catalog_number_key = id_partcollection.split(':')[0];
-        var id_part_type_key = id_partcollection.split(':')[1];
-        var id_part_type = id_partcollection.split(':')[2];
+        // var id_part_type_key = id_partcollection.split(':')[1];
+        var id_part_type = id_partcollection.split(':')[1];
         var name = $('#name').val();
         var description = $('#description').val();
         var update = $('#update').val();

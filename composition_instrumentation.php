@@ -130,7 +130,8 @@ require_once("includes/navbar.php");
             <div class="row mb-3">
                 <div class="col-form-label col-sm-2 pt-0">Instrument parts*</div>
                 <div class="col-sm-10 offset-sm-2">
-                    <p>Select multiple parts by holding the Shift or Ctrl keys while clicking</p>
+                    <p>Select multiple parts by holding the Shift or Ctrl keys while clicking.</p>
+                    <p>Enter single parts <i>and</i> parts that are collections (Percussion I, for example). If a type of part does not appear on the list, check the <a href="parttypes.php">Part types</a> page.</p>
                 <!-- Read part types from part_types table -->
                 <?php
                     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);

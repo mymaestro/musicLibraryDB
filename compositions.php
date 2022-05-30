@@ -327,11 +327,11 @@ require_once("includes/navbar.php");
                         <div class="row bg-white">
                             <div class="col-md-2">
                                 <!-- grade decimal(1,1) UNSIGNED  'Grade of difficulty' -->
-                                <label for="grade" class="col-form-label">Grade level (1-7)</label>
+                                <label for="grade" class="col-form-label">Grade level (0-7, 0="unknown")</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="" name="gradevalue" id="gradevalue" disabled/><input type="range" name="grade" class="form-range" min="1" max="7" step="0.5" id="grade" oninput="gradevalue.value=grade.value"/>
-                                <small id="gradeHelp" class="form-text text-muted">Level of difficulty (1-7 in 1/2 grade increments)</small>
+                                <input type="number" name="grade" class="form-control" value="0" min="0" max="7" id="grade"/>
+                                <small id="gradeHelp" class="form-text text-muted">Level of difficulty (1-7, 0 for "unknown")</small>
                             </div>
                             <div class="col-md-2">
                                 <!-- paper_size (4 characters)  'Physical size, from the paper_sizes table' -->
@@ -397,9 +397,9 @@ require_once("includes/navbar.php");
                         </div>
                         <div class="row bg-white">
                             <div class="col-md-12">
-                                <!-- performance_notes (2048 characters)  'Performance notes (how to rehearse it, for example)' -->
+                                <!-- performance_notes (4096 characters)  'Performance notes (how to rehearse it, for example)' -->
                                 <label for="performance_notes" class="col-form-label">Performance notes</label>
-                                <textarea class="form-control" id="performance_notes" name="performance_notes" rows="3" maxlength="2048"></textarea>
+                                <textarea class="form-control" id="performance_notes" name="performance_notes" rows="3" maxlength="4096"></textarea>
                                 <small id="performance_notesHelp" class="form-text text-muted">Performance notes (how to rehearse it, for example).</small>
                             </div>
                         </div>
@@ -528,7 +528,6 @@ $(document).ready(function() {
                 $('#genre').val(data.genre);
                 $('#ensemble').val(data.ensemble);
                 $('#grade').val(data.grade);
-                $('#gradevalue').val(data.grade);
                 $('#last_performance_date').val(data.last_performance_date);
                 $('#duration').val(data.duration);
 
@@ -655,10 +654,6 @@ $(document).ready(function() {
     $('#duration_seconds').on("input", function() {
         $('#duration').val(computeDurationSecs());
     });
-});
-
-$(document).on('input change', '#grade', function() {
-    $("#gradevalue").html($(this).val());
 });
 
 function computeDurationSecs() {

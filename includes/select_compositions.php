@@ -12,6 +12,7 @@ if (isset($_POST["catalog_number"])) {
     <div class="table-responsive">
         <table class="table">';
     while($rowList = mysqli_fetch_array($res)) {
+        $duration = $rowList["duration"];
         $output .= '
             <tr>
                 <td><h4 class="text-primary">'.$rowList["catalog_number"].'</h4></td>
@@ -46,8 +47,12 @@ if (isset($_POST["catalog_number"])) {
                 <td>'.$rowList["comments"].'</td>
             </tr>
             <tr>
+                <td><label>Duration (hours:minutes:seconds)</label></td>
+                <td>'.gmdate("H:i:s", $rowList["duration"]).'</td>
+            <tr>
                 <td><label>Listening link</label></td>
                 <td>'.$rowList["listening_example_link"].'</td>
+            </tr>
             <tr>
                 <td><label>Genre</label></td>
                 <td>'.$rowList["genre"].'</td>

@@ -8,6 +8,7 @@ if (isset($_POST["catalog_number"])) {
     $sql = "SELECT p.catalog_number,
                    c.name title,
                    t.name name,
+                   p.description description,
                    z.name paper_size,
                    p.page_count,
                    p.originals_count,
@@ -39,6 +40,7 @@ if (isset($_POST["catalog_number"])) {
                     <th>Originals</th>
                     <th>Copies</th>
                     <th>Paper</th>
+                    <th>Description</th>
                </tr>';            
         }
         $output .= '
@@ -47,6 +49,7 @@ if (isset($_POST["catalog_number"])) {
                 <td>'.$originals.'</td>
                 <td>'.$rowList["copies_count"].'</td>
                 <td>'.$rowList["page_count"]. ' ' . $pages .' of '. $rowList["paper_size"].'</td>
+                <td>'.$rowList["description"].'</td>
             </tr>
             ';
     }

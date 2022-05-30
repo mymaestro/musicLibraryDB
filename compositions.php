@@ -53,6 +53,7 @@ require_once("includes/navbar.php");
                         <th data-tablesort-type="string">Arranger <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Description <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Comments <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Grade <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Genre <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Enabled <i class="fa fa-sort" aria-hidden="true"></i></th>
@@ -69,9 +70,11 @@ require_once("includes/navbar.php");
                            c.description,
                            c.comments,
                            c.composer,
+                           c.grade,
                            c.arranger,
                            g.name genre,
                            e.name ensemble,
+                           c.grade,
                            c.enabled
                     FROM   compositions c
                     JOIN   genres g
@@ -90,6 +93,7 @@ require_once("includes/navbar.php");
                            c.arranger,
                            g.name genre,
                            e.name ensemble,
+                           c.grade,
                            c.enabled
                     FROM   compositions c
                     JOIN   genres g
@@ -107,6 +111,7 @@ require_once("includes/navbar.php");
             $composer = $rowList['composer'];
             $arranger = $rowList['arranger'];
             $genre = $rowList['genre'];
+            $grade = $rowList['grade'];
             $ensemble = $rowList['ensemble'];
             $enabled = $rowList['enabled'];
             echo '<tr>
@@ -116,6 +121,7 @@ require_once("includes/navbar.php");
                         <td>'.$arranger.'</td>
                         <td>'.$description.'</td>
                         <td>'.$comments.'</td>
+                        <td>'.$grade.'</td>
                         <td>'.$genre.'</td>
                         <td>'.$ensemble.'</td>
                         <td><div class="form-check form-switch">
@@ -197,16 +203,23 @@ require_once("includes/navbar.php");
                 </div><!-- modal-header -->
                 <div class="modal-body">
                   <div class="container-fluid">
-                    <form method="post" id="insert_form">
+                    <form class="gx-3 gy-2 align-items-center" method="post" id="insert_form">
                         <div class="row bg-light">
                             <div class="col-md-3">
                                 <!-- catalog_number (5 characters) 'The catalog number is a letter and 3-digit number, for example M101' -->
                                 <label for="catalog_number" class="col-form-label">Catalog number*</label>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <input type="text" class="form-control" id="catalog_number" name="catalog_number" placeholder="X" required minlength="2" maxlength="5" size="5"/>
                                 <input type="hidden" id="catalog_number_hold" name="catalog_number_hold" value="" />
                             </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                <!-- enabled (0 or 1) UNSIGNED  'Set greater than 0 if this composition can be played' -->
+                                <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
+                                <label for="enabled" class="form-check-label">Enabled</label>
+                            </div>
+                        </div>                            
                         </div>
                         <hr />
                         <div class="row bg-white">
@@ -317,7 +330,7 @@ require_once("includes/navbar.php");
                                 <label for="grade" class="col-form-label">Grade level (1-7)</label>
                             </div>
                             <div class="col-md-4">
-                                1<input type="range" name="grade" class="form-range" min="1" max="7" step="0.5" id="grade"/>7
+                                <input type="" name="gradevalue" id="gradevalue" disabled/><input type="range" name="grade" class="form-range" min="1" max="7" step="0.5" id="grade" oninput="gradevalue.value=grade.value"/>
                                 <small id="gradeHelp" class="form-text text-muted">Level of difficulty (1-7 in 1/2 grade increments)</small>
                             </div>
                             <div class="col-md-2">
@@ -468,14 +481,6 @@ require_once("includes/navbar.php");
                                 <small id="last_inventory_dateHelp" class="form-text text-muted">When was the last time somebody touched this music</small>
                             </div>
                         </div>
-                        <div class="row">
-                                <br />
-                                <div class="form-check">
-                                <label for="enabled" class="form-check-label">Enabled</label>
-                                <!-- enabled (0 or 1) UNSIGNED  'Set greater than 0 if this composition can be played' -->
-                                <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
-                            </div>
-                        </div>
                   </div><!-- container-fluid -->
                 </div><!-- modal-body -->
                 <div class="modal-footer">  
@@ -493,6 +498,7 @@ require_once("includes/navbar.php");
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function() {
+    $("#gradevalue").html($("#grade").val());;
     $('#windrep').click(function() {
         var searchURL = 'https://www.windrep.org/index.php?search=' + $('#name').val();
         window.open(searchURL);
@@ -522,8 +528,19 @@ $(document).ready(function() {
                 $('#genre').val(data.genre);
                 $('#ensemble').val(data.ensemble);
                 $('#grade').val(data.grade);
+                $('#gradevalue').val(data.grade);
                 $('#last_performance_date').val(data.last_performance_date);
                 $('#duration').val(data.duration);
+
+                // Set the hour, minutes, seconds fields
+                var d_duration = data.duration;
+                var d_hours = ~~(d_duration / 3600);
+                var d_minutes = ~~((d_duration % 3600) / 60);
+                var d_seconds = ~~d_duration % 60;
+                $('#duration_hours').val(d_hours);
+                $('#duration_minutes').val(d_minutes);
+                $('#duration_seconds').val(d_seconds);
+
                 $('#comments').val(data.comments);
                 $('#performance_notes').val(data.performance_notes);
                 $('#storage_location').val(data.storage_location);
@@ -638,6 +655,10 @@ $(document).ready(function() {
     $('#duration_seconds').on("input", function() {
         $('#duration').val(computeDurationSecs());
     });
+});
+
+$(document).on('input change', '#grade', function() {
+    $("#gradevalue").html($(this).val());
 });
 
 function computeDurationSecs() {

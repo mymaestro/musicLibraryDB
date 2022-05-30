@@ -41,7 +41,7 @@ require_once("includes/navbar.php");
 <main role="main" class="container">
     <div class="container">
         <h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1>
-        <?php if ($u_user) : ?>
+        <?php if($u_admin) : ?>
     <div id="instrumentation">
         <form action="includes/insert_instrumentation.php" method="post" id="instrumentation_form">
             <div class="row mb-3">

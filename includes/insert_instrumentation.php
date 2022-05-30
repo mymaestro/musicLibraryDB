@@ -19,7 +19,7 @@ require_once("navbar.php");
     ?>
     <div class="container">
         <h1 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
-        <?php if ($u_user) : ?>
+        <?php if ($u_admin) : ?>
         <?php if(!empty($_POST)) {
             echo '<h4>You added the following parts:</h4>';
             if($_POST["submit"] == "add"){

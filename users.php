@@ -27,7 +27,7 @@
         <?php
         echo '            <div class="panel panel-default">
                <div class="table-repsonsive">';
-            if($u_user){ 
+            if($u_admin){ 
                 echo '
                 <form action="enable_list.php" method="post" id="enable_list_form">';
             }    

@@ -7,6 +7,7 @@
   if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
     $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
+    $u_librarian = (strpos(htmlspecialchars($_SESSION['roles']), 'librarian') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
   }
   require_once('includes/config.php');
@@ -41,6 +42,7 @@
                         <th>Real name</th>
                         <th>e-mail address</th>
                         <th>User</th>
+                        <th>Librarian</th>
                         <th>Admin</th>
                     </tr>
                     </thead>
@@ -55,6 +57,7 @@
             $address = $rowList['address'];
             $roles = $rowList['roles'];
             $isAdmin = (strpos(htmlspecialchars($roles), 'administrator') !== FALSE ? TRUE : FALSE);
+            $isLibrarian = (strpos(htmlspecialchars($roles), 'librarian') !== FALSE ? TRUE : FALSE);
             $isUser = (strpos(htmlspecialchars($roles), 'user') !== FALSE ? TRUE : FALSE);
             echo '<tr>
                         <td>'.$id_user.'<input type="hidden" name="id_user[]" value="'. $id_user .'"></td>
@@ -63,6 +66,9 @@
                         <td>'.$address.'</td>
                         <td><div class="form-check form-switch">
                         <input class="form-check-input" name="u_user[]" type="checkbox" role="switch" id="isUser" '. (($u_admin) ? "" : "disabled ") . (($isUser) ? "checked" : "") .'>
+                        </div></td>
+                        <td><div class="form-check form-switch">
+                        <input class="form-check-input" name="u_librarian[]" type="checkbox" role="switch" id="isLibrarian" '. (($u_librarian) ? "" : "disabled ") . (($isLibrarian) ? "checked" : "") .'>
                         </div></td>
                         <td><div class="form-check form-switch">
                         <input class="form-check-input" name="u_admin[]" type="checkbox" role="switch" id="isAdmin" '. (($u_admin) ? "" : "disabled ") . (($isAdmin) ? "checked" : "") .'>

@@ -11,6 +11,7 @@ if (isset($_SESSION['username'])) {
 }
 require_once('includes/config.php');
 require_once("includes/navbar.php");
+require_once('includes/functions.php');
 ?>
 <main role="main" class="container">
 <div class="container">
@@ -60,7 +61,6 @@ require_once("includes/navbar.php");
                     </tr>
                     </thead>
                     <tbody>';
-        require_once('includes/functions.php');               
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         if (isset($_POST["submitButton"])) {
             ferror_log("POST search=".$_POST["search"]);

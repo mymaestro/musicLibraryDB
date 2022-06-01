@@ -18,7 +18,7 @@
 <main>
   <div class="container">
         <h2 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h2>
-<?php if($u_admin) : ?>
+<?php if($u_librarian) : ?>
         <div align="right">
             <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
             <br />
@@ -28,7 +28,7 @@
         <?php
         echo '            <div class="panel panel-default">
                <div class="table-repsonsive">';
-            if($u_admin){ 
+            if($u_librarian){ 
                 echo '
                 <form action="enable_list.php" method="post" id="enable_list_form">';
             }    
@@ -60,9 +60,9 @@
                         <td>'.$description.'</td>
                         <td>'.$link.'</td>
                         <td><div class="form-check form-switch">
-                        <input class="form-check-input" name="enabled[]" type="checkbox" role="switch" id="typeEnabled" '. (($u_admin) ? "" : "disabled ") . (($enabled == 1) ? "checked" : "") .'>
+                        <input class="form-check-input" name="enabled[]" type="checkbox" role="switch" id="typeEnabled" '. (($u_librarian) ? "" : "disabled ") . (($enabled == 1) ? "checked" : "") .'>
                         </div></td>';
-            if ($u_admin) { echo '
+            if ($u_librarian) { echo '
                         <td><input type="button" name="delete" value="Delete" id="'.$id_ensemble.'" class="btn btn-danger btn-sm delete_data" /></td>
                         <td><input type="button" name="edit" value="Edit" id="'.$id_ensemble.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
             echo '
@@ -73,7 +73,7 @@
         echo '
                     </tbody>
                     </table>';
-                    if($u_admin){ 
+                    if($u_librarian){ 
                         echo '
                         </form>';
                     }

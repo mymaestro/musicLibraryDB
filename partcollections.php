@@ -19,7 +19,7 @@
 <main role="main">
     <div class="container">
     <h2 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h2>
-<?php if($u_admin) : ?>
+<?php if($u_librarian) : ?>
     <div align="right">
         <p>Before adding a part collection, there must be a part with more than one "parts in a collection" specified.
         <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>

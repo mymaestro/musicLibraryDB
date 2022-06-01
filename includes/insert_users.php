@@ -22,7 +22,12 @@ if(!empty($_POST)) {
     $username = mysqli_real_escape_string($f_link, $_POST['username']);
     $address = mysqli_real_escape_string($f_link, $_POST['address']);
     $roles = mysqli_real_escape_string($f_link, $_POST['roles']);
-    
+    $u_password = 'changeme'; // need to encode this
+    $passwordHash = password_hash($u_password, PASSWORD_DEFAULT);
+
+    ferror_log("Password hash =" . $passwordHash);
+
+    // Need to check that a user with that username or email address already exist
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE users 
@@ -30,13 +35,14 @@ if(!empty($_POST)) {
         name ='$name',
         username = '$username',
         address = '$address',
-        roles = '$roles'
+        roles = '$roles',
+        password = '$u_password'
         WHERE id_users='".$_POST["id_users_hold"]."'";
         $message = "user $name updated";
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO users(id_users, name, username, address, roles)
-        VALUES('$id_users','$name', '$username', '$address', '$roles');
+        INSERT INTO users(id_users, name, username, address, roles, password)
+        VALUES('$id_users','$name', '$username', '$address', '$roles', '$passwordHash');
         ";
         $message = "user $name inserted";
     }

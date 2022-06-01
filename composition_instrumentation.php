@@ -3,6 +3,7 @@ define('PAGE_TITLE', 'Enter instrumentation');
 define('PAGE_NAME', 'Enter instrumentation');
 require_once("includes/header.php");
 $u_admin = FALSE;
+$u_librarian = FALSE;
 $u_user = FALSE;
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
@@ -42,7 +43,7 @@ require_once("includes/navbar.php");
 <main role="main" class="container">
     <div class="container">
         <h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1>
-        <?php if($u_admin) : ?>
+        <?php if($u_librarian) : ?>
     <div id="instrumentation">
         <form action="includes/insert_instrumentation.php" method="post" id="instrumentation_form">
             <div class="row mb-3">

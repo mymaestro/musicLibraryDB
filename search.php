@@ -3,6 +3,7 @@
   define('PAGE_NAME', 'search');
   require_once("includes/header.php");
   $u_admin = FALSE;
+  $u_librarian = FALSE;
   $u_user = FALSE;
   if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];

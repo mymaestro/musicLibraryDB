@@ -215,8 +215,9 @@ $(document).ready(function(){
         }
         else
         {
+            alert("Going for AJAX.");
             $.ajax({
-                url:"includes/insert_parts.php",
+                url:"includes/insert_instrumentation.php",
                 method:"POST",
                 data:$('#insert_form').serialize(),
                 beforeSend:function(){

@@ -13,6 +13,13 @@ if (isset($_SESSION['username'])) {
 }
 require_once('includes/config.php');
 require_once("includes/navbar.php");
+require_once('includes/functions.php');
+
+if(!empty($_POST["catalog_number"])) {
+    $catalog_number = $_POST['catalog_number'];
+} else {
+    $catalog_number = "";
+}
 
 // Ways to get here:
 // 1. Directly from the menu. Select Composition by name, enter default parts, click submit (need form validation)
@@ -21,21 +28,7 @@ require_once("includes/navbar.php");
 // 4. User mode: Like 3 but view only
 
 // Fill the parts table with information from the rows in this form
-// Parts table:
 
-//CREATE TABLE `parts` (
-//    `catalog_number` varchar(255) NOT NULL DEFAULT '' COMMENT 'Library catalog number of the composition to which this part belongs',
-//    `id_part_type` int(10) UNSIGNED NOT NULL COMMENT 'Which type of part, from the part_types table',
-//    `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Name of the part, if different from the part type',
-//    `description` varchar(255) DEFAULT '' COMMENT 'Description or comments of this particular part',
-//    `is_part_collection` int(11) DEFAULT NULL COMMENT 'This is a part collection of other parts',
-//    `paper_size` varchar(4) DEFAULT NULL COMMENT 'Physical size, from the paper_sizes table',
-//    `page_count` int(11) DEFAULT NULL COMMENT 'How many pages does this part contain?',
-//    `image_path` text DEFAULT NULL COMMENT 'Where an image of this part is stored.',
-//    `originals_count` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Set greater than 0 if originals of this part exist',
-//    `copies_count` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Set greater than 0 if copies of this part exist'
-//  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table holds parts.';
-  
 // It is expected that all the instrumentation (parts) for a composition will by default have the same
 // catalog_number, paper_size, and page_count
 // The code inserts a  
@@ -55,13 +48,12 @@ require_once("includes/navbar.php");
                     <!-- Unless one is already provided in the _POST('catalog_number') -->
                     <!-- check if we got here by instr button in list_compositions -->
                 <?php
-                    require_once('includes/functions.php');
                     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                    $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
                     // Clicked to get here
                     // $_POST catalog_number=C123
                     // $_POST compositions=Instrumentation
-                    if(!empty($_POST["catalog_number"])) {
-                        $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
+                    if(!empty($catalog_number)) {
                         $sql = "SELECT `name` FROM compositions WHERE `enabled` = 1 AND `catalog_number` = '".$catalog_number."' ORDER BY name;";
                         $opt = '<input type="hidden" name="catalog_number" value="'.$catalog_number.'" />';
                         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
@@ -71,6 +63,7 @@ require_once("includes/navbar.php");
                         }
                         mysqli_close($f_link);
                     } else {
+                        // User came here from the menu or by typing the URL
                         $sql = "SELECT `catalog_number`, `name` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
                         //ferror_log("Running " . $sql);
                         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
@@ -137,16 +130,23 @@ require_once("includes/navbar.php");
                 <!-- Read part types from part_types table -->
                 <?php
                     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                    // Fetch parts already saved for this composition into an array
+                    //$sql = "SELECT id_part_type FROM parts WHERE catalog_number = '". $catalog_number . "';";
+                    //$res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                    //$parts_included = mysqli_fetch_array($res);
+                    //ferror_log("parts in ".$catalog_number.": ". $parts_included[1]);
+
                     $sql = "SELECT `id_part_type`, `name` FROM part_types WHERE `enabled` = 1 ORDER BY collation;";
                     $rowcount = 0;
-                    //ferror_log("Running " . $sql);
+                    ferror_log("Running " . $sql);
                     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
                     $opt = "<select class='form-select form-control' aria-label='Select part types' id='parttypes' name='parttypes[]' size='17' multiple>";
                     while ($rowList = mysqli_fetch_array($res)) {
                         $rowcount++;
                         $id_part_type = $rowList['id_part_type'];
                         $part_type_name = $rowList['name'];
-                        $opt .= "<option value='".$id_part_type ."'>" . $part_type_name . "</option>";
+                      //  $selected = (in_array($id_part_type, $parts_included)) ? ' selected' : '';
+                        $opt .= "<option value='".$id_part_type . "'>" . $part_type_name . "</option>";
                     }
                     $opt .= "</select>";
                     mysqli_close($f_link);

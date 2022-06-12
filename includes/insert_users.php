@@ -24,7 +24,7 @@ if(!empty($_POST)) {
     $roles = mysqli_real_escape_string($f_link, $_POST['roles']);
     $u_password = 'changeme'; // need to encode this
     $passwordHash = password_hash($u_password, PASSWORD_DEFAULT);
-
+    //grr
     ferror_log("Password hash =" . $passwordHash);
 
     // Need to check that a user with that username or email address already exist
@@ -35,8 +35,7 @@ if(!empty($_POST)) {
         name ='$name',
         username = '$username',
         address = '$address',
-        roles = '$roles',
-        password = '$u_password'
+        roles = '$roles'
         WHERE id_users='".$_POST["id_users_hold"]."'";
         $message = "user $name updated";
     } elseif($_POST["update"] == "add") {

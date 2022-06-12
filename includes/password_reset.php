@@ -17,7 +17,7 @@ if (isset($_POST["reset-request-submit"])) {
     $sql = "SELECT * FROM users WHERE username = ? AND address = ?;";
 
     if (!$stmt = mysqli_prepare($f_link, $sql)) {
-        echo "Database error.";
+        echo "Database error preparing $sql";
         exit();
     } else {
         mysqli_stmt_bind_param($stmt, "ss", $username, $address);
@@ -41,7 +41,7 @@ if (isset($_POST["reset-request-submit"])) {
             $sql = "INSERT INTO password_reset (password_reset_email, password_reset_selector, password_reset_token, password_reset_expires) VALUES (?, ?, ?, ?);";
         
             if (!$stmt = mysqli_prepare($f_link, $sql)) {
-                echo "Database error.";
+                echo "Database error preparing $sql.";
                 exit();
             } else {
                 $hashedToken = password_hash($token, PASSWORD_DEFAULT);

@@ -21,6 +21,7 @@
         <h2 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h2>
 <?php if($u_admin) : ?>
         <div align="right">
+            <span id="updatemessage"></span>
             <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
             <br />
         </div><!-- right button -->
@@ -31,7 +32,7 @@
                <div class="table-repsonsive">';
             if($u_admin){ 
                 echo '
-                <form action="enable_list.php" method="post" id="enable_list_form">';
+                <form action="includes/insert_users.php" method="post" id="users_form">';
             }    
         echo '
           <table class="table table-hover">
@@ -215,7 +216,6 @@ $(document).ready(function(){
                 $('#insert').val("Update");
                 $('#update').val("update");
                 $('#add_data_Modal').modal('show');
-
             }
         });
     });

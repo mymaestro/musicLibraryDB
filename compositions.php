@@ -332,7 +332,7 @@ require_once('includes/functions.php');
                                 <label for="grade" class="col-form-label">Grade level (0-7, 0="unknown")</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="number" name="grade" class="form-control" value="0" min="0" max="7" id="grade"/>
+                                <input type="number" name="grade" class="form-control" value="0" min="0" max="7" step="0.5" id="grade"/>
                                 <small id="gradeHelp" class="form-text text-muted">Level of difficulty (1-7, 0 for "unknown")</small>
                             </div>
                             <div class="col-md-2">

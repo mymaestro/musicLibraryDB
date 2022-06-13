@@ -3,7 +3,16 @@
  //Multi-row set Enabled flag
 require_once('includes/config.php');
 require_once('includes/functions.php');
-error_log("Running delete_records.php");
+error_log("Running enable_list.php");
+$u_admin = FALSE;
+$u_librarian = FALSE;
+$u_user = FALSE;
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+    $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
+    $u_librarian = (strpos(htmlspecialchars($_SESSION['roles']), 'librarian') !== FALSE ? TRUE : FALSE);
+    $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
+}
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $output = '';
 $message = '';
@@ -48,7 +57,7 @@ if(!empty($_POST)) {
         ferror_log("Delete SQL (N/A): " . $sql);
         $message = 'No data deleted';
     }
-    if ($u_admin) :
+    if ($u_librarian) :
         if(!empty($_POST)) {
             echo '<h4>You added the following parts:</h4>';
             if($_POST["submit"] == "add"){

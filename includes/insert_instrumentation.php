@@ -3,11 +3,13 @@ define('PAGE_TITLE', 'Insert instrumentation');
 define('PAGE_NAME', 'Insert instrumentation');
 require_once("header.php");
 $u_admin = FALSE;
+$u_librarian = FALSE;
 $u_user = FALSE;
 if (isset($_SESSION['username'])) {
-    $username = $_SESSION['username'];
-    $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
-    $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
+  $username = $_SESSION['username'];
+  $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
+  $u_librarian = (strpos(htmlspecialchars($_SESSION['roles']), 'librarian') !== FALSE ? TRUE : FALSE);
+  $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
 }
 require_once('config.php');
 require_once("navbar.php");
@@ -19,7 +21,7 @@ require_once("navbar.php");
     ?>
     <div class="container">
         <h1 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
-        <?php if ($u_admin) : ?>
+        <?php if ($u_librarian) : ?>
         <?php if(!empty($_POST)) {
             echo '<h4>You added the following parts:</h4>';
             if($_POST["submit"] == "add"){

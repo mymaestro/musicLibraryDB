@@ -129,13 +129,14 @@ if(!empty($_POST)) {
         last_inventory_date = $last_inventory_date,
         image_path = '$image_path',
         windrep_link = $windrep_link,
+        last_update = CURRENT_TIMESTAMP(),
         enabled = $enabled
         WHERE catalog_number='".$_POST["catalog_number_hold"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration, comments, performance_notes, storage_location, date_acquired, cost, listening_example_link, checked_out, paper_size, image_path, windrep_link, last_inventory_date, enabled)
-        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, $last_performance_date, $duration, '$comments', '$performance_notes', '$storage_location', $date_acquired, $cost, '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$winrep_link', $last_inventory_date, $enabled);
+        INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration, comments, performance_notes, storage_location, date_acquired, cost, listening_example_link, checked_out, paper_size, image_path, windrep_link, last_inventory_date, last_update, enabled)
+        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, $last_performance_date, $duration, '$comments', '$performance_notes', '$storage_location', $date_acquired, $cost, '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$winrep_link', $last_inventory_date, CURRENT_TIMESTAMP(), $enabled);
         ";
         $message = 'Data Inserted';
     }

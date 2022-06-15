@@ -40,7 +40,8 @@ if(!empty($_POST)) {
               id_part_type_key = '$id_part_type_key',
               id_part_type = '$id_part_type',
               name =$name,
-              description = $description
+              description = $description,
+              last_update = CURRENT_TIMESTAMP()
         WHERE catalog_number_key='".$catalog_number_key."'
         AND   id_part_type_key='".$id_part_type_key."'
         AND   id_part_type = '".$id_part_type."';";
@@ -52,8 +53,8 @@ if(!empty($_POST)) {
                 $id_part_type = mysqli_real_escape_string($f_link, $id_part_type_num);
                 ferror_log("Adding id_part_type = ".$id_part_type);
                 $sql = "
-                INSERT INTO part_collections(catalog_number_key, id_part_type_key, id_part_type, name, description)
-                VALUES('$catalog_number_key', '$id_part_type_key', '$id_part_type', $name, $description);
+                INSERT INTO part_collections(catalog_number_key, id_part_type_key, id_part_type, name, description, last_update)
+                VALUES('$catalog_number_key', '$id_part_type_key', '$id_part_type', $name, $description, CURRENT_TIMESTAMP() );
                 ";
                 ferror_log("Running SQL ". $sql);
                 if(mysqli_query($f_link, $sql)) {

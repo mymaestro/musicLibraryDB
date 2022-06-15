@@ -80,13 +80,14 @@ if(!empty($_POST)) {
         page_count = $page_count,
         image_path = $image_path,
         originals_count = $originals_count,
-        copies_count = $copies_count
+        copies_count = $copies_count,
+        last_update = CURRENT_TIMESTAMP()
         WHERE catalog_number = '".$catalog_number_hold."' AND id_part_type = ".$id_part_type_hold.";";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO parts(catalog_number, id_part_type, name, description, is_part_collection, paper_size, page_count, image_path, originals_count, copies_count)
-        VALUES('$catalog_number', '$id_part_type', '$name', $description, $is_part_collection, $paper_size, $page_count, $image_path, $originals_count, $copies_count);
+        INSERT INTO parts(catalog_number, id_part_type, name, description, is_part_collection, paper_size, page_count, image_path, originals_count, copies_count, last_update)
+        VALUES('$catalog_number', '$id_part_type', '$name', $description, $is_part_collection, $paper_size, $page_count, $image_path, $originals_count, $copies_count, CURRENT_TIMESTAMP() );
         ";
         $message = 'Data Inserted';
     }

@@ -58,6 +58,7 @@ require_once('includes/functions.php');
                         <th data-tablesort-type="string">Comments <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Grade <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Genre <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="string">Parts <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Enabled <i class="fa fa-sort" aria-hidden="true"></i></th>
                     </tr>
@@ -72,19 +73,22 @@ require_once('includes/functions.php');
                            c.description,
                            c.comments,
                            c.composer,
-                           c.grade,
                            c.arranger,
-                           g.name genre,
-                           e.name ensemble,
                            c.grade,
+                           g.name genre,
+                           COUNT(p.id_part_type) as parts,
+                           e.name ensemble,
                            c.enabled
                     FROM   compositions c
-                    JOIN   genres g
+                    JOIN   genres g      
                     ON     c.genre = g.id_genre
-                    JOIN   ensembles e
+                    JOIN   ensembles e   
                     ON     c.ensemble = e.id_ensemble
+                    LEFT OUTER JOIN parts p 
+                    ON  c.catalog_number = p.catalog_number
                     WHERE  MATCH(c.name, c.description, c.composer, c.arranger, c.comments)
                     AGAINST( '".$search."' IN NATURAL LANGUAGE MODE)
+                    GROUP BY c.catalog_number
                     ORDER BY c.catalog_number;";
         } else {
             $sql = "SELECT c.catalog_number,
@@ -94,6 +98,7 @@ require_once('includes/functions.php');
                            c.composer,
                            c.arranger,
                            g.name genre,
+                           COUNT(p.id_part_type) as parts,
                            e.name ensemble,
                            c.grade,
                            c.enabled
@@ -102,8 +107,12 @@ require_once('includes/functions.php');
                     ON     c.genre = g.id_genre
                     JOIN   ensembles e
                     ON     c.ensemble = e.id_ensemble
+                    LEFT OUTER JOIN parts p
+                    ON     c.catalog_number = p.catalog_number
+                    GROUP  BY c.catalog_number
                     ORDER BY RAND();";
         }
+
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
         while ($rowList = mysqli_fetch_array($res)) {
             $catalog_number = $rowList['catalog_number'];
@@ -114,6 +123,7 @@ require_once('includes/functions.php');
             $arranger = $rowList['arranger'];
             $genre = $rowList['genre'];
             $grade = $rowList['grade'];
+            $partscount = $rowList['parts'];
             $ensemble = $rowList['ensemble'];
             $enabled = $rowList['enabled'];
             echo '<tr>
@@ -125,6 +135,7 @@ require_once('includes/functions.php');
                         <td>'.$comments.'</td>
                         <td>'.$grade.'</td>
                         <td>'.$genre.'</td>
+                        <td>'.$partscount.'</td>
                         <td>'.$ensemble.'</td>
                         <td><div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
@@ -153,7 +164,7 @@ require_once('includes/functions.php');
     </div><!-- container -->
 
     <div class="modal" id="view_data_modal"><!-- view data -->
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Composition details</h3>

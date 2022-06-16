@@ -7,72 +7,42 @@ $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
 $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
 if (isset($_POST["id_part_type"])) {
     $output = "";
-    $sql = "SELECT p.catalog_number,
-        c.name title,
-        p.id_part_type,
-        t.name type,
-        p.name,
-        p.description,
-        p.is_part_collection,
-        p.paper_size,
-        z.name size,
-        p.page_count,
-        p.image_path,
-        p.originals_count,
-        p.copies_count
+    $sql = "SELECT p.catalog_number       'Catalog',
+                   c.name                 'Composition',
+                   c.composer             'Composer',
+                   t.name                 'Type',
+                   p.name                 'Part name',
+                   p.description          'Description',
+                   p.is_part_collection   'Instruments in collection',
+                   z.name                 'Paper size',
+                   p.page_count           'Pages',
+                   p.originals_count      'Originals',
+                   p.copies_count         'Copies',
+                   p.image_path           'Digital image',
+                   p.last_update          'Last updated'
     FROM   parts p
     LEFT JOIN compositions c ON c.catalog_number = p.catalog_number
     LEFT JOIN part_types t ON t.id_part_type = p.id_part_type
     LEFT JOIN paper_sizes z ON z.id_paper_size = p.paper_size
     WHERE  p.catalog_number = '" . $catalog_number . "'
     AND    p.id_part_type = " . $id_part_type .";";
-    $res = mysqli_query($f_link, $sql);
+
     $output .= '
     <div class="table-responsive">
-        <table class="table">';
-    while($rowList = mysqli_fetch_array($res)) {
-        $output .= '
-            <tr>
-                <td><label>Composition</label></td>
-                <td>'.$rowList["catalog_number"].' - <em>'. $rowList["title"] .'</em></td>
-            </tr>
-            <tr>
-                <td><label>Part name</label></td>
-                <td>'.$rowList["name"].'</td>
-            </tr>
-            <tr>
-                <td><label>Part type</label></td>
-                <td>'.$rowList["type"].'</td>
-            </tr>
-            <tr>
-                <td><label>Description</label></td>
-                <td>'.$rowList["description"].'</td>
-            </tr>
-            <tr>
-                <td><label>Paper size</label></td>
-                <td>'.$rowList["size"].'</td>
-            </tr>
-            <tr>
-                <td><label>Pages</label></td>
-                <td>'.$rowList["page_count"].'</td>
-            </tr>
-            <tr>
-                <td><label>Originals</label></td>
-                <td>'.$rowList["originals_count"].'</td>
-            </tr>
-            <tr>
-                <td><label>Copies</label></td>
-                <td>'.$rowList["copies_count"].'</td>
-            </tr>
-            <tr>
-                <td><label>Parts in collection</label></td>
-                <td>'.$rowList["is_part_collection"].'</td>
-            </tr>
-            <tr>
-                <td><label>Image path</label></td>
-                <td>'.$rowList["image_path"].'</td>
-            </tr>
-            ';
+        <table class="table table-striped table-condensed">';
+
+    if ($res = mysqli_query($f_link, $sql)) {
+        $col = 0;
+        while ($fieldinfo = mysqli_fetch_field($res)) {
+            $fields[$col] =  $fieldinfo -> name;
+            $col++;
+        }
+        while ($rowList = mysqli_fetch_array($res, MYSQLI_NUM)) {
+            for ($row = 0; $row < $col; $row++) {
+                $output .= '<tr><td><strong>'. $fields[$row] . '</strong></td>';
+                $output .= '<td>'. $rowList[$row] . '</td></tr>';
+            }
+        }
     }
     $output .= '
         </table>

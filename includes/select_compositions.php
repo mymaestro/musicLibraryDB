@@ -49,7 +49,7 @@ if (isset($_POST["catalog_number"])) {
         while ($rowList = mysqli_fetch_array($res, MYSQLI_NUM)) {
             for ($row = 0; $row < $col; $row++) {
                 $output .= '<tr><td><strong>'. $fields[$row] . '</strong></td>';
-                $output .= '<td>'. $rowList[$row] . '</td></tr>';
+                $output .= '<td id="'.$fields[$row].'-data">'. $rowList[$row] . '</td></tr>';
             }
         }
     }

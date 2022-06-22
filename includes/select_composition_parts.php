@@ -7,6 +7,7 @@ if (isset($_POST["catalog_number"])) {
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $sql = "SELECT p.catalog_number,
                    c.name title,
+                   c.composer composer,
                    t.name name,
                    p.description description,
                    z.name paper_size,
@@ -23,6 +24,7 @@ if (isset($_POST["catalog_number"])) {
             WHERE  p.catalog_number = '".$_POST["catalog_number"]."'
             ORDER BY t.collation;";
     ferror_log("Running SQL: ". $sql);
+    $output = '<div class="modal-header">';
     $res = mysqli_query($f_link, $sql);
     $rowNum = 0;
     while($rowList = mysqli_fetch_array($res)) {
@@ -31,14 +33,18 @@ if (isset($_POST["catalog_number"])) {
         $originals = $rowList["originals_count"];
         if($rowNum == 1){
             $output .= '
-            <h4><span class="text-primary">'.$rowList["catalog_number"].'</span> - <span class="text-info">'.$rowList["title"].'</span></h4>
+            <h3 class="modal-title">Parts for <span class="text-primary">'.$rowList["catalog_number"].'</span> - <span class="text-info">'.$rowList["title"].'</span> <span class="text-muted">('.$rowList["composer"].')</span></h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!-- modal-header -->
+            <div class="modal-body">
             <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-condensed table-striped">
             <thead>
                 <tr>
                     <th>Part</th>
                     <th>Originals</th>
                     <th>Copies</th>
+                    <th>Pages</th>
                     <th>Paper</th>
                     <th>Description</th>
                </tr>';            
@@ -48,14 +54,20 @@ if (isset($_POST["catalog_number"])) {
                 <td>'.$rowList["name"].'</td>
                 <td>'.$originals.'</td>
                 <td>'.$rowList["copies_count"].'</td>
-                <td>'.$rowList["page_count"]. ' ' . $pages .' of '. $rowList["paper_size"].'</td>
+                <td>'.$rowList["page_count"]. '</td>
+                <td>'.$rowList["paper_size"].'</td>
                 <td>'.$rowList["description"].'</td>
             </tr>
             ';
     }
     $output .= '
         </table>
-    </div>
+    </div><!-- table-responsive -->
+    </div><!-- modal body -->
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div><!-- modal-footer -->
+
     ';
     echo $output;
 }

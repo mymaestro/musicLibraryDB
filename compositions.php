@@ -110,7 +110,7 @@ require_once('includes/functions.php');
                     LEFT OUTER JOIN parts p
                     ON     c.catalog_number = p.catalog_number
                     GROUP  BY c.catalog_number
-                    ORDER BY RAND();";
+                    ORDER BY c.last_update DESC;";
         }
 
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
@@ -171,28 +171,22 @@ require_once('includes/functions.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body" id="composition_detail">
+                    <!-- filled in by select_compositions.php -->
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal">Parts</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- view_data_modal -->
     <div class="modal" id="parts_data_modal"><!-- view parts instrumentation -->
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Instrumentation details</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div><!-- modal-header -->
-                <div class="modal-body" id="instrumentation_detail">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div><!-- modal-footer -->
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content" id="instrumentation_detail">
+                <!-- filled in by select_composition_parts.php -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
-    </div><!-- view_data_modal -->
+    </div><!-- parts_data_modal -->
     <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
         <div class="modal-dialog" role="document">
             <div class="modal-content rounded-4 shadow">

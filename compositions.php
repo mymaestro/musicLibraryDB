@@ -110,7 +110,7 @@ require_once('includes/functions.php');
                     LEFT OUTER JOIN parts p
                     ON     c.catalog_number = p.catalog_number
                     GROUP  BY c.catalog_number
-                    ORDER BY c.last_update DESC;";
+                    ORDER BY c.catalog_number;";
         }
 
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));

@@ -56,11 +56,11 @@ require_once('includes/functions.php');
                         <th data-tablesort-type="string">Arranger <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Description <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Comments <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th data-tablesort-type="string">Grade <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="number">Grade <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Genre <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th data-tablesort-type="string">Parts <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
                         <th data-tablesort-type="string">Enabled <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        <th data-tablesort-type="number">Parts <i class="fa fa-sort" aria-hidden="true"></i></th>
                     </tr>
                     </thead>
                     <tbody>';
@@ -135,20 +135,26 @@ require_once('includes/functions.php');
                         <td>'.$comments.'</td>
                         <td>'.$grade.'</td>
                         <td>'.$genre.'</td>
-                        <td>'.$partscount.'</td>
                         <td>'.$ensemble.'</td>
                         <td><div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
                         </div></td>';
-            if ($u_librarian) { echo '
-                        <td><form method="post" id="instr_data_'.$catalog_number.'" action="composition_instrumentation.php"><input type="hidden" name="catalog_number" value="'.$catalog_number.'" />
-                        <input type="submit" name="compositions" value="Instrumentation" id="'.$catalog_number.'" class="btn btn-warning btn-sm instr_data" /></form></td>
-                        <td><input type="button" name="delete" value="Delete" id="'.$catalog_number.'" class="btn btn-danger btn-sm delete_data" /></td>
-                        <td><input type="button" name="edit" value="Edit" id="'.$catalog_number.'" class="btn btn-primary btn-sm edit_data" /></td>';
-                        }
+                if ( $partscount > 0 ) {
+                    echo '
+                                <td><button type="button" name="parts_data" id="'.$catalog_number.'" class="btn btn-info btn-sm parts_data">'. $partscount.' parts</button></td>';
+                    } else {
+                    echo '
+                                <td class="text-muted">0 parts</td>';
+                    }
+                    echo '
+                    <td><input type="button" name="view" value="Details" id="'.$catalog_number.'" class="btn btn-secondary btn-sm view_data" /></td>';
+                if ($u_librarian) { echo '
+                    <td><form method="post" id="instr_data_'.$catalog_number.'" action="composition_instrumentation.php"><input type="hidden" name="catalog_number" value="'.$catalog_number.'" />
+                    <input type="submit" name="compositions" value="Instrumentation" id="'.$catalog_number.'" class="btn btn-warning btn-sm instr_data" /></form></td>
+                    <td><input type="button" name="delete" value="Delete" id="'.$catalog_number.'" class="btn btn-danger btn-sm delete_data" /></td>
+                    <td><input type="button" name="edit" value="Edit" id="'.$catalog_number.'" class="btn btn-primary btn-sm edit_data" /></td>';
+                    }
             echo '
-                        <td><input type="button" name="view" value="View" id="'.$catalog_number.'" class="btn btn-secondary btn-sm view_data" /></td>                        
-                        <td><input type="button" name="parts_data" value="View instrumentation" id="'.$catalog_number.'" class="btn btn-secondary btn-sm parts_data" /></td>                        
                     </tr>
                     ';
         }

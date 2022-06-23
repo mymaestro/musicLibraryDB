@@ -172,6 +172,7 @@ if(!empty($_POST["catalog_number"])) {
     <?php endif; ?>
 </main>
 <?php require_once("includes/footer.php");?>
+<?php if($u_librarian) : ?>
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function(){
@@ -234,5 +235,6 @@ $(document).ready(function(){
     });
 });
 </script>
+<?php endif; ?>
 </body>
 </html>

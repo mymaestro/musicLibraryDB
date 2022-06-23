@@ -511,6 +511,37 @@ require_once('includes/functions.php');
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function() {
+    $(document).on('click', '.view_data', function(){
+        var catalog_number = $(this).attr("id");
+        if(catalog_number != '')
+        {
+            $.ajax({
+                url:"includes/select_compositions.php",
+                type:"POST",
+                data:{catalog_number:catalog_number},
+                success:function(data){
+                    $('#composition_detail').html(data);
+                    $('#view_data_modal').modal('show');
+                }
+            });
+        }
+    });
+    $(document).on('click', '.parts_data', function(){
+        var catalog_number = $(this).attr("id");
+        if(catalog_number != '')
+        {
+            $.ajax({
+                url:"includes/select_composition_parts.php",
+                type:"POST",
+                data:{catalog_number:catalog_number},
+                success:function(data){
+                    $('#instrumentation_detail').html(data);
+                    $('#parts_data_modal').modal('show');
+                }
+            });
+        }
+    });
+<?php if($u_librarian) : ?>
     $("#gradevalue").html($("#grade").val());;
     $('#windrep').click(function() {
         var searchURL = 'https://www.windrep.org/index.php?search=' + $('#name').val();
@@ -628,36 +659,7 @@ $(document).ready(function() {
             });
         }
     });
-    $(document).on('click', '.view_data', function(){
-        var catalog_number = $(this).attr("id");
-        if(catalog_number != '')
-        {
-            $.ajax({
-                url:"includes/select_compositions.php",
-                type:"POST",
-                data:{catalog_number:catalog_number},
-                success:function(data){
-                    $('#composition_detail').html(data);
-                    $('#view_data_modal').modal('show');
-                }
-            });
-        }
-    });
-    $(document).on('click', '.parts_data', function(){
-        var catalog_number = $(this).attr("id");
-        if(catalog_number != '')
-        {
-            $.ajax({
-                url:"includes/select_composition_parts.php",
-                type:"POST",
-                data:{catalog_number:catalog_number},
-                success:function(data){
-                    $('#instrumentation_detail').html(data);
-                    $('#parts_data_modal').modal('show');
-                }
-            });
-        }
-    });
+<?php endif; ?>
     $('#duration_hours').on("input", function() {
         $('#duration').val(computeDurationSecs());
     });

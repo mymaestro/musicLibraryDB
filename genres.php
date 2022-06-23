@@ -158,6 +158,7 @@
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function(){
+<?php if($u_librarian) : ?>
     $('#add').click(function(){
         $('#insert').val("Insert");
         $('#update').val("add");
@@ -235,6 +236,7 @@ $(document).ready(function(){
             });
         }
     });
+<?php endif; ?>
     $(document).on('click', '.view_data', function(){
         var id_genre = $(this).attr("id");
         if(id_genre != '')

@@ -25,7 +25,6 @@
             <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
             <br />
         </div><!-- right button -->
-<?php endif; ?>
         <div id="user_table">
         <?php
         echo '            <div class="panel panel-default">
@@ -189,8 +188,15 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
+    <?php else: ?>
+        <div class="row mb-3">
+            <p class="text-center">You must be logged in as an administrator to see this page</p>
+        </div>
+    </div><!-- container -->
+    <?php endif; ?>
 </main>
 <?php require_once("includes/footer.php");?>
+<?php if($u_admin) : ?>
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function(){
@@ -287,5 +293,6 @@ $(document).ready(function(){
     });
 });
 </script>
+<?php endif; ?>
 </body>
 </html>

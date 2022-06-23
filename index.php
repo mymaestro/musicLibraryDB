@@ -26,7 +26,13 @@
 					<h5 class="card-title">Search</h5>
 					<p class="card-text">Find a piece of music.</br>See what's in the library.</p>
 					<p class="card-text"><small class="text-muted">No logon required</small></p>
-					<a href="search.php" class="btn btn-sm btn-primary">Search page</a>
+					<form action="compositions.php" method="POST">
+						<div class="input-group">
+								<button type="submit" name="submitButton" class="btn btn-sm btn-primary"><i class="fas fa-search"></i></button>
+								<input type="search" id="search" name="search" placeholder="Search compositions">
+						</div>
+					</form>
+					<!--<a href="search.php" class="btn btn-sm btn-primary">Search page</a>-->
 				</div>
 			</div>
 			<div class="card">

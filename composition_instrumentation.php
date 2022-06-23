@@ -157,6 +157,7 @@ if(!empty($_POST["catalog_number"])) {
             <div class="row">
                 <div class="col-sm-4">
                     <button class="btn btn-primary" type="submit" name="submit" value="add">Add parts</button>
+                    <a href="compositions.php" class="btn btn-link" role="button">Return</a>
                 </div>
             </div>
         </form>
@@ -164,7 +165,7 @@ if(!empty($_POST["catalog_number"])) {
     <?php else: ?>
     <div id="instrumentation_view">
         <div class="row mb-3">
-            <p class="text-center">You must be logged in as a user to see this page</p>
+            <p class="text-center">You must be logged in as a librarian to see this page</p>
         </div>
         </div>
     </div>

@@ -44,7 +44,7 @@ $(document).on('click', '.missing_parts', function(){
             if(catalog_number != '')
             {
                 $.ajax({
-                    url:"report_missing_parts.php",
+                    url:"includes/report_missing_parts.php",
                     type:"POST",
                     data:{report:"missing_parts"},
                     success:function(data){

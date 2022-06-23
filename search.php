@@ -101,7 +101,6 @@
           while ($rowList = mysqli_fetch_array($res)) {
               $id_genre = $rowList['id_genre'];
               $name = $rowList['name'];
-              $description = $rowList['description'];
               echo '
                    <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="" id="'.$id_genre.'">

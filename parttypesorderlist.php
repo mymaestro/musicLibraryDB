@@ -24,7 +24,6 @@
             <span id="scoreordersavemessage">Choose and drag list each item to sort, then choose </span><button type="button" name="update" id="update" class="btn btn-warning">Update</button>
             <br />
         </div><!-- right button -->
-<?php endif; ?>
         <div class="row">
             <div class="col align-self-start">&nbsp</div>
         <div class="col align-self-center" id="part_type_list">
@@ -48,6 +47,12 @@
         // ferror_log("returned: " . $sql);
         ?>
     </div><!-- container -->
+<?php else: ?>
+        <div class="row mb-3">
+            <p class="text-center">You must be logged in as a librarian to use this page</p>
+        </div>
+    </div><!-- container -->
+<?php endif; ?>
 
 </main>
 <?php require_once("includes/footer.php");?>

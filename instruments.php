@@ -145,7 +145,7 @@ $(document).ready(function(){
     var rowTarget;
 
     $.ajax({
-        url:"includes/fetch_instruments_table.php",
+        url:"includes/fetch_instruments.php",
         method:"POST",
         data:{
             user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"

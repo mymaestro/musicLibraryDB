@@ -62,7 +62,7 @@ if(isset($_POST["id_instrument"])) {
                 </tbody>
                 </table>
             </div><!-- table-responsive -->
-        </div><!-- class panel -->
+        </div><!-- panel -->
         ';
   }
   mysqli_close($f_link);

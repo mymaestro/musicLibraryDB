@@ -26,7 +26,8 @@
             <br />
         </div><!-- right button -->
 <?php endif; ?>
-        <div id="instrument_table">
+        <div id="instrument_table" align="center">
+            Loading table...
         </div><!-- instrument_table -->
 
         <div id="dataModal" class="modal"><!-- view data -->
@@ -141,9 +142,6 @@
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function(){
-    var clickRowID;
-    var rowTarget;
-
     $.ajax({
         url:"includes/fetch_instruments.php",
         method:"POST",

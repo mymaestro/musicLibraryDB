@@ -219,7 +219,7 @@
                                     while ($rowList = mysqli_fetch_array($res)) {
                                         $comp_catno = $rowList['catalog_number'];
                                         $comp_name = $rowList['name'];
-                                        $opt .= "<option value='" . $comp_catno . "'>" . $comp_name . "</option>";
+                                        $opt .= '<option value="' . $comp_catno . '">' . $comp_catno . ': ' . $comp_name . '</option>';
                                     }
                                     $opt .= "</select>";
                                     mysqli_close($f_link);

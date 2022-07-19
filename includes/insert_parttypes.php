@@ -54,19 +54,16 @@ if(!empty($_POST)) {
     }
     ferror_log("Running SQL ". $sql);
     $referred = $_SERVER['HTTP_REFERER'];
+    $referred .= "/#" . $id_part_type;
     if(mysqli_query($f_link, $sql)) {
         $output .= '<label class="text-success">' . $message . '</label>';
         $query = parse_url($referred, PHP_URL_QUERY);
         $referred = str_replace(array('?', $query), '', $referred);
-        echo '<p><a href="'.$referred.'">Return</a></p>';
-        echo $output;
     } else {
         $message = "Failed";
         $error_message = mysqli_error($f_link);
         $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
            ';
-        echo '<p><a href="'.$referred.'">Return</a></p>';
-        echo $output;
         ferror_log("Error: " . $error_message);
     }
  } else {

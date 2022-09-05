@@ -18,6 +18,22 @@ if(isset($_POST["id_instrument"])) {
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     echo json_encode($rowList);
+} elseif(isset($_POST["instrument_list"])) {
+    $sql = "SELECT `id_instrument`, `name` FROM instruments WHERE `enabled` = 1 ORDER BY collation;";
+    ferror_log("Running " . $sql);
+    $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+    $opt = "<select class='form-select form-control' aria-label='Select instrument' id='default_instrument' name='default_instrument'>";
+    while($rowList = mysqli_fetch_array($res)) {
+        $id_instrument = $rowList['id_instrument'];
+        $instrument_name = $rowList['name'];
+        $opt .= '
+        <option value="'.$id_instrument.'">'.$instrument_name.'</option>';
+    }
+    $opt .= '
+    </select>';
+    mysqli_close($f_link);
+    echo $opt;
+    ferror_log("returned: " . $sql);
 } else { 
     echo '            <div class="panel panel-default">
                <div class="table-repsonsive">

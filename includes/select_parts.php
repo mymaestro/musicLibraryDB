@@ -1,6 +1,7 @@
 <?php
 require_once('config.php');
 require_once('functions.php');
+/* called by parts.php when user selects "View" */
 error_log("RUNNING select_parts.php with id_part=". $_POST["catalog_number"] . "-" . $_POST["id_part_type"]);
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
@@ -8,6 +9,7 @@ $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
 if (isset($_POST["id_part_type"])) {
     $output = "";
     $sql = "SELECT p.catalog_number       'Catalog',
+                   p.id_part_type         'Part type ID',
                    c.name                 'Composition',
                    c.composer             'Composer',
                    t.name                 'Type',

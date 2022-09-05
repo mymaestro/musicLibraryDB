@@ -132,28 +132,24 @@ if(!empty($_POST)) {
         last_update = CURRENT_TIMESTAMP(),
         enabled = $enabled
         WHERE catalog_number='".$_POST["catalog_number_hold"]."'";
-        $message = 'Data Updated';
+        $message = 'Composition '.$catalog_number.' updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
         INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration, comments, performance_notes, storage_location, date_acquired, cost, listening_example_link, checked_out, paper_size, image_path, windrep_link, last_inventory_date, last_update, enabled)
         VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, $last_performance_date, $duration, '$comments', '$performance_notes', '$storage_location', $date_acquired, $cost, '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$winrep_link', $last_inventory_date, CURRENT_TIMESTAMP(), $enabled);
         ";
-        $message = 'Data Inserted';
+        $message = 'Composition '.$catalog_number.' added';
     }
     ferror_log("Running SQL ". $sql);
     $referred = $_SERVER['HTTP_REFERER'];
     if(mysqli_query($f_link, $sql)) {
         $output .= '<label class="text-success">' . $message . '</label>';
-        $query = parse_url($referred, PHP_URL_QUERY);
-        $referred = str_replace(array('?', $query), '', $referred);
-        echo '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
     } else {
         $message = "Failed";
         $error_message = mysqli_error($f_link);
         $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
            ';
-        echo '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
         ferror_log("Error: " . $error_message);
     }

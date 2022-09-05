@@ -23,16 +23,25 @@ require_once("navbar.php");
         <h1 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
         <?php if ($u_librarian) : ?>
         <?php if(!empty($_POST)) {
+            $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+            if (isset($_POST['catalog_number'])) $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
+            if (isset( $_POST['paper_size'])) $paper_size = mysqli_real_escape_string($f_link, $_POST['paper_size']);
+            if (isset( $_POST['page_count'])) $page_count = mysqli_real_escape_string($f_link, $_POST['page_count']);
+            // parttypes could/should be an array, that is handled below
+            if (isset($_POST['parttypes'])) {
+                if (!is_array($_POST['parttypes'])) {
+                    $parttypes = mysqli_real_escape_string($f_link, $_POST['parttypes']);
+                } else {
+                    $parttypes = $_POST['parttypes'];
+                }
+            }
             echo '<h4>You added the following parts:</h4>';
             if($_POST["submit"] == "add"){
-                $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
-                $paper_size = mysqli_real_escape_string($f_link, $_POST['paper_size']);
-                $page_count = mysqli_real_escape_string($f_link, $_POST['page_count']);
     
-                // loop over checked checkboxes
+                // loop over part types selected in the dropdown <option>
 
-                if(!empty($_POST['parttypes'])){
+                if(!empty($_POST['parttypes']) && isset($catalog_number) && isset($paper_size) && isset($page_count)) {
+                    echo '<form action="../parts.php" method="POST"><input type="hidden" name="catalog_number" value="'.$catalog_number.'"><button class="btn btn-primary"/>Edit parts</button></form>';
                     $output = '<table class="table table-hover">
                     <thead>
                         <tr>
@@ -47,26 +56,31 @@ require_once("navbar.php");
                     $copies_count = 0;
                     $name = "$username " . date("Y-m-d");
                     foreach($_POST['parttypes'] as $id_part_type_num) {
+                        // Expect to find duplicates
                         $id_part_type = mysqli_real_escape_string($f_link, $id_part_type_num);
-                        $sql = "
-                        INSERT INTO parts(catalog_number, id_part_type, name, paper_size, page_count, originals_count, copies_count)
-                        VALUES('$catalog_number', '$id_part_type', '$name', '$paper_size', $page_count, $originals_count, $copies_count);
-                        ";
+                        $sql = "INSERT INTO parts(catalog_number, id_part_type, name, paper_size, page_count, originals_count, copies_count)
+                        VALUES('$catalog_number', '$id_part_type', '$name', '$paper_size', $page_count, $originals_count, $copies_count);";
                         $output .= '<tr><td>' . $catalog_number . '</td><td>' . $id_part_type .  '</td><td>';
-                        $message = 'Data Inserted';
                         ferror_log("Running SQL ". $sql);
-                        $referred = $_SERVER['HTTP_REFERER'];
                         if(mysqli_query($f_link, $sql)) {
-                            $output .= '<span class="text-success">' . $message . '</span></td></tr>';
-                            $query = parse_url($referred, PHP_URL_QUERY);
-                            $referred = str_replace(array('?', $query), '', $referred);
+                            $output .= '<span class="text-success">Part ' . $catalog_number . '-' . $id_part_type . ' added successfully.</span></td>';
                         } else {
-                            $message = "Failed";
                             $error_message = mysqli_error($f_link);
-                            $output .= '<span class="text-danger">' . $message . '. Error: ' . $error_message . '</span></td></tr>';
-                            ferror_log("Error: " . $error_message);
-                        } // SQL complete
+                            $error_number = mysqli_errno($f_link);
+                            if ($error_number == 1062) {
+                                $output .= '<span class="text-secondary">Not added. Part already exists for '. $catalog_number . '-' . $id_part_type . '.</td>';
+                            } else {
+                                $output .= '<span class="text-danger">Insert failed. Error (' . $error_number . '): ' .$error_message . '</span></td>';
+                                ferror_log("Error: " . $error_message);
+                            }
+                        }
+                        $output .= '
+                        </tr>
+                        ';
                     } // Loop parts
+                    $referred = $_SERVER['HTTP_REFERER'];
+                    $query = parse_url($referred, PHP_URL_QUERY);
+                    $referred = str_replace(array('?', $query), '', $referred);
                     echo $output;
                     echo '</tbody></table>';
                     echo '<p><a href="'.$referred.'">Return</a></p>';

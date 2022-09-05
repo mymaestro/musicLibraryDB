@@ -47,7 +47,9 @@ if (isset($_POST["catalog_number"])) {
                     <th>Pages</th>
                     <th>Paper</th>
                     <th>Description</th>
-               </tr>';            
+               </tr>
+            </thead>
+            <tbody>';            
         }
         $output .= '
             <tr '. (($originals == 0) ? ' class="table-danger"' : '') . '>
@@ -61,11 +63,16 @@ if (isset($_POST["catalog_number"])) {
             ';
     }
     $output .= '
+            </tbody>
         </table>
     </div><!-- table-responsive -->
     </div><!-- modal body -->
 <div class="modal-footer">
+<form action="parts.php" method="POST">
+    <input type="hidden" name="catalog_number" value="'.$_POST["catalog_number"].'"/>
+    <input type="submit" name="parts_button" value="Edit parts" class="btn btn-info">
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</form>
 </div><!-- modal-footer -->
 
     ';

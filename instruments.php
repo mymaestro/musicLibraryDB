@@ -34,7 +34,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title">Instrument Details</h3>
+                        <h3 class="modal-title">Instrument details</h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div><!-- modal-header -->
                     <div class="modal-body" id="instrument_detail">
@@ -108,6 +108,10 @@
                                         <input type="radio" class="form-check-input" id="Strings" name="family" value="Strings">
                                     </div>
                                     <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="Voice">Voice </label>
+                                        <input type="radio" class="form-check-input" id="Voice" name="family" value="Voice">
+                                    </div>
+                                    <div class="form-check form-check-inline">
                                         <label class="form-check-label" for="Other">Other </label>
                                         <input type="radio" class="form-check-input" id="Other" name="family" value="Other">
                                     </div>
@@ -136,6 +140,21 @@
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
         </div><!-- add_data_modal -->
+        <div id="messageModal" class="modal"><!-- message feedback -->
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Message</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div><!-- modal-header -->
+                    <div class="modal-body" id="message_detail">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- messageModal -->
     </div><!-- container -->
 </main>
 <?php require_once("includes/footer.php");?>
@@ -200,8 +219,18 @@ $(document).ready(function(){
                 table_key: id_instrument
             },
             success:function(data){
-                $('#insert_form')[0].reset();
-                $('#instrument_table').html(data);
+                $('#message_detail').html(data);
+                $('#messageModal').modal('show');
+                $.ajax({
+                    url:"includes/fetch_instruments.php",
+                    method:"POST",
+                    data:{
+                        user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
+                    },   
+                    success:function(data){
+                        $('#instrument_table').html(data);
+                    }
+                });
             }
         });
     });

@@ -6,27 +6,34 @@ require_once('config.php');
 require_once('functions.php');
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
-    error_log("RUNNING insert_parts.php with id_part=". $_POST["catalog_number"] . ":" . $_POST["id_part_type"]);
+    ferror_log("------------------------------------------------");
+    ferror_log("RUNNING insert_parts.php with id_part=". $_POST["catalog_number"] . ":" . $_POST["id_part_type"]);
     $output = '';
     $message = '';
     $timestamp = time();
-    ferror_log("THIS IS A TEST +=================--+++");
-    ferror_log("POST catalog_number=".$_POST["catalog_number"]);
-    ferror_log("POST id_part_type=".$_POST["id_part_type"]);
-    ferror_log("POST name=".$_POST["name"]);
-    ferror_log("POST description=".$_POST["description"]);
-    ferror_log("POST is_part_collection=".$_POST["is_part_collection"]);
-    ferror_log("POST paper_size=".$_POST["paper_size"]);
-    ferror_log("POST page_count=".$_POST["page_count"]);
-    ferror_log("POST image_path=".$_POST["image_path"]);
-    ferror_log("POST originals_count=".$_POST["originals_count"]);
-    ferror_log("POST copies_count=".$_POST["copies_count"]);
+
+    foreach($_POST as $key => $value ) {
+        ferror_log("key: $key");
+        ferror_log("==> value: $value");
+    }
+    if (!empty($_POST['id_instrument'])) {
+        ferror_log('POST id_instrument=*not_empty*');
+    } else {
+        ferror_log('POST id_instrument=*empty*');
+    }
+
     $catalog_number_hold = mysqli_real_escape_string($f_link, $_POST['catalog_number_hold']);
     $id_part_type_hold = mysqli_real_escape_string($f_link, $_POST['id_part_type_hold']);
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
-    $name = mysqli_real_escape_string($f_link, $_POST['name']);
+
     // Handle columns that can be NULL
+    $name = mysqli_real_escape_string($f_link, $_POST['name']);
+    if (empty($name)) {
+        $name = "NULL";
+    } else {
+        $name = "'" . $name . "'";
+    }
     $description = mysqli_real_escape_string($f_link, $_POST['description']);
     if (empty($description)) {
         $description = "NULL";
@@ -64,6 +71,14 @@ if(!empty($_POST)) {
     if (!is_numeric($copies_count)) {
         $copies_count = "NULL";
     }
+    // Instruments on the part should be an array
+    if (isset($_POST['id_instrument'])){
+        if(!is_array($_POST['id_instrument'])){
+            $id_instrument = mysqli_real_escape_string($f_link, $_POST['id_instrument']);
+        } else {
+            $id_instrument = $_POST['id_instrument'];
+        }
+    }
     ferror_log("The REAL originals_count is ". $originals_count);
     ferror_log("The REAL copies_count is ". $copies_count);
 
@@ -73,7 +88,7 @@ if(!empty($_POST)) {
         UPDATE parts
         SET id_part_type = '$id_part_type',
         catalog_number = '$catalog_number',
-        name ='$name',
+        name = $name,
         description = $description,
         is_part_collection = $is_part_collection,
         paper_size = $paper_size,
@@ -83,31 +98,62 @@ if(!empty($_POST)) {
         copies_count = $copies_count,
         last_update = CURRENT_TIMESTAMP()
         WHERE catalog_number = '".$catalog_number_hold."' AND id_part_type = ".$id_part_type_hold.";";
-        $message = 'Data Updated';
+        ferror_log("Running SQL ". $sql);
+        if(mysqli_query($f_link, $sql)) {
+            $output = "Parts updated successfully.";
+            ferror_log($output);
+            // Clean out instruments for this part type
+            $sql = "DELETE FROM part_collections 
+            WHERE catalog_number_key = '".$catalog_number."'
+            AND id_part_type_key = '".$id_part_type."';";
+            ferror_log("Running SQL: ". $sql);
+            if(mysqli_query($f_link, $sql)) {
+                ferror_log("Part collection removed for ".$catalog_number." and ".$id_part_type.".");
+            } else {
+                $error_message =  mysqli_error($f_link);
+                ferror_log("Part collection delete failed with error: ". $error_message);
+            }
+            // Add to part_collections table for each instrument in the part
+            foreach($_POST['id_instrument'] as $id_instrument_num) {
+                ferror_log("Adding instrument: ". $id_instrument_num . " to part_collections.");
+                $id_instrument_key = mysqli_real_escape_string($f_link, $id_instrument_num);
+                $sql = "INSERT INTO part_collections(
+                    catalog_number_key,
+                    id_part_type_key,
+                    id_instrument_key,
+                    name,
+                    description,
+                    last_update)
+                VALUES('$catalog_number', $id_part_type, $id_instrument_key, $name, $description, CURRENT_TIMESTAMP() );";
+                ferror_log("=-=-=-=-= Running SQL: ". $sql);
+                if(mysqli_query($f_link, $sql)) {
+                    ferror_log("Part collection added for ".$catalog_number." and part type = ".$id_part_type." and instrument = ".$id_instrument_key.".");
+                } else {
+                    $error_message =  mysqli_error($f_link);
+                    ferror_log("Part collection add failed with error: ". $error_message);
+                }
+            }
+        } else {
+            $error_message = mysqli_error($f_link);
+            $output = "Parts update failed with error = " . $error_message;
+            ferror_log($output);
+        }
     } elseif($_POST["update"] == "add") {
+        ferror_log("Running SQL ". $sql);
         $sql = "
         INSERT INTO parts(catalog_number, id_part_type, name, description, is_part_collection, paper_size, page_count, image_path, originals_count, copies_count, last_update)
         VALUES('$catalog_number', '$id_part_type', '$name', $description, $is_part_collection, $paper_size, $page_count, $image_path, $originals_count, $copies_count, CURRENT_TIMESTAMP() );
         ";
-        $message = 'Data Inserted';
+        if(mysqli_query($f_link, $sql)) {
+            $output = "Parts inserted successfully.";
+            ferror_log($output);
+        } else {
+            $error_message = mysqli_error($f_link);
+            $output = "Parts insert failed with error = " . $error_message;
+            ferror_log($output);
+        }
     }
-    ferror_log("Running SQL ". $sql);
-    $referred = $_SERVER['HTTP_REFERER'];
-    if(mysqli_query($f_link, $sql)) {
-        $output .= '<label class="text-success">' . $message . '</label>';
-        $query = parse_url($referred, PHP_URL_QUERY);
-        $referred = str_replace(array('?', $query), '', $referred);
-        echo '<p><a href="'.$referred.'">Return</a></p>';
-        echo $output;
-    } else {
-        $message = "Failed";
-        $error_message = mysqli_error($f_link);
-        $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
-           ';
-        echo '<p><a href="'.$referred.'">Return</a></p>';
-        echo $output;
-        ferror_log("Error: " . $error_message);
-    }
+
  } else {
     require_once("header.php");
     echo '<body>

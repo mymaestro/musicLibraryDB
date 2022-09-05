@@ -45,19 +45,13 @@ if(!empty($_POST)) {
         $output .= '<label class="text-success">' . $message . '</label>';
         $query = parse_url($referred, PHP_URL_QUERY);
         $referred = str_replace(array('?', $query), '', $referred);
-        $output .= '<p><a href="'.$referred.'">Return</a></p>';
-        echo $output;
-        ferror_log($output);
+        ferror_log($message);
     } else {
-        $message = "Failed";
+        $message = "Insert/update ensemble failed";
         $error_message = mysqli_error($f_link);
-        $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
-           ';
-        $output .= '<p><a href="'.$referred.'">Return</a></p>';
-        echo $output;
-        ferror_log($output);
-        ferror_log("Command:" . $sql);
         ferror_log("Error: " . $error_message);
+        $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
+        ';
     }
  } else {
     require_once("header.php");

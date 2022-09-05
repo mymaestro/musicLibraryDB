@@ -8,9 +8,9 @@ ferror_log("Running delete_partcollections.php with id=". $_POST["catalog_number
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $catalog_number_key = mysqli_real_escape_string($f_link, $_POST['catalog_number_key']);
 $id_part_type_key = mysqli_real_escape_string($f_link, $_POST['id_part_type_key']);
-$id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
+$id_instrument_key = mysqli_real_escape_string($f_link, $_POST['id_instrument_key']);
 
-if(isset($id_part_type) && isset($id_part_type_key) && isset($catalog_number_key) )  {
+if(isset($id_instrument_key) && isset($id_part_type_key) && isset($catalog_number_key) )  {
     $output = '';
     $message = '';
     $timestamp = time();
@@ -18,7 +18,7 @@ if(isset($id_part_type) && isset($id_part_type_key) && isset($catalog_number_key
     if($catalog_number_key != '') {
         $sql = "
         DELETE FROM " . $table_name . " 
-        WHERE catalog_number_key = '" . $catalog_number_key . "' AND id_part_type_key = " . $id_part_type_key . " AND id_part_type = " . $id_part_type .";";
+        WHERE catalog_number_key = '" . $catalog_number_key . "' AND id_part_type_key = " . $id_part_type_key . " AND id_instrument_key = " . $id_instrument_key .";";
         ferror_log("Running SQL ".$sql);
         $message = 'Data deleted';
         if(mysqli_query($f_link, $sql)) {

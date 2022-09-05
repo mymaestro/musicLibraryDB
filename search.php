@@ -53,10 +53,10 @@
           <form action="compositions.php" method="POST">
             <div class="row g-3 align-items-center">
               <div class="col-auto">
-                <button type="submit" name="submitButton" class="btn btn-primary">Search</button>
+                <button type="submit" name="submitButton" value="search" class="btn btn-primary">Search</button>
               </div>
               <div class="col-auto">
-                <input type="text" id="search" name="search" class="form-control" aria-describedby="searchHelp">
+                <input type="text" id="search" name="search" class="form-control" aria-describedby="searchHelp" placeholder="Leave blank to find all compositions">
               </div>
               <div class="col-auto">
                 <span id="searchHelp" class="form-text">
@@ -64,12 +64,10 @@
                 </span>
               </div>
             </div>
-          </form>
         </div><!-- search_form -->
         <div class="row">
           <div class="col-auto">
             <h4>Ensembles</h4>
-              <form action="compositions.php" method="POST">
 <?php
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         $sql = "SELECT id_ensemble, name FROM ensembles WHERE enabled = 1 ORDER BY name;";
@@ -78,7 +76,7 @@
            $id_ensemble = $rowList['id_ensemble'];
            $title = $rowList['name'];
            echo '              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="'.$id_ensemble.'">
+                <input class="form-check-input" type="checkbox" value="'.$id_ensemble.'" id="'.$id_ensemble.'" name="ensemble[]">
                 <label class="form-check-label" for="'.$id_ensemble.'">
                   '.$title.'
                 </label>
@@ -87,14 +85,11 @@
         }
         mysqli_close($f_link);
         ferror_log("returned: " . $sql);
-        echo '              </form>
-';
 ?>
           </div>
           <div class="col-auto">
 <?php
-          echo '            <h4>Genre</h4>
-                <form action="compositions.php" method="POST">';
+          echo '            <h4>Genre</h4>'.PHP_EOL;
           $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
           $sql = "SELECT id_genre, name FROM genres WHERE enabled = 1 ORDER BY name;";
           $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
@@ -103,7 +98,7 @@
               $name = $rowList['name'];
               echo '
                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="'.$id_genre.'">
+                      <input class="form-check-input" type="checkbox" value="'.$id_genre.'" id="'.$id_genre.'" name="genre[]">
                       <label class="form-check-label" for="'.$id_genre.'">
                         '.$name.'
                       </label>

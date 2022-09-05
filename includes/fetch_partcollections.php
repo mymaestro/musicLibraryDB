@@ -9,7 +9,7 @@ if(isset($_POST["catalog_number_key"])) {
               FROM part_collections
              WHERE catalog_number_key = '".$_POST["catalog_number_key"]."'
                AND id_part_type_key = '".$_POST["id_part_type_key"]."'
-               AND id_part_type = '".$_POST["id_part_type"]."'";
+               AND id_instrument_key = '".$_POST["id_instrument_key"]."'";
 
     ferror_log("SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);

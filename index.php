@@ -13,6 +13,8 @@
   }
   require_once('includes/config.php'); 
   require_once("includes/navbar.php");
+  require_once('includes/functions.php');
+  ferror_log("RUNNING index.php");
 ?>
 <main role="main" class="container">
 	<div class="jumbotron">

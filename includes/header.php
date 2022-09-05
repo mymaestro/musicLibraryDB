@@ -31,6 +31,12 @@
             padding-top: 0px;
         }
     }
+    #btn-back-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: none;
+    }
     </style>
 </head>
 <body>

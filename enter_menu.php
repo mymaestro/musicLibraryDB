@@ -38,6 +38,24 @@
 					<a href="parts.php" class="card-link">Parts</a>
 				</div>
 			</div>
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Instruments</h5>
+					<p class="card-text">Work with instruments.</p>
+				</div>
+				<div class="card-footer">
+					<a href="instruments.php" class="card-link">Instruments</a>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Recordings</h5>
+					<p class="card-text">Work with recordings.</p>
+				</div>
+				<div class="card-footer">
+					<a href="recordings.php" class="card-link">Recordings</a>
+				</div>
+			</div>
 		</div>
 		<br />
 		<div class="card-group">
@@ -74,7 +92,7 @@
 			<div class="card">
 				<div class="card-body">
 					<h5 class="card-title">Part type collections</h5>
-					<p class="card-text">Work with types of parts that are collections.</p>
+					<p class="card-text">Work with instruments that are on parts.</p>
 					<p class="card-text"><small class="text-muted">Percussion 1 or Horn 1 & 2</small></p>
 				</div>
 				<div class="card-footer">

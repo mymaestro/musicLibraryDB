@@ -20,8 +20,12 @@
     <div class="container">
         <h2 align="center"><?php echo ORGNAME . ' ' . PAGE_TITLE ?></h2>
 <?php if($u_librarian) : ?>
+        <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
         <div align="center">
-            <span id="scoreordersavemessage">Choose and drag list each item to sort, then choose </span><button type="button" name="update" id="update" class="btn btn-warning">Update</button>
+            <span id="scoreordersavemessage">Choose and drag each item in the list to sort. </span><button type="button" name="update" id="update" class="btn btn-success">Update</button>
+            <button onclick="history.back()" class="btn btn-secondary">Back</button>
             <br />
         </div><!-- right button -->
         <div class="row">
@@ -59,6 +63,28 @@
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
 <!-- jquery function to add/update database records -->
 <script>
+// Scroll-to-top button
+let mybutton = document.getElementById("btn-back-to-top");
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function () {
+    scrollFunction();
+};
+function scrollFunction() {
+    if (
+        document.body.scrollTop > 20 ||
+        document.documentElement.scrollTop > 20
+        ) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+    // When the user chooses scrollbutton, scroll to the top of the document
+mybutton.addEventListener("click", backToTop);
+function backToTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
 $(document).ready(function(){
     $("ul#partscoreorder").sortable({
         opacity: 0.6,

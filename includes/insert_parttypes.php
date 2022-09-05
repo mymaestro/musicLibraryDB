@@ -10,13 +10,14 @@ if(!empty($_POST)) {
     $output = '';
     $message = '';
     $timestamp = time();
-    // ferror_log("POST id_part_type=".$_POST["id_part_type"]);
+    ferror_log("POST id_part_type=".$_POST["id_part_type"]);
     ferror_log("POST collation=".$_POST["collation"]);
     ferror_log("POST name=".$_POST["name"]);
     ferror_log("POST family=".$_POST["family"]);
     ferror_log("POST description=".$_POST["description"]);
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     ferror_log("POST enabled=".$enabled);
+    ferror_log("POST default_instrument=".$_POST["default_instrument"]);
     ferror_log("POST is_part_collection=".$_POST["is_part_collection"]);
     ferror_log("POST is_part_collection=".$is_part_collection);
     $is_part_collection =  mysqli_real_escape_string($f_link, $_POST["is_part_collection"]);
@@ -29,6 +30,7 @@ if(!empty($_POST)) {
     $collation = mysqli_real_escape_string($f_link, $_POST['collation']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
     $description = mysqli_real_escape_string($f_link, $_POST['description']);
+    $default_instrument = mysqli_real_escape_string($f_link, $_POST['default_instrument']);
     $family = mysqli_real_escape_string($f_link, $_POST['family']);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
 
@@ -41,14 +43,15 @@ if(!empty($_POST)) {
         description = '$description',
         collation = $collation,
         family = '$family',
+        default_instrument = '$default_instrument',
         is_part_collection = $is_part_collection,
         enabled = $enabled
         WHERE id_part_type='".$_POST["id_part_type"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO part_types(collation, name, description, family, is_part_collection, enabled)
-        VALUES($collation, '$name', '$description', '$family', $is_part_collection, $enabled);
+        INSERT INTO part_types(collation, name, description, family, default_instrument, is_part_collection, enabled)
+        VALUES($collation, '$name', '$description', '$family', $default_instrument, $is_part_collection, $enabled);
         ";
         $message = 'Data Inserted';
     }

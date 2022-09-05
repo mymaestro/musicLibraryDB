@@ -19,6 +19,9 @@
 <main role="main">
     <div class="container">
         <h2 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h2>
+        <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
         <div align="right">
             <input type="text" class="tablesearch-input" data-tablesearch-table="#cpdatatable" placeholder="Search">
 <?php if($u_librarian) : ?>
@@ -26,230 +29,214 @@
             <br />
 <?php endif; ?>
         </div><!-- right -->
-        <div id="recording_table">
-        <?php
-        echo '
-            <div class="panel panel-default">
-            <div class="table-repsonsive">
-                    <table class="table table-hover tablesort tablesearch-table" id="cpdatatable">
-                    <caption class="title">Available recordings</caption>
-                    <thead>
-                    <tr>
-                        <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th data-tablesort-type="string">Catalog number <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th data-tablesort-type="string">Name <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th data-tablesort-type="string">Composer <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th data-tablesort-type="date">Date <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th data-tablesort-type="string">File name <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th data-tablesort-type="string">Concert <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th data-tablesort-type="string">Venue <i class="fa fa-sort" aria-hidden="true"></i></th>
-                        <th>Enabled</th>
-                    </tr>
-                    </thead>
-                    <tbody>';
-        $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $sql = "SELECT * FROM recordings ORDER BY RAND();";
-        $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-        while ($rowList = mysqli_fetch_array($res)) {
-            $id_recording = $rowList["id_recording"];
-            $ensemble = $rowList["ensemble"];
-            $catalog_number = $rowList["catalog_number"];
-            $composer = $rowList["composer"];
-            $date = $rowList["date"];
-            $name = $rowList["name"];
-            $link = $rowList["link"];
-            $concert = $rowList["concert"];
-            $venue = $rowList["venue"];
-            $enabled = $rowList["enabled"];
-            echo '<tr>
-                    <td>'. $ensemble . '</td>
-                    <td>'. $catalog_number . '</td>
-                    <td>'. $name . '</td>
-                    <td>'. $composer . '</td>
-                    <td>'. $date . '</td>
-                    <td><a href="'. ORGFILES . $date . '/' . $link . '">'.$link.'</a></td>
-                    <td>'. $concert . '</td>
-                    <td>'. $venue . '</td>
-                    <td><div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
-                    </div></td>';
-            if ($u_librarian) { echo '
-                        <td><input type="button" name="delete" value="Delete" id="'.$id_recording.'" class="btn btn-danger btn-sm delete_data" /></td>
-                        <td><input type="button" name="edit" value="Edit" id="'.$id_recording.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
-            echo '
-                        <td><input type="button" name="view" value="View" id="'.$id_recording.'" class="btn btn-secondary btn-sm view_data" /></td>
-                    </tr>
-                    ';
-        }
-        echo '
-                    </tbody>
-                    </table>
-                </div><!-- table-responsive -->
-            </div><!-- class panel -->
-           ';
-        mysqli_close($f_link);
-        ferror_log("returned: " . $sql);
-        ?>
-    </div><!-- container -->
+        <div id="recordings_table">
+            <p class="text-center">Loading recordings...</p>
+        </div><!-- recordings_table -->
 
-    <div id="dataModal" class="modal"><!-- view data -->
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Recording details</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div><!-- modal-header -->
-                <div class="modal-body" id="recording_detail">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div><!-- modal-footer -->
-            </div><!-- modal-content -->
-        </div><!-- modal-dialog -->
-    </div><!-- dataModal -->
-    <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
-        <div class="modal-dialog" role="document">
-            <div class="modal-content rounded-4 shadow">
-                <div class="modal-body p-4 text-center">
-                    <h5 class="mb-0">Delete this recording?</h5>
-                    <p id="recording2delete">You can cancel now.</p>
-                </div>
-                <div class="modal-footer flex-nowrap p-0">
-                    <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
-                    <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0" data-bs-dismiss="modal">No thanks</button>
-                </div><!-- modal-footer -->
-            </div><!-- modal-content -->
-        </div><!-- modal-dialog -->
-    </div><!-- deleteModal -->
-    <div id="add_data_Modal" class="modal">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Recording information</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div><!-- modal-header -->
-                <div class="modal-body">
-                  <div class="container-fluid">
-                    <form method="post" id="insert_form">
-                        <div class="row bg-light">
-                            <div class="col-md-1">
-                                <label for="id_recording" class="col-form-label">ID</label>
+        <div id="dataModal" class="modal"><!-- view data -->
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Recording details</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div><!-- modal-header -->
+                    <div class="modal-body" id="recording_detail">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- dataModal -->
+        <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
+            <div class="modal-dialog" role="document">
+                <div class="modal-content rounded-4 shadow">
+                    <div class="modal-body p-4 text-center">
+                        <h5 class="mb-0">Delete this recording?</h5>
+                        <p id="recording2delete">You can cancel now.</p>
+                    </div>
+                    <div class="modal-footer flex-nowrap p-0">
+                        <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
+                        <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0" data-bs-dismiss="modal">No thanks</button>
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- deleteModal -->
+        <div id="add_data_Modal" class="modal">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Recording information</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div><!-- modal-header -->
+                    <div class="modal-body">
+                    <div class="container-fluid">
+                        <form method="post" id="insert_form">
+                            <div class="row bg-light">
+                                <div class="col-md-1">
+                                    <label for="id_recording" class="col-form-label">ID</label>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control" id="id_recording" name="id_recording" placeholder="X" minlength="1" maxlength="4" size="4" disabled/>
+                                    <input type="hidden" id="id_recording_hold" name="id_recording_hold" value=""/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="catalog_number" class="col-form-label">Catalog number*</label>
+                                </div>
+                                <div class="col-md-1">
+                                    <p class="text-light" id="catalog_number_display" name="catalog_number_display">000</p>
+                                </div>
+                                <div class="col-md-7">
+                                    <?php
+                                    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                                    $sql = "SELECT `catalog_number`, `name`, `composer`,`arranger` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
+                                    //error_log("Running " . $sql);
+                                    $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+                                    $opt = "<select class='form-select form-control' aria-label='Select composition' id='catalog_number' name='catalog_number'>";
+                                    while ($rowList = mysqli_fetch_array($res)) {
+                                        $comp_catno = $rowList['catalog_number'];
+                                        $comp_name = $rowList['name'];
+                                        $comp_composer = $rowList['composer'];
+                                        $comp_arranger = $rowList['arranger'];
+                                        $comp_display = $comp_name;
+                                        if (("$comp_composer" <> "" ) || ("$comp_arranger" <> "")) $comp_display .= ' (';
+                                        if (("$comp_composer" <> "" ) && ("$comp_arranger" <> "")) $comp_display .= $comp_composer . ", arr. " . $comp_arranger . ")";
+                                        if (("$comp_composer" == "" ) && ("$comp_arranger" <> "")) $comp_display .= "arr. " . $comp_arranger . ")";
+                                        if (("$comp_composer" <> "" ) && ("$comp_arranger" == "")) $comp_display .=  $comp_composer . ")";
+                                        $opt .= "<option value='" . $comp_catno . "'>" . $comp_display . "</option>";
+                                    }
+                                    $opt .= "</select>";
+                                    mysqli_close($f_link);
+                                    echo $opt;
+                                    //error_log("returned: " . $sql);
+                                    ?>
+                                    <input type="hidden" id="catalog_number_hold" name="catalog_number_hold" value="" />
+                                    <p class="text-light">Some kind of recording</p>
+                                </div>
+                            </div><hr />
+                            <div class="row bg-light">
+                                <div class="col-md-2">
+                                    <label for="ensemble" class="col-form-label">Ensemble*</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="ensemble" name="ensemble" placeholder="Austin Civic Wind Ensemble" required minlength="3" maxlength="255"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="name" class="col-form-label">Recording name*</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Musical comedy" required minlength="3" maxlength="255"/>
+                                </div>
                             </div>
-                            <div class="col-md-1">
-                                <input type="text" class="form-control" id="id_recording" name="id_recording" placeholder="X" minlength="1" maxlength="4" size="4" disabled/>
-                                <input type="hidden" id="id_recording_hold" name="id_recording_hold" value=""/>
+                            <div class="row bg-white">
+                                <div class="col-md-2">
+                                    <label for="date" class="col-form-control">Date*</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="date" class="form-control" id="date" name="date" placeholder="2000-12-25" required />
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="link" class="col-form-control">File*</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="link" name="link" placeholder="01recordingOfGreatness.mp3" required minlength="5" maxlength="255" />
+                                </div>
                             </div>
-                            <div class="col-md-2">
-                                <label for="catalog_number" class="col-form-label">Catalog number*</label>
+                            <div class="row bg-white">
+                                <div class="col-md-12">
+                                    <p class="text-info text-center"><?php echo ORGFILES ?><span id="filedate">0000-00-00</span>/<span id="filebase">00file.mp3</span></p>
+                                </div>
                             </div>
-                            <div class="col-md-1">
-                                <p class="text-light" id="catalog_number_display" name="catalog_number_display">000</p>
+                            <div class="row bg-light">
+                                <div class="col-md-2">
+                                    <label for="composer" class="col-form-control">Composer</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="composer" name="composer" placeholder="Last, First"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="arranger" class="col-form-control">Arranger</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="arranger" name="arranger" placeholder="Last, First" />
+                                </div>
                             </div>
-                            <div class="col-md-7">
-                                <?php
-                                $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                                $sql = "SELECT `catalog_number`, `name` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
-                                //error_log("Running " . $sql);
-                                $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                                $opt = "<select class='form-select form-control' aria-label='Select composition' id='catalog_number' name='catalog_number'>";
-                                while ($rowList = mysqli_fetch_array($res)) {
-                                    $comp_catno = $rowList['catalog_number'];
-                                    $comp_name = $rowList['name'];
-                                    $opt .= "<option value='" . $comp_catno . "'>" . $comp_name . "</option>";
-                                }
-                                $opt .= "</select>";
-                                mysqli_close($f_link);
-                                echo $opt;
-                                //error_log("returned: " . $sql);
-                                ?>
-                                <input type="hidden" id="catalog_number_hold" name="catalog_number_hold" value="" />
-                                <p class="text-light">Some kind of recording</p>
+                            <div class="row bg-white">
+                                <div class="col-md-2">
+                                    <label for="venue" class="col-form-control">Venue</label>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" id="venue" name="venue" placeholder="Band Hall" />
+                                </div>
                             </div>
-                        </div><hr />
-                        <div class="row bg-light">
-                            <div class="col-md-2">
-                                <label for="ensemble" class="col-form-label">Ensemble*</label>
+                            <div class="row bg-light">
+                                <div class="col-md-12">
+                                    <label for="concert" class="col-form-label">Description</label>
+                                    <textarea class="form-control" id="concert" name="concert" rows="3" maxlength="255"></textarea>
+                                    <br />
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" id="ensemble" name="ensemble" placeholder="Austin Civic Wind Ensemble" required minlength="3" maxlength="255"/>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="name" class="col-form-label">Recording name*</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Musical comedy" required minlength="3" maxlength="255"/>
-                            </div>
-                        </div>
-                        <div class="row bg-white">
-                            <div class="col-md-2">
-                                <label for="date" class="col-form-control">Date*</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="date" class="form-control" id="date" name="date" placeholder="2000-12-25" required />
-                            </div>
-                            <div class="col-md-2">
-                                <label for="link" class="col-form-control">File*</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" id="link" name="link" placeholder="01recordingOfGreatness.mp3" required minlength="5" maxlength="255" />
-                            </div>
-                        </div>
-                        <div class="row bg-white">
-                            <div class="col-md-12">
-                                <p class="text-info text-center"><?php echo ORGFILES ?><span id="filedate">0000-00-00</span>/<span id="filebase">00file.mp3</span></p>
-                            </div>
-                        </div>
-                        <div class="row bg-light">
-                            <div class="col-md-2">
-                                <label for="composer" class="col-form-control">Composer</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" id="composer" name="composer" placeholder="Last, First"/>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="arranger" class="col-form-control">Arranger</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" id="arranger" name="arranger" placeholder="Last, First" />
-                            </div>
-                        </div>
-                        <div class="row bg-white">
-                            <div class="col-md-2">
-                                <label for="venue" class="col-form-control">Venue</label>
-                            </div>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" id="venue" name="venue" placeholder="Band Hall" />
-                            </div>
-                        </div>
-                        <div class="row bg-light">
-                            <div class="col-md-12">
-                                <label for="concert" class="col-form-label">Description</label>
-                                <textarea class="form-control" id="concert" name="concert" rows="3" maxlength="255"></textarea>
-                                <br />
-                            </div>
-                        <div class="row bg-white">
-                            <div class="form-check">
-                                <label for="enabled" class="form-check-label">Enabled</label>
-                                <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
-                            </div>
-                        </div>
-                  </div><!-- container-fluid -->
-                </div><!-- modal-body -->
-                <div class="modal-footer">  
-                        <input type="hidden" name="update" id="update" value="0" />
-                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
-                    </form>  
-                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
-                </div><!-- modal-footer -->
-            </div><!-- modal-content -->
-        </div><!-- modal-dialog -->
-    </div><!-- add_data_modal -->
+                            <div class="row bg-white">
+                                <div class="form-check">
+                                    <label for="enabled" class="form-check-label">Enabled</label>
+                                    <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
+                                </div>
+                            </div><!-- row -->
+                        </div><!-- container-fluid -->
+                    </div><!-- modal-body -->
+                    <div class="modal-footer">  
+                            <input type="hidden" name="update" id="update" value="0" />
+                            <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                        </form>  
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- add_data_modal -->
+        <div id="messageModal" class="modal"><!-- message feedback -->
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Message</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div><!-- modal-header -->
+                    <div class="modal-body" id="message_detail">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- messageModal -->
+    </div><!-- container -->
 </main>
 <?php require_once("includes/footer.php");?>
 <!-- script to sort and filter table views -->
 <script src="js/auto-tables.js"></script>
 <!-- jquery function to add/update database records -->
 <script>
+// Scroll-to-top button
+let mybutton = document.getElementById("btn-back-to-top");
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function () {
+    scrollFunction();
+};
+function scrollFunction() {
+    if (
+        document.body.scrollTop > 20 ||
+        document.documentElement.scrollTop > 20
+        ) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+    // When the user chooses scrollbutton, scroll to the top of the document
+mybutton.addEventListener("click", backToTop);
+function backToTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
 $("#link").change(function(){
     $('#filebase').text($('#link').val());
 });
@@ -257,10 +244,37 @@ $("#date").change(function(){
     $('#filedate').text($('#date').val());
 });
 $(document).ready(function(){
+    $.ajax({
+        url:"includes/fetch_recordings.php",
+        method:"POST",
+        data:{
+            user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
+        },   
+        success:function(data){
+            $('#recordings_table').html(data);
+        }
+    });
     $('#add').click(function(){
         $('#insert').val("Insert");
         $('#update').val("add");
         $('#insert_form')[0].reset();
+    });
+    $('#catalog_number').change(function() {
+        var catalog_number = this.value;
+        $.ajax({
+            url:"includes/fetch_recordings.php",
+            method:"POST",
+            dataType: "json",
+            data:{
+                catalog_number: catalog_number, 
+                user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
+            },
+            success:function(data){
+                $('#catalog_number').val(data.catalog_number);
+                $('#composer').val(data.composer);
+                $('#arranger').val(data.arranger);
+            }
+        });
     });
     $(document).on('click', '.edit_data', function(){
         var id_recording = $(this).attr("id");
@@ -311,8 +325,18 @@ $(document).ready(function(){
                 table_key: id_recording
             },
             success:function(data){
-                $('#insert_form')[0].reset();
-                $('#recording_table').html(data);
+                $('#message_detail').html(data);
+                $('#messageModal').modal('show');
+                $.ajax({
+                    url:"includes/fetch_recordings.php",
+                    method:"POST",
+                    data:{
+                        user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
+                    },
+                    success:function(data){
+                        $('#recordings_table').html(data);
+                    }
+                });
             }
         });
     });
@@ -338,7 +362,16 @@ $(document).ready(function(){
                 success:function(data){
                     $('#insert_form')[0].reset();
                     $('#add_data_Modal').modal('hide');
-                    $('#recording_table').html(data);
+                    $.ajax({
+                        url:"includes/fetch_recordings.php",
+                        method:"POST",
+                        data:{
+                            user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
+                        },   
+                        success:function(data){
+                            $('#recordings_table').html(data);
+                        }
+                    });
                 }
             });
         }

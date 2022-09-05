@@ -17,13 +17,13 @@
                         <ul class="dropdown-menu" aria-labelledby="nav_menu_dropdown">
                         <li><a class="dropdown-item" href="compositions.php">Compositions</a></li>
                         <li><a class="dropdown-item" href="parts.php">Parts</a></li>
-                        <li><a class="dropdown-item" href="partcollections.php">Part collections</a></li>
+                        <li><a class="dropdown-item" href="recordings.php">Recordings</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="ensembles.php">Ensembles</a></li>
+                        <li><a class="dropdown-item" href="instruments.php">Instruments</a></li>
                         <li><a class="dropdown-item" href="genres.php">Genres</a></li>
                         <li><a class="dropdown-item" href="parttypes.php">Part types</a></li>
-                        <li><a class="dropdown-item" href="papersizes.php">Paper sizes</a></li>
-                        <li><a class="dropdown-item" href="recordings.php">Recordings</a></li><?php if (isset($_SESSION['username'])) if (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ) echo '
+                        <li><a class="dropdown-item" href="papersizes.php">Paper sizes</a></li><?php if (isset($_SESSION['username'])) if (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ) echo '
                         <li><a class="dropdown-item" href="users.php">Users</a></li>
 '; ?>
                         </ul>

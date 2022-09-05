@@ -26,6 +26,9 @@
             <br />
         </div><!-- right button -->
 <?php endif; ?>
+        <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
         <div id="part_type_table" align="center">
             Loading table...
         </div><!-- part_type_table -->
@@ -34,7 +37,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title">Part Type Details</h3>
+                        <h3 class="modal-title">Part type details</h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div><!-- modal-header -->
                     <div class="modal-body" id="part_type_detail">
@@ -59,7 +62,7 @@
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
         </div><!-- deleteModal -->
-        <div id="add_data_Modal" class="modal">
+        <div id="add_data_Modal" class="modal"><!-- add/edit data -->
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -108,6 +111,10 @@
                                         <input type="radio" class="form-check-input" id="Strings" name="family" value="Strings">
                                     </div>
                                     <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="Strings">Voice </label>
+                                        <input type="radio" class="form-check-input" id="Voice" name="family" value="Voice">
+                                    </div>
+                                    <div class="form-check form-check-inline">
                                         <label class="form-check-label" for="Other">Other </label>
                                         <input type="radio" class="form-check-input" id="Other" name="family" value="Other">
                                     </div>
@@ -117,17 +124,29 @@
                                 <div class="col-md-12">
                                     <label for="description" class="col-form-label">Description (up to 2048 characters)</label>
                                     <textarea class="form-control" id="description" name="description" rows="3" maxlength="2048"></textarea>
-                                    <br />
-                                    <label for="link" class="col-form-label">Part type collection? (How many parts in the collection)</label>
-                                    <input type="number" class="form-control" id="is_part_collection" name="is_part_collection">
-                                    <br />
+                                </div>
+                            </div>
+                            <div class="row bg-white">
+                                <div class="col-md-8">
+                                    <label for="link" class="col-form-label">Default instrument</label>
+                                    <select class="form-select form-control" aria-label="Select instrument" id="default_instrument" name="default_instrument">
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="is_part_collection" class="col-form-label">Additional instruments</label>
+                                    <input type="number" class="form-control" id="is_part_collection" name="is_part_collection" placeholder="0"/>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row bg-white">
+                                <div class="col-md-12">
                                     <div class="form-check">
                                         <label for="enabled" class="form-check-label">Enabled</label>
                                         <input class="form-check-input" id="enabled" name="enabled" type="checkbox" value="1"></>
                                     </div>
                                 </div>
                             </div>
-                    </div><!-- container-fluid -->
+                        </div><!-- container-fluid -->
                     </div><!-- modal-body -->
                     <div class="modal-footer">  
                             <input type="hidden" name="update" id="update" value="0" />
@@ -141,8 +160,49 @@
     </div><!-- container -->
 </main>
 <?php require_once("includes/footer.php");?>
-<!-- jquery function to add/update database records -->
 <script>
+    // Load instruments data into a JSON array for frequent use
+<?php
+$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$sql = "SELECT `id_instrument`, `collation`, `name` FROM instruments WHERE `enabled` = 1 ORDER BY collation;";
+ferror_log("Running " . $sql);
+$res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+$jsondata = "var instrumentdata = [";
+while($rowList = mysqli_fetch_array($res)) {
+    $id_instrument = $rowList['id_instrument'];
+    $collation = $rowList['collation'];
+    $instrument_name = $rowList['name'];
+    $jsondata .= '{"collation":'.$collation.',"id":'.$id_instrument.',"name":"'.$instrument_name.'"},';
+}
+$jsondata = rtrim($jsondata, ',');
+$jsondata .= ']'.PHP_EOL;
+mysqli_close($f_link);
+echo $jsondata;
+ferror_log("returned: " . $sql);
+?>
+// Scroll-to-top button
+let mybutton = document.getElementById("btn-back-to-top");
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function () {
+    scrollFunction();
+};
+function scrollFunction() {
+    if (
+        document.body.scrollTop > 20 ||
+        document.documentElement.scrollTop > 20
+        ) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+    // When the user chooses scrollbutton, scroll to the top of the document
+mybutton.addEventListener("click", backToTop);
+function backToTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+// jquery functions to add/update database records
 $(document).ready(function(){
     $.ajax({
         url:"includes/fetch_parttypes.php",
@@ -152,6 +212,12 @@ $(document).ready(function(){
         },   
         success:function(data){
             $('#part_type_table').html(data);
+            var selectitems = '';
+            $.each(instrumentdata, function(key, value) {
+                selectitems += '<option value=' + value.id + '>' + value.name + '</option>';
+                $(".instrument_" + value.id).text(value.name);
+            });
+            $('#default_instrument').html(selectitems);
         }
     });
     $('#add').click(function(){
@@ -171,6 +237,7 @@ $(document).ready(function(){
                 $('#collation').val(data.collation);
                 $('#name').val(data.name);
                 $('#description').val(data.description);
+                $('#default_instrument').val(data.default_instrument);
                 $('#' + data.family).prop('checked', true);
                 $('#is_part_collection').val(data.is_part_collection);
                 if ((data.enabled) == 1) {
@@ -233,9 +300,12 @@ $(document).ready(function(){
                         method:"POST",
                         data:{
                             user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
-                        },   
+                        },
                         success:function(data){
                             $('#part_type_table').html(data);
+                            $.each(instrumentdata, function(key, value) {
+                                $(".instrument_" + key).text(value);
+                            });
                         }
                     });
                 }

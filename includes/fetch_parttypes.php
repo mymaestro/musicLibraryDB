@@ -2,14 +2,13 @@
  //fetch_parttypes.php
 require_once('config.php');
 require_once('functions.php');
+ferror_log("Running fetch_parttypes.php");
 
 if(isset($_POST["user_role"])) {
     $u_librarian = (($_POST["user_role"] == 'librarian') !== FALSE ? TRUE : FALSE);
 } else {
     $u_librarian = FALSE;
 }
-
-ferror_log("Running fetch_parttypes.php");
 
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
@@ -19,7 +18,9 @@ if(isset($_POST["id_part_type"])) {
     ferror_log("SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
-    echo json_encode($rowList);
+    $output = json_encode($rowList);
+    ferror_log("JSON: " . $output);
+    echo $output;
 } else {
     echo '            <div class="panel panel-default">
            <div class="table-repsonsive">
@@ -29,6 +30,7 @@ if(isset($_POST["id_part_type"])) {
                 <tr>
                     <th>Collation</th>
                     <th>Name</th>
+                    <th>Instrument</th>
                     <th>Family</th>
                     <th>Description</th>
                     <th>Part Collection</th>
@@ -44,14 +46,18 @@ if(isset($_POST["id_part_type"])) {
         $name = $rowList['name'];
         $family = $rowList['family'];
         $description = $rowList['description'];
+        $default_instrument = $rowList['default_instrument'];
         $is_part_collection = $rowList['is_part_collection'];
         $enabled = $rowList['enabled'];
         echo '<tr>
                     <td>'.$collation.'</td>
                     <td>'.$name.'</td>
-                    <td>'.$family.'</td>
+                    <td class="instrument_'.$default_instrument.' text-muted"></td>
+                    <td class="text-muted">'.$family.'</td>
                     <td>'.$description.'</td>
-                    <td>'.$is_part_collection.'</td>
+                    <td><div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="typePartCollection" disabled '. (($is_part_collection > 0) ? "checked" : "") .'>
+                    </div></td>
                     <td><div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
                     </div></td>';

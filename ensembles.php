@@ -25,74 +25,17 @@
         </div><!-- right button -->
 <?php endif; ?>
         <div id="ensemble_table">
-        <?php
-        echo '            <div class="panel panel-default">
-               <div class="table-repsonsive">';
-            if($u_librarian){ 
-                echo '
-                <form action="enable_list.php" method="post" id="enable_list_form">';
-            }    
-        echo '
-          <table class="table table-hover">
-                    <caption class="title">Available ensembles</caption>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Link</th>
-                        <th>Enabled</th>
-                    </tr>
-                    </thead>
-                    <tbody>';
-        $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $sql = "SELECT * FROM ensembles ORDER BY id_ensemble;";
-        $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-        while ($rowList = mysqli_fetch_array($res)) {
-            $id_ensemble = $rowList['id_ensemble'];
-            $title = $rowList['name'];
-            $description = $rowList['description'];
-            $link = $rowList['link'];
-            $enabled = $rowList['enabled'];
-            echo '<tr>
-                        <td>'.$id_ensemble.'<input type="hidden" name="id_ensemble[]" value="'. $id_ensemble .'"></td>
-                        <td>'.$title.'</td>
-                        <td>'.$description.'</td>
-                        <td>'.$link.'</td>
-                        <td><div class="form-check form-switch">
-                        <input class="form-check-input" name="enabled[]" type="checkbox" role="switch" id="typeEnabled" '. (($u_librarian) ? "" : "disabled ") . (($enabled == 1) ? "checked" : "") .'>
-                        </div></td>';
-            if ($u_librarian) { echo '
-                        <td><input type="button" name="delete" value="Delete" id="'.$id_ensemble.'" class="btn btn-danger btn-sm delete_data" /></td>
-                        <td><input type="button" name="edit" value="Edit" id="'.$id_ensemble.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
-            echo '
-                        <td><input type="button" name="view" value="View" id="'.$id_ensemble.'" class="btn btn-secondary btn-sm view_data" /></td>
-                    </tr>
-                    ';
-        }
-        echo '
-                    </tbody>
-                    </table>';
-                    if($u_librarian){ 
-                        echo '
-                        </form>';
-                    }
-        echo '
-                </div><!-- table-responsive -->
-            </div><!-- class panel -->
-           ';
-        mysqli_close($f_link);
-        // ferror_log("returned: " . $sql);
-        ?>
-    </div><!-- container -->
+            <p class="text-center">Loading ensembles...</p>
+        </div><!-- ensemble_table -->
     <div id="dataModal" class="modal"><!-- view data -->
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Ensemble Details</h3>
+                    <h3 class="modal-title">Ensemble details</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div><!-- modal-header -->
                 <div class="modal-body" id="ensemble_detail">
+                    <p class="text-center">Loading details...</p><!-- filled in by select_ensembles -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -166,11 +109,37 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
+    <div id="messageModal" class="modal"><!-- message feedback -->
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Message</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div><!-- modal-header -->
+                <div class="modal-body" id="message_detail">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- messageModal -->
+    </div><!-- container -->
 </main>
 <?php require_once("includes/footer.php"); ?>
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function(){
+    $.ajax({
+        url:"includes/fetch_ensembles.php",
+        method:"POST",
+        data:{
+            user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
+        },   
+        success:function(data){
+            $('#ensemble_table').html(data);
+        }
+    });
 <?php if($u_librarian) : ?>
     $('#add').click(function(){
         $('#insert').val("Insert");
@@ -219,8 +188,18 @@ $(document).ready(function(){
                 table_key: id_ensemble
             },
             success:function(data){
-                $('#insert_form')[0].reset();
-                $('#ensemble_table').html(data);
+                $('#message_detail').html(data);
+                $('#messageModal').modal('show');
+                $.ajax({
+                    url:"includes/fetch_ensembles.php",
+                    method:"POST",
+                    data:{
+                        user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody' ?>"
+                    },
+                    success:function(data){
+                        $('#ensemble_table').html(data);
+                    }
+                });
             }
         });
     });
@@ -246,7 +225,16 @@ $(document).ready(function(){
                 success:function(data){
                     $('#insert_form')[0].reset();
                     $('#add_data_Modal').modal('hide');
-                    $('#ensemble_table').html(data);
+                    $.ajax({
+                        url:"includes/fetch_ensembles.php",
+                        method:"POST",
+                        data:{
+                            user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody' ?>"
+                        },
+                        success:function(data){
+                            $('#ensemble_table').html(data);
+                        }
+                    });
                 }
             });
         }

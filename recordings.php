@@ -98,7 +98,7 @@
                                         $comp_name = $rowList['name'];
                                         $comp_composer = $rowList['composer'];
                                         $comp_arranger = $rowList['arranger'];
-                                        $comp_display = $comp_name;
+                                        $comp_display = $comp_name . " - " . $comp_catno;
                                         if (("$comp_composer" <> "" ) || ("$comp_arranger" <> "")) $comp_display .= ' (';
                                         if (("$comp_composer" <> "" ) && ("$comp_arranger" <> "")) $comp_display .= $comp_composer . ", arr. " . $comp_arranger . ")";
                                         if (("$comp_composer" == "" ) && ("$comp_arranger" <> "")) $comp_display .= "arr. " . $comp_arranger . ")";
@@ -211,8 +211,7 @@
     </div><!-- container -->
 </main>
 <?php require_once("includes/footer.php");?>
-<!-- script to sort and filter table views -->
-<script src="js/auto-tables.js"></script>
+
 <!-- jquery function to add/update database records -->
 <script>
 // Scroll-to-top button

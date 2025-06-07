@@ -2,7 +2,7 @@
     <p class="mb-1">&copy; 2025 <?php echo ORGDESC ?></p>
     <ul class="list-inline">
         <li class="list-inline-item"><a href="<?php echo ORGHOME ?>privacy-statement.php">Privacy</a></li>
-        <li class="list-inline-item"><a href="#">Terms</a></li>
+        <li class="list-inline-item"><a href="<?php echo ORGHOME ?>terms-conditions.php">Terms</a></li>
         <li class="list-inline-item"><a href="<?php echo ORGHOME ?>"><?php echo ORGDESC ?></a></li>
     </ul>
 </footer>

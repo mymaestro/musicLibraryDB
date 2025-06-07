@@ -41,10 +41,13 @@ function f_sqlConnect($dbhost, $user, $pass, $db) {
         printf("Database connection failed: %s\n", mysqli_connect_error());
         exit();
     }
+    /* Allow UTF characters to display properly */
+    mysqli_set_charset($link, "utf8mb4");
     $db_selected = mysqli_select_db($link, $db);
     if (!$db_selected) {
         die('Can\'t use ' . $db . ": " . mysqli_error());
     }
+
     return $link;
 }
 

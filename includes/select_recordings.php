@@ -20,14 +20,20 @@ if (isset($_POST["id_recording"])) {
                 <td><h4 class="text-info">(' . $rowList["catalog_number"] . ') '.$rowList["name"].'</h4></td>
             </tr>
             <tr>
+                <td><label>Play</label></td>
+                <td><audio controls>
+			<source src="'. ORGFILES . $date. '/'.$link . '">
+                    Your browser does not support the audio element.
+                    </audio></td>
+            </tr>
+            <tr>
                 <td><label>Ensemble</label></td>
                 <td>'.$rowList["ensemble"] .'</td>
             </tr>
             <tr>
                 <td><label>File name</label></td>
-                <td><a href="'. ORGFILES . $date. '/'.$link . '">'.$link.'</a></td>
+                <td>'.$link.'</td>
             </tr>
-
             <tr>
                 <td><label>Information</label></td>
                 <td>'.$rowList["concert"] .'</td>

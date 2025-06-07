@@ -40,13 +40,13 @@ if(isset($_POST["id_recording"])) {
                     <th data-tablesort-type="string">Name <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="string">Composer <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="date">Date <i class="fa fa-sort" aria-hidden="true"></i></th>
-                    <th data-tablesort-type="string">File name <i class="fa fa-sort" aria-hidden="true"></i></th>
-                    <th data-tablesort-type="string">Concert <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="string">Venue <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th>Enabled</th>
                 </tr>
                 </thead>
-                <tbody>';
+                <tbody>
+                <!-- script to sort and filter table views -->
+<script src="js/auto-tables.js"></script>';
     $sql = "SELECT * FROM recordings ORDER BY date DESC;";
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
     while ($rowList = mysqli_fetch_array($res)) {
@@ -60,14 +60,12 @@ if(isset($_POST["id_recording"])) {
         $concert = $rowList["concert"];
         $venue = $rowList["venue"];
         $enabled = $rowList["enabled"];
-        echo '<tr>
+        echo '<tr><!-- '. $concert . ' -->
                 <td>'. $ensemble . '</td>
                 <td>'. $catalog_number . '</td>
-                <td>'. $name . '</td>
+                <td><strong>'. $name . '</strong></td>
                 <td>'. $composer . '</td>
                 <td>'. $date . '</td>
-                <td><a href="'. ORGFILES . $date . '/' . $link . '">'.$link.'</a></td>
-                <td>'. $concert . '</td>
                 <td>'. $venue . '</td>
                 <td><div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
@@ -76,7 +74,7 @@ if(isset($_POST["id_recording"])) {
                     <td><input type="button" name="delete" value="Delete" id="'.$id_recording.'" class="btn btn-danger btn-sm delete_data" /></td>
                     <td><input type="button" name="edit" value="Edit" id="'.$id_recording.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
         echo '
-                    <td><input type="button" name="view" value="View" id="'.$id_recording.'" class="btn btn-secondary btn-sm view_data" /></td>
+                    <td><input type="button" name="view" value="Details" id="'.$id_recording.'" class="btn btn-secondary btn-sm view_data" /></td>
                 </tr>
                 ';
     }

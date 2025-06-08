@@ -34,6 +34,10 @@ use musicLibraryDB;
 source musicLibraryDB.sql
 ```
 
+After that, go into the includes directory and copy *config.example.php* to *config.php*.
+Then, edit *config.php* to match whatever settings you want.
+
+
 - Open the web page.
 - Login (choose the padlock icon in the nav bar).
     - User: librarian

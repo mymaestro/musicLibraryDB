@@ -33,3 +33,9 @@ After you create the database, import one of the SQL files.
 use musicLibraryDB;
 source musicLibraryDB.sql
 ```
+
+- Open the web page.
+- Login (choose the padlock icon in the nav bar).
+    - User: librarian
+    - Pass: superS3cretPa$$wo4d
+- Have fun.

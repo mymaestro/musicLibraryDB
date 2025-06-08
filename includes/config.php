@@ -15,7 +15,7 @@ define('DB_HOST', 'localhost');
 define('DB_NAME', 'musicLibraryDB');
 define('DB_USER', 'musicLibraryDB');
 define('DB_PASS', 'superS3cretPa$$wo4d');
-define('DB_CHARSET', 'utf8');
+define('DB_CHARSET', 'utf8mb4');
 define('REGION', 'HOME');
 define('DEBUG', 1);
 ?>

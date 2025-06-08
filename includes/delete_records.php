@@ -12,8 +12,8 @@ if (isset($_POST["table_key"])) $table_key = mysqli_real_escape_string($f_link, 
 
 if (isset($table_name) && isset($table_key_name) && isset($table_key)) {
     $timestamp = time();
-    // JSON comin' atcha
     header('Content-Type: application/json');
+    
     ferror_log("table=". $table_name );
     ferror_log("table key=". $table_key);
     ferror_log("table key name=". $table_key_name);
@@ -33,18 +33,18 @@ if (isset($table_name) && isset($table_key_name) && isset($table_key)) {
         $error_code = $e->getCode();
         $error_message = $e->getMessage();
         ferror_log("Ended with error code " . $error_code . ": " . $error_message);
-        // 1451 = foreign key constraint
+
+        if ($error_code == 1451) { // 1451 = foreign key constraint
+            echo json_encode([
+                'success' => false,
+                'error' => 'Delete failed with ' . $error_code . ': '. $table_key . ' is referenced in another table. MSG: ' . $error_message
+            ]);
+        } else {
         echo json_encode([
             'success' => false,
             'error' => 'Database error code ' . $error_code . ': ' . $error_message
-        ]);
+            ]);
+        }
     }
-
-// ERROR
-//       echo '<p class="text-danger">Error deleting <emp>'.$table_key.'</emp> from '.$table_name.'.</p><p>Error message:<br/>'. $error_message . '</p>';
-
-// SUCCESS
-//       echo '<p class="text-success">Record '.$table_key.' deleted from '.$table_name.'</p>';
-
 }
 ?>

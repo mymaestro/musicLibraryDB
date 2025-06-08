@@ -7,8 +7,8 @@
 */
 define('ORGNAME', '4th Wind');
 define('ORGDESC', 'Fourth Wind Wind Ensemble');
-define('ORGHOME', 'http://localhost/4thWind/musicLibraryDB/html/');
-define('ORGFILES', 'https://localhost/4thWind/musicLibraryDB/html/files/recordings/'); // with trailing slash
+define('ORGHOME', 'http://library.local/');
+define('ORGFILES', 'https://library.local/files/recordings/'); // with trailing slash
 define('ORGLOGO', 'images/logo.png');
 define('ORGMAIL', 'librarian@musicLibraryDB.com');
 define('DB_HOST', 'localhost');

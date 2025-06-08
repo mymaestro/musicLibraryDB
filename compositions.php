@@ -437,7 +437,7 @@ $(document).ready(function() {
     $.ajax({
         url:"includes/fetch_compositions.php",
         method:"POST",
-        data:{
+        data: {
             <?php
             if (isset($_POST["submitButton"])) echo 'submitButton: "' . $_POST["submitButton"] . '",'.PHP_EOL;
             if (isset($_POST["ensemble"])) echo "ensemble: '" . json_encode($_POST["ensemble"]) . "',".PHP_EOL;
@@ -561,23 +561,31 @@ $(document).ready(function() {
                 table_key_name: "catalog_number",
                 table_key: catalog_number
             },
-            success:function(data){
-                $('#message_detail').html(data);
-                $('#messageModal').modal('show');
-                $.ajax({
-                    url:"includes/fetch_compositions.php",
-                    method:"POST",
-                    data:{
-                        <?php
-                        if (isset($_POST["submitButton"])) echo 'submitButton: "' . $_POST["submitButton"] . '",'.PHP_EOL;
-                        if (isset($_POST["search"])) echo "search: " . json_encode($_POST["search"]) . ",".PHP_EOL;
-                        ?>
-                        user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
-                    },
-                    success:function(data){
-                        $('#composition_table').html(data);
-                    }
-                });
+            success:function(response){
+                if (response.success) {
+                    $('#message_detail').html('<p class="text-success">Record ' + response.message + ' deleted from compositions</p>');
+                    $('#messageModal').modal('show');
+                    $.ajax({
+                        url:"includes/fetch_compositions.php",
+                        method:"POST",
+                        data:{
+                            <?php
+                            if (isset($_POST["submitButton"])) echo 'submitButton: "' . $_POST["submitButton"] . '",'.PHP_EOL;
+                            if (isset($_POST["search"])) echo "search: " . json_encode($_POST["search"]) . ",".PHP_EOL;
+                            ?>
+                            user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
+                        },
+                        success:function(data){
+                            $('#composition_table').html(data);
+                        }
+                    });
+                } else {
+                    $('#message_detail').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');
+                    $('#messageModal').modal('show');
+                }
+            },
+            error:function(xhr, status, error){
+                alert("Unexpected XHR error " + error);
             }
         });
     });
@@ -649,6 +657,7 @@ function computeDurationSecs() {
     if(!isNaN(seconds) && seconds.length !== 0) durationSecs += parseInt(seconds);
     return durationSecs;
 }
+
 </script>
 </body>
 </html>

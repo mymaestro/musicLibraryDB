@@ -36,6 +36,7 @@ function f_validateIP($ip)
 
 /* Connect to the database */
 function f_sqlConnect($dbhost, $user, $pass, $db) {
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
     $link = mysqli_connect($dbhost, $user, $pass);
     if (mysqli_connect_errno()) {
         printf("Database connection failed: %s\n", mysqli_connect_error());
@@ -45,7 +46,7 @@ function f_sqlConnect($dbhost, $user, $pass, $db) {
     mysqli_set_charset($link, "utf8mb4");
     $db_selected = mysqli_select_db($link, $db);
     if (!$db_selected) {
-        die('Can\'t use ' . $db . ": " . mysqli_error());
+        die('Can\'t use ' . $db . ": " . mysqli_error($link));
     }
 
     return $link;
@@ -65,7 +66,7 @@ function f_clean($link, $array) {
 function f_tableExists($link, $tablename, $database = false) {
     if (!$database) {
         $res = mysqli_query($link, "SELECT DATABASE()");
-        $database = mysqli_result($res, 0);
+        $database = mysqli_fetch_array($res, 0);
     }
     $res = mysqli_query($link, "SHOW TABLES LIKE '$tablename'");
     return mysqli_num_rows($res) > 0;

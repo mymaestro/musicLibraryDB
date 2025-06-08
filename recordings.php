@@ -323,19 +323,27 @@ $(document).ready(function(){
                 table_key_name: "id_recording",
                 table_key: id_recording
             },
-            success:function(data){
-                $('#message_detail').html(data);
-                $('#messageModal').modal('show');
-                $.ajax({
-                    url:"includes/fetch_recordings.php",
-                    method:"POST",
-                    data:{
-                        user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
-                    },
-                    success:function(data){
-                        $('#recordings_table').html(data);
-                    }
-                });
+            success:function(response){
+                if (response.success) {
+                    $('#message_detail').html('<p class="text-success">Record ' + response.message + ' deleted from recordings</p>');
+                    $('#messageModal').modal('show');
+                    $.ajax({
+                        url:"includes/fetch_recordings.php",
+                        method:"POST",
+                        data:{
+                            user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
+                        },
+                        success:function(data){
+                            $('#recordings_table').html(data);
+                        }
+                    });
+                 } else {
+                    $('#message_detail').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');
+                    $('#messageModal').modal('show');
+                }
+            },
+            error:function(xhr, status, error){
+                alert("Unexpected XHR error " + error);
             }
         });
     });

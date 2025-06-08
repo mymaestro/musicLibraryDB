@@ -174,7 +174,7 @@
                                 <label for="roles" class="col-form-label">Roles</label>
                             </div>
                             <div class="col-md-7">
-                                <input type="text" class="form-control" id="roles" name="roles" placeholder="administrator user" required/>
+                                <input type="text" class="form-control" id="roles" name="roles" placeholder="user librarian administrator" required/>
                             </div>
                         </div>
                   </div><!-- container-fluid -->
@@ -243,9 +243,16 @@ $(document).ready(function(){
                 table_key_name: "id_users",
                 table_key: id_users
             },
-            success:function(data){
+            success:function(resppnse){
                 $('#insert_form')[0].reset();
-                $('#user_table').html(data);
+                if (response.success) {
+                    $('#user_table').html('<p class="text-success">Record ' + response.message + ' deleted from users</p>');
+                } else {
+                    $('#user_table').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');                
+                }
+            },
+            error:function(xhr, status, error){
+                alert("Unexpected XHR error " + error);
             }
         });
     });

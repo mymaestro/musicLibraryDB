@@ -1,3 +1,5 @@
 images/logo_large.png
 images/logo_184x256.png
 includes/config.php
+error_log
+includes/error_log

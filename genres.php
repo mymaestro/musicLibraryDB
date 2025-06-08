@@ -203,9 +203,16 @@ $(document).ready(function(){
                 table_key_name: "id_genre",
                 table_key: id_genre
             },
-            success:function(data){
-                $('#insert_form')[0].reset();
-                $('#genre_table').html(data);
+            success:function(response){
+                if (response.success) {
+                    $('#insert_form')[0].reset();
+                    $('#genre_table').html('<p class="text-success">Record ' + response.message + ' deleted from genres</p>');
+                } else {
+                    $('#genre_table').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');
+                }
+            },
+            error:function(xhr, status, error){
+                alert("Unexpected XHR error " + error);
             }
         });
     });

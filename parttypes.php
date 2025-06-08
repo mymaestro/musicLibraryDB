@@ -267,9 +267,16 @@ $(document).ready(function(){
                 table_key_name: "id_part_type",
                 table_key: id_part_type
             },
-            success:function(data){
+            success:function(response){
                 $('#insert_form')[0].reset();
-                $('#part_type_table').html(data);
+                if (response.success) {
+                    $('#part_type_table').html('<p class="text-success">Record ' + response.message + ' deleted from part types</p>');
+                } else {
+                    $('#part_type_table').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');                
+                }
+            },
+            error:function(xhr, status, error){
+                alert("Unexpected XHR error " + error);
             }
         });
     });

@@ -86,8 +86,8 @@
                         </div><hr />
                         <div class="row bg-white">
                             <div class="col-md-12">
-                                <label for="description" class="col-form-label">Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                <label for="description" class="col-form-label">Description (max. 512 characters)</label>
+                                <textarea class="form-control" id="description" name="description" rows="3" maxlength="512"></textarea>
                                 <br />
                                 <label for="link" class="col-form-label">Link</label>
                                 <input type="text" class="form-control" id="link" name="link">
@@ -170,7 +170,6 @@ $(document).ready(function(){
         });
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
-        // input button name="delete" id="id_ensemble" class="delete_data"
         var id_ensemble = $(this).attr("id");
         $('#deleteModal').modal('show');
         $('#confirm-delete').data('id', id_ensemble);
@@ -187,19 +186,27 @@ $(document).ready(function(){
                 table_key_name: "id_ensemble",
                 table_key: id_ensemble
             },
-            success:function(data){
-                $('#message_detail').html(data);
-                $('#messageModal').modal('show');
-                $.ajax({
-                    url:"includes/fetch_ensembles.php",
-                    method:"POST",
-                    data:{
-                        user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody' ?>"
-                    },
-                    success:function(data){
-                        $('#ensemble_table').html(data);
-                    }
-                });
+            success:function(response){
+                if (response.success) {
+                    $('#message_detail').html('<p class="text-success">Record ' + response.message + ' deleted from ensembles</p>');
+                    $('#messageModal').modal('show');
+                    $.ajax({
+                        url:"includes/fetch_ensembles.php",
+                        method:"POST",
+                        data:{
+                            user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody' ?>"
+                        },
+                        success:function(data){
+                            $('#ensemble_table').html(data);
+                        }
+                    });                    
+                } else {
+                    $('#message_detail').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');
+                    $('#messageModal').modal('show');
+                }
+            },
+            error:function(xhr, status, error){
+                alert("Unexpected XHR error " + error);
             }
         });
     });

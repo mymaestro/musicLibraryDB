@@ -225,9 +225,16 @@ $(document).ready(function(){
                 table_key_name: "id_paper_size",
                 table_key: id_paper_size
             },
-            success:function(data){
+            success:function(response){
                 $('#insert_form')[0].reset();
-                $('#paper_size_table').html(data);
+                if (response.success) {
+                    $('#paper_size_table').html('<p class="text-success">Record ' + response.message + ' deleted from paper sizes</p>');
+                } else {
+                    $('#paper_size_table').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');
+                }
+            },
+            error:function(xhr, status, error){
+                alert("Unexpected XHR error " + error);
             }
         });
     });

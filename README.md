@@ -8,16 +8,28 @@ Database schema and supporting documents for a music library database to track t
 - Promote
 
 ## Notes:
-- The Grade level (1-7) slider does actually work. You just can't see exactly what number it's set at.
-
+- Runs on a LAMP stack (MariaDB/Mysql and PHP)
+- No installer, some manual work will have to happen.
 
 # Installation
-Write some install commands here:
-
+Clone the repo into your web site's html folder.
 You must create a database. Here's how I did it with MariaDB:
 
 ```sql
 create database musicLibraryDB;
 grant all privileges on musicLibraryDB.* to 'musicLibraryDB'@'localhost' identified by 'superS3cretPa$$wo4d';
 flush privileges;
+```
+
+Then, you can load the samples (or just the basics, or just the framework). There are 3 SQL files in the setup folder:
+
+- musicLibraryDB-core.sql - Only the tables and schema, no data except for users.
+- musicLibraryDB-basic.sql - Basics to get you started: all the paper types, instruments, genre, and part types
+- musicLibraryDB-demo.sql - Full demo with all the basics, plus some sample data with compositions and recordings
+
+After you create the database, import one of the SQL files.
+
+```sql
+use musicLibraryDB;
+source musicLibraryDB.sql
 ```

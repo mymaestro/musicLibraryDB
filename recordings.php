@@ -218,7 +218,8 @@
     </div><!-- container -->
 </main>
 <?php require_once("includes/footer.php");?>
-
+<!-- script to sort and filter table views -->
+<script src="js/auto-tables.js"></script>
 <!-- jquery function to add/update database records -->
 <script>
 // Scroll-to-top button

@@ -44,9 +44,7 @@ if(isset($_POST["id_recording"])) {
                     <th>Enabled</th>
                 </tr>
                 </thead>
-                <tbody>
-                <!-- script to sort and filter table views -->
-<script src="js/auto-tables.js"></script>';
+                <tbody>';
     $sql = "SELECT * FROM recordings ORDER BY date DESC;";
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
     while ($rowList = mysqli_fetch_array($res)) {

@@ -212,11 +212,18 @@ ferror_log("RUNNING parts.php");
                                 </div>
                                 <div class="row bg-light">
                                     <div class="col-md-2">
-                                        <label for="image_path" class="col-form-label">Image path</label>
+                                        <label for="image_path" class="col-form-label">Part PDF</label>
                                     </div>
+                                    <!--
                                     <div class="col-md-10">
                                         <input type="text" class="form-control" id="image_path" name="image_path" aria-label="Image path" placeholder="https://acwe.org/parts/flute1.pdf (optional)" />
                                     </div>
+                                        -->
+                                    <div class="input-group mb-3">
+                                        <input type="file" class="form-control" id="image_path">
+                                        <label class="input-group-text" for="image_path">Upload</label>
+                                    </div>
+
                                 </div>
                         </div><!-- container-fluid -->
                     </div><!-- modal-body -->

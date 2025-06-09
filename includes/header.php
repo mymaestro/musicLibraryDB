@@ -40,5 +40,13 @@
         display: none;
     }
     </style>
+<?php if (PAGE_NAME == 'Parts') : ?>
+   <!-- this is the PARTS page 
+        eventually you will be able to upload PDF parts here -->
+<?php elseif (PAGE_NAME == 'Recordings') : ?>
+    <!-- this is the RECORDINGS page
+        eventually you will be able to upload MP3 recordings here -->
+<?php endif; ?>
+
 </head>
 <body>

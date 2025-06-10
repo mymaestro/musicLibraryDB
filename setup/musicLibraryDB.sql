@@ -84,6 +84,35 @@ INSERT INTO `compositions` VALUES
 UNLOCK TABLES;
 
 --
+-- Table structure for table `concerts`
+--
+
+DROP TABLE IF EXISTS `concerts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `concerts` (
+  `id_concert` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Incremented unique number for concert ID',
+  `id_playgram` int(11) NOT NULL COMMENT 'Which playgram will be performed',
+  `performance_date` date NOT NULL COMMENT 'Date of the concert performance',
+  `venue` varchar(255) NOT NULL COMMENT 'Where the concert is held.',
+  `conductor` varchar(255) NOT NULL COMMENT 'Optional name of the conductor.',
+  `notes` text NOT NULL COMMENT 'Optional performance-specific notes.',
+  PRIMARY KEY (`id_concert`),
+  UNIQUE KEY `id_playgram` (`id_playgram`,`performance_date`,`venue`),
+  CONSTRAINT `concerts_ibfk_1` FOREIGN KEY (`id_playgram`) REFERENCES `playgrams` (`id_playgram`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='This table keeps concerts performance data.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `concerts`
+--
+
+LOCK TABLES `concerts` WRITE;
+/*!40000 ALTER TABLE `concerts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `concerts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ensembles`
 --
 
@@ -1087,6 +1116,61 @@ LOCK TABLES `password_reset` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `playgram_items`
+--
+
+DROP TABLE IF EXISTS `playgram_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `playgram_items` (
+  `id_playgram_item` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique playgram item ID',
+  `id_playgram` int(11) NOT NULL COMMENT 'Reference to the playgram parent',
+  `catalog_number` varchar(20) NOT NULL COMMENT 'Which piece from the Compositions is on this playgram',
+  `comp_order` int(11) NOT NULL COMMENT 'Order of this piece in the performance',
+  PRIMARY KEY (`id_playgram_item`),
+  UNIQUE KEY `id_playgram_item` (`id_playgram_item`,`comp_order`),
+  KEY `fk_playgram_items_idfk_1` (`id_playgram`),
+  KEY `fk_playgram_items_idfk_2` (`catalog_number`),
+  CONSTRAINT `fk_playgram_items_idfk_1` FOREIGN KEY (`id_playgram`) REFERENCES `playgrams` (`id_playgram`) ON DELETE CASCADE,
+  CONSTRAINT `fk_playgram_items_idfk_2` FOREIGN KEY (`catalog_number`) REFERENCES `compositions` (`catalog_number`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='This table keeps the list of playgram items.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `playgram_items`
+--
+
+LOCK TABLES `playgram_items` WRITE;
+/*!40000 ALTER TABLE `playgram_items` DISABLE KEYS */;
+/*!40000 ALTER TABLE `playgram_items` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `playgrams`
+--
+
+DROP TABLE IF EXISTS `playgrams`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `playgrams` (
+  `id_playgram` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier, incremented number',
+  `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT 'Title of the playgram (concert program series); must be unique.',
+  `description` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL COMMENT 'Complete description of the program, with concert performance notes.',
+  PRIMARY KEY (`id_playgram`),
+  UNIQUE KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `playgrams`
+--
+
+LOCK TABLES `playgrams` WRITE;
+/*!40000 ALTER TABLE `playgrams` DISABLE KEYS */;
+/*!40000 ALTER TABLE `playgrams` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `recordings`
 --
 
@@ -1163,4 +1247,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-08 10:46:24
+-- Dump completed on 2025-06-09 21:00:02

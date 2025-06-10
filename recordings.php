@@ -139,12 +139,8 @@
                                     <label for="link" class="col-form-control">File*</label>
                                 </div>
                                 <div class="col-md-4">
-                                    <!-- 
-                                    <input type="text" class="form-control" id="link" name="link" placeholder="01recordingOfGreatness.mp3" required minlength="5" maxlength="255" />
-                                        <input type="file" class="form-control" id="inputGroupFile">
-                                    -->
                                     <div class="input-group mb-3">
-                                        <input type="file" class="form-control" id="link">
+                                        <input type="file" class="form-control" name="link" id="link">
                                         <label class="input-group-text" for="link">Upload</label>
                                     </div>
                                 </div>

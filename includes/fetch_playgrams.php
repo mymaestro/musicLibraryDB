@@ -1,0 +1,66 @@
+<?php  
+ //fetch_playgrams.php
+require_once('config.php');
+require_once('functions.php');
+ferror_log("Running fetch_playgrams.php");
+
+if(isset($_POST["user_role"])) {
+    $u_librarian = (($_POST["user_role"] == 'librarian') !== FALSE ? TRUE : FALSE);
+} else {
+    $u_librarian = FALSE;
+}
+
+$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+if(isset($_POST["id_playgram"])) {
+    ferror_log("with id=". $_POST["id_playgram"]);
+    $sql = "SELECT * FROM playgrams WHERE id_playgram = '".$_POST["id_playgram"]."'";
+    ferror_log("SQL: ". $sql);
+    $res = mysqli_query($f_link, $sql);
+    $rowList = mysqli_fetch_array($res);
+    $output = json_encode($rowList);
+    ferror_log("JSON: " . $output);
+    echo $output;
+} else {
+    echo '            <div class="panel panel-default">
+           <div class="table-repsonsive">
+                <table class="table table-hover">
+                <caption class="title">Available program play lists (playgrams)</caption>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Enabled</th>
+                </tr>
+                </thead>
+                <tbody>';
+    $sql = "SELECT * FROM playgrams;";
+    $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+    while ($rowList = mysqli_fetch_array($res)) {
+        $id_playgram = $rowList['id_playgram'];
+        $name = $rowList['name'];
+        $description = $rowList['description'];
+        $enabled = $rowList['enabled'];
+        echo '<tr>
+                    <td>'.$name.'</td>
+                    <td>'.$description.'</td>
+                    <td><div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
+                    </div></td>';
+        if ($u_librarian) { echo '
+                    <td><input type="button" name="delete" value="Delete" id="'.$id_playgram.'" class="btn btn-danger btn-sm delete_data" /></td>
+                    <td><input type="button" name="edit" value="Edit" id="'.$id_playgram.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
+        echo '
+                    <td><input type="button" name="view" value="View" id="'.$id_playgram.'" class="btn btn-secondary btn-sm view_data" /></td>
+                </tr>
+                ';
+    }
+    echo '
+                </tbody>
+                </table>
+            </div><!-- table-responsive -->
+        </div><!-- panel -->
+       ';
+}
+mysqli_close($f_link);
+?>

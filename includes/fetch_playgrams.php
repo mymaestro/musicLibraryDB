@@ -23,11 +23,13 @@ if(isset($_POST["id_playgram"])) {
     echo $output;
 } else {
     echo '            <div class="panel panel-default">
+        <form id="actionForm" method="post" action="handle_action.php">
            <div class="table-repsonsive">
                 <table class="table table-hover">
                 <caption class="title">Available program play lists (playgrams)</caption>
                 <thead>
                 <tr>
+                    <th style="width: 50px;"></th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Enabled</th>
@@ -42,18 +44,11 @@ if(isset($_POST["id_playgram"])) {
         $description = $rowList['description'];
         $enabled = $rowList['enabled'];
         echo '<tr>
-                    <td>'.$name.'</td>
+                    <td><input type="radio" name="selected_id" value="'.$id_playgram.'" class="form-check-input select-radio"></td>
+                    <td id="'.$id_playgram.'" ><a href="#" class="view_data" name="view">'.$name.'</a></td>
                     <td>'.$description.'</td>
-                    <td><div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
-                    </div></td>';
-        if ($u_librarian) { echo '
-                    <td><input type="button" name="delete" value="Delete" id="'.$id_playgram.'" class="btn btn-danger btn-sm delete_data" /></td>
-                    <td><input type="button" name="edit" value="Edit" id="'.$id_playgram.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
-        echo '
-                    <td><input type="button" name="view" value="View" id="'.$id_playgram.'" class="btn btn-secondary btn-sm view_data" /></td>
-                </tr>
-                ';
+                    <td>'. (($enabled == 1) ? "Yes": "No" ). '</td>
+                </tr>';
     }
     echo '
                 </tbody>

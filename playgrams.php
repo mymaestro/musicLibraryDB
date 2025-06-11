@@ -14,14 +14,16 @@
   require_once('includes/config.php');
   require_once('includes/functions.php');
   require_once("includes/navbar.php");
-  ferror_log("RUNNING parttypes.php");
+  ferror_log("RUNNING playgrams.php");
 ?>
 <main role="main">
     <div class="container">
         <h2 align="center"><?php echo ORGNAME ?> Program playlists</h2>
 <?php if($u_librarian) : ?>
         <div align="right">
-            <a href="parttypesorderlist.php" class="btn btn-info" role="button" name="sort" id="sort">Set program order</a>
+            <a href="playgramsorderlist.php" class="btn btn-info" role="button" name="sort" id="sort">Set program order</a>
+            <button id="editBtn" class="btn btn-primary" disabled>Edit</button>
+            <button id="deleteBtn" class="btn btn-danger" disabled>Delete</button>
             <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
             <br />
         </div><!-- right button -->
@@ -73,68 +75,18 @@
                     <div class="container-fluid">
                         <form method="post" id="insert_form">
                             <input type="hidden" name="id_playgram" id="id_playgram" />
-                            <div class="row bg-light">
-                                <div class="col-md-3">
-                                    <label for="collation" class="col-form-label">Sorting order*</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" class="form-control" id="collation" name="collation" placeholder="999" required/>
-                                </div>
-                            </div><hr />
                             <div class="row bg-white">
                                 <div class="col-md-3">
                                     <label for="name" class="col-form-label">Program playlist name*</label>
                                 </div>
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Vuvuzela 4" required/>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Playlist Fall 2029" required/>
                                 </div>
                             </div>
-                            <div class="row bg-white">
-                                <div class="col-md-3">
-                                    <label for="family" class="col-form-label">Program playlist family</label>
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label" for="Woodwind">Woodwind </label>
-                                        <input type="radio" class="form-check-input" id="Woodwind" name="family" value="Woodwind">
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label" for="Brass">Brass </label>
-                                        <input type="radio" class="form-check-input" id="Brass" name="family" value="Brass">
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label" for="Percussion">Percussion </label>
-                                        <input type="radio" class="form-check-input" id="Percussion" name="family" value="Percussion">
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label" for="Strings">Strings </label>
-                                        <input type="radio" class="form-check-input" id="Strings" name="family" value="Strings">
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label" for="Strings">Voice </label>
-                                        <input type="radio" class="form-check-input" id="Voice" name="family" value="Voice">
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label" for="Other">Other </label>
-                                        <input type="radio" class="form-check-input" id="Other" name="family" value="Other">
-                                    </div>
-                                </div>
-                            </div><hr />
                             <div class="row bg-white">
                                 <div class="col-md-12">
                                     <label for="description" class="col-form-label">Description (up to 2048 characters)</label>
                                     <textarea class="form-control" id="description" name="description" rows="3" maxlength="2048"></textarea>
-                                </div>
-                            </div>
-                            <div class="row bg-white">
-                                <div class="col-md-8">
-                                    <label for="link" class="col-form-label">Default instrument</label>
-                                    <select class="form-select form-control" aria-label="Select instrument" id="default_instrument" name="default_instrument">
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="is_part_collection" class="col-form-label">Additional instruments</label>
-                                    <input type="number" class="form-control" id="is_part_collection" name="is_part_collection" placeholder="0"/>
                                 </div>
                             </div>
                             <hr />
@@ -180,6 +132,7 @@ mysqli_close($f_link);
 echo $jsondata;
 ferror_log("returned: " . $sql);
 ?>
+
 // Scroll-to-top button
 let mybutton = document.getElementById("btn-back-to-top");
 // When the user scrolls down 20px from the top of the document, show the button
@@ -204,8 +157,12 @@ function backToTop() {
 }
 // jquery functions to add/update database records
 $(document).ready(function(){
+    // Enable edit buttons when row is selected
+    $('.select-radio').on('change', function() {
+        $('#editBtn, #deleteBtn').prop('disabled',false);
+    });
     $.ajax({
-        url:"includes/fetch_parttypes.php",
+        url:"includes/fetch_playgrams.php",
         method:"POST",
         data:{
             user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
@@ -228,18 +185,14 @@ $(document).ready(function(){
     $(document).on('click', '.edit_data', function(){
         var id_playgram = $(this).attr("id");
         $.ajax({
-            url:"includes/fetch_parttypes.php",
+            url:"includes/fetch_playgrams.php",
             method:"POST",
             data:{id_playgram:id_playgram},
             dataType:"json",
             success:function(data){
                 $('#id_playgram').val(data.id_playgram);
-                $('#collation').val(data.collation);
                 $('#name').val(data.name);
                 $('#description').val(data.description);
-                $('#default_instrument').val(data.default_instrument);
-                $('#' + data.family).prop('checked', true);
-                $('#is_part_collection').val(data.is_part_collection);
                 if ((data.enabled) == 1) {
                     $('#enabled').prop('checked',true);
                 }
@@ -293,7 +246,7 @@ $(document).ready(function(){
         else
         {
             $.ajax({
-                url:"includes/insert_parttypes.php",
+                url:"includes/insert_playgrams.php",
                 method:"POST",
                 data:$('#insert_form').serialize(),
                 beforeSend:function(){
@@ -303,7 +256,7 @@ $(document).ready(function(){
                     $('#insert_form')[0].reset();
                     $('#add_data_Modal').modal('hide');
                     $.ajax({
-                        url:"includes/fetch_parttypes.php",
+                        url:"includes/fetch_playgrams.php",
                         method:"POST",
                         data:{
                             user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
@@ -324,7 +277,7 @@ $(document).ready(function(){
         if(id_playgram != '')
         {
             $.ajax({
-                url:"includes/select_parttypes.php",
+                url:"includes/select_playgrams.php",
                 method:"POST",
                 data:{id_playgram:id_playgram},
                 success:function(data){

@@ -21,7 +21,7 @@
 ?>
 <main role="form-signin" style="margin-bottom: -1px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
     <div class="container">
-        <h3 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME?></h3>
+        <h1 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME?></h1>
         <form id="signin_form" class="form-signin" method="post" style="width: 100%; max-width: 330px; padding: 15px; margin: auto;">
         <img class="d-block mx-auto mb-4" src="<?php echo ORGLOGO ?>" alt="<?php echo ORGDESC ?>" height="256">
         <h2 align="center">Please sign in</h2>

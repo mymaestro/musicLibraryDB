@@ -10,7 +10,7 @@ require_once("includes/navbar.php");
 ?>
 <main>
   <div class="container">
-    <h2 class="display-4">Privacy Statement</h2>
+    <h1 class="display-4">Privacy Statement</h1>
     <p>Effective Date: January 1, 2025</p>
     <p>At <b><?php echo ORGNAME ?></b>, we are committed to protecting your privacy. This Privacy Statement explains how we collect, use, and protect your information when you use our digital library of sheet music.</p>
     <h3>1. Information We Collect</h3>

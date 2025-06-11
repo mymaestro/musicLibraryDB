@@ -18,7 +18,7 @@
 ?>
 <main role="main">
     <div class="container">
-        <h2 align="center"><?php echo ORGNAME ?> Genres</h2>
+        <h1 align="center"><?php echo ORGNAME ?> Genres</h1>
 <?php if($u_librarian) : ?>
         <div align="right">
             <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>

@@ -17,7 +17,7 @@
                         <ul class="dropdown-menu" aria-labelledby="nav_menu_dropdown">
                         <li><a class="dropdown-item" href="compositions.php">Compositions</a></li>
                         <li><a class="dropdown-item" href="parts.php">Parts</a></li>
-                        <li><a class="dropdown-item" href="playgrams.php">Program playlists</a></li>
+                        <li><a class="dropdown-item" href="playgrams.php">Playgrams</a></li>
                         <li><a class="dropdown-item" href="concerts.php">Concerts</a></li>
                         <li><a class="dropdown-item" href="recordings.php">Recordings</a></li>
                         <li><hr class="dropdown-divider"></li>

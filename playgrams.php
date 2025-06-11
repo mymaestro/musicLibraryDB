@@ -18,7 +18,7 @@
 ?>
 <main role="main">
     <div class="container">
-        <h2 align="center"><?php echo ORGNAME ?> Program playlists</h2>
+        <h1 align="center"><?php echo ORGNAME ?> Program playlists</h1>
 <?php if($u_librarian) : ?>
         <div align="right">
             <a href="playgramsorderlist.php" class="btn btn-info" role="button" name="sort" id="sort">Set program order</a>

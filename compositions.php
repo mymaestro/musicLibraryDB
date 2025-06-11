@@ -18,7 +18,7 @@ ferror_log("RUNNING compositions.php");
 ?>
 <main role="main" class="container">
 <div class="container">
-    <h2 align="center"><?php echo ORGNAME ?> Compositions</h2>
+    <h1 align="center"><?php echo ORGNAME ?> Compositions</h1>
     <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
         <i class="fas fa-arrow-up"></i>
     </button>

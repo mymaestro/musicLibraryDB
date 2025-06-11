@@ -18,7 +18,7 @@
 ?>
 <main role="main">
    <div class="container">
-        <h2 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h2>
+        <h1 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
 <?php if($u_admin) : ?>
         <div align="right">
             <span id="updatemessage"></span>

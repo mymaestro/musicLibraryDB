@@ -18,7 +18,7 @@ ferror_log("RUNNING parts.php");
 ?>
 <main role="main">
     <div class="container">
-        <h2 align="center"><?php echo ORGNAME ?> Instrument parts</h2>
+        <h1 align="center"><?php echo ORGNAME ?> Instrument parts</h1>
         <hr>
         <div class="row">
             <div class="d-flex col-3">

@@ -20,7 +20,7 @@ require_once('includes/navbar.php');
 <div class="container">
 <main>
     <div class="py-5 text-center">
-        <h2><?php echo ORGNAME ?> library <?php echo PAGE_NAME ?></h2>
+        <h1><?php echo ORGNAME ?> library <?php echo PAGE_NAME ?></h1>
     </div>
     <div class="row g-5">
         <div class="col-md-7">

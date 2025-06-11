@@ -124,7 +124,7 @@ require_once('includes/navbar.php');
 <div class="container">
 <main>
     <div class="py-5 text-center">
-        <h2>Sign up for <?php echo ORGNAME ?> library access.</h2>
+        <h1>Sign up for <?php echo ORGNAME ?> library access.</h1>
     </div>
     <div class="row g-5">
         <div class="col-md-7">

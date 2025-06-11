@@ -18,7 +18,7 @@
 ?>
 <main role="main">
     <div class="container">
-        <h2 align="center"><?php echo ORGNAME ?> <?php echo PAGE_NAME?></h2>
+        <h1 align="center"><?php echo ORGNAME ?> <?php echo PAGE_NAME?></h1>
 <?php if($u_librarian) : ?>
         <div align="right">
             <a href="instrumentsorderlist.php" class="btn btn-info" role="button" name="sort" id="sort">Set score order</a>

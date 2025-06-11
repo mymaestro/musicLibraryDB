@@ -18,12 +18,13 @@
 ?>
 <main role="main">
    <div class="container">
-        <h1 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
+        <div class="row pb-3 pt-5 border-bottom"><h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
 <?php if($u_admin) : ?>
-        <div align="right">
-            <span id="updatemessage"></span>
-            <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
-            <br />
+        <div class="row pt-3 justify-content-end">
+            <div class="col-auto">
+                <span id="updatemessage"></span>
+                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+            </div>
         </div><!-- right button -->
         <div id="user_table">
         <?php

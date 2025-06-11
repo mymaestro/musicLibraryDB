@@ -17,9 +17,10 @@
 ?>
 <main role="main">
   <div class="container">
-    <div class="row align-items-start">
+    <div class="row pb-3 pt-5 border-bottom"><h1>Search the library</h1></div>
+    <div class="row pt-3 align-items-start">
       <div class="col">
-        <h1>Browse the music library</h1>
+        <h2>Browse the music library</h2>
         <p>These are the tables that are used in the music library database.</p>
         <dl>
           <dt><a href="compositions.php">Compositions</a></dt>
@@ -48,7 +49,7 @@
         </dl>
       </div><!-- col -->
       <div class="col">
-        <h1>Search compositions</h1>
+        <h2>Search compositions</h2>
         <div id="search_form">
           <form action="compositions.php" method="POST">
             <div class="row g-3 align-items-center">

@@ -16,13 +16,14 @@
   require_once('includes/functions.php');
   ferror_log("RUNNING genres.php");
 ?>
-<main role="main">
+<main role="main" class="container">
     <div class="container">
-        <h1 align="center"><?php echo ORGNAME ?> Genres</h1>
+        <div class="row pb-3 pt-5 border-bottom"><h1 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1></div>
 <?php if($u_librarian) : ?>
-        <div align="right">
-            <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
-            <br />
+        <div class="row pt-3 justify-content-end">
+            <div class="col-auto">
+                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+            </div>
         </div><!-- right -->
 <?php endif; ?>
         <div id="genre_table">

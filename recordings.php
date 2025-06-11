@@ -16,18 +16,20 @@
   require_once('includes/functions.php');
   ferror_log("RUNNING recordings.php");
 ?>
-<main role="main">
+<main role="main" class="container">
     <div class="container">
-        <h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1>
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
-        <div align="right">
-            <input type="text" class="tablesearch-input" data-tablesearch-table="#cpdatatable" placeholder="Search">
+        <div class="row pb-3 pt-5 border-bottom"><h1 align="center"><?php echo ORGNAME  . ' '. PAGE_NAME ?></h1></div>
+        <div class="row pt-3 justify-content-end">
+            <div class="col-auto">
+                <input type="text" class="tablesearch-input" data-tablesearch-table="#cpdatatable" placeholder="Search">
 <?php if($u_librarian) : ?>
-            <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
-            <br />
-<?php endif; ?>
+                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+<?php endif; ?>            </div>
+        </div>
+
         </div><!-- right -->
         <div id="recordings_table">
             <p class="text-center">Loading recordings...</p>

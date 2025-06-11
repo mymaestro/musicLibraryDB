@@ -15,13 +15,17 @@
   require_once("includes/navbar.php");
   require_once('includes/functions.php');
 ?>
-<main>
+<main role="main" class="container">
   <div class="container">
-        <h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1>
+        <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <div class="row pb-3 pt-5 border-bottom"><h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
 <?php if($u_librarian) : ?>
-        <div align="right">
-            <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
-            <br />
+        <div class="row pt-3 justify-content-end">
+            <div class="col-auto">
+                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+            </div>
         </div><!-- right button -->
 <?php endif; ?>
         <div id="ensemble_table">
@@ -129,6 +133,29 @@
 <?php require_once("includes/footer.php"); ?>
 <!-- jquery function to add/update database records -->
 <script>
+// Scroll-to-top button
+let mybutton = document.getElementById("btn-back-to-top");
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function () {
+    scrollFunction();
+};
+function scrollFunction() {
+    if (
+        document.body.scrollTop > 20 ||
+        document.documentElement.scrollTop > 20
+        ) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+    // When the user chooses scrollbutton, scroll to the top of the document
+mybutton.addEventListener("click", backToTop);
+function backToTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+};
+
 $(document).ready(function(){
     $.ajax({
         url:"includes/fetch_ensembles.php",

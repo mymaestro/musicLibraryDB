@@ -1,5 +1,5 @@
 <?php
-  define('PAGE_TITLE', 'List playgrams');
+  define('PAGE_TITLE', 'Playgrams');
   define('PAGE_NAME', 'Playgrams');
   require_once("includes/header.php");
   $u_admin = FALSE;
@@ -18,19 +18,20 @@
 ?>
 <main role="main">
     <div class="container">
-        <h1 align="center"><?php echo ORGNAME ?> Program playlists</h1>
-<?php if($u_librarian) : ?>
-        <div align="right">
-            <a href="playgramsorderlist.php" class="btn btn-info" role="button" name="sort" id="sort">Set program order</a>
-            <button id="editBtn" class="btn btn-primary" disabled>Edit</button>
-            <button id="deleteBtn" class="btn btn-danger" disabled>Delete</button>
-            <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
-            <br />
-        </div><!-- right button -->
-<?php endif; ?>
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
+        <div class="row pb-3 pt-5 border-bottom"><h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
+<?php if($u_librarian) : ?>
+        <div class="row pt-3 justify-content-end">
+            <div class="col-auto">
+                <a href="playgramsorderlist.php" class="btn btn-info" role="button" name="sort" id="sort">Set program order</a>
+                <button id="editBtn" class="btn btn-primary" disabled>Edit</button>
+                <button id="deleteBtn" class="btn btn-danger" disabled>Delete</button>
+                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+            </div>
+        </div><!-- right button -->
+<?php endif; ?>
         <div id="playgram_table" align="center">
             Loading table...
         </div><!-- playgram_table -->

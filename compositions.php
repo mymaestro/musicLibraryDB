@@ -17,44 +17,40 @@ require_once('includes/functions.php');
 ferror_log("RUNNING compositions.php");
 ?>
 <main role="main" class="container">
-<div class="container">
-    <h1 align="center"><?php echo ORGNAME ?> Compositions</h1>
-    <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-    <div class="row">
-        <div class="col-md-10">
-        <div id="search_form">
-            <form action="" method="POST">
-                <div class="row g-3 align-items-center">
-                    <div class="col-auto">
-                        <button type="submit" name="submitButton" class="btn btn-secondary">Search</button>
-                    </div>
-                    <div class="col-auto">
-                        <input type="text" id="search" name="search" class="form-control" aria-describedby="searchHelp">
-                    </div>
-                    <div class="col-auto">
-                       <span id="searchHelp" class="form-text">
-                           Search the name, description, composer, arranger, and comments
-                       </span>
-                    </div>
-                </div>
-            </form>
-        </div><!-- search_form -->
-    </div><!-- col -->
-    <div class="col-md-2">
+    <div class="container">
+        <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <div class="row pb-3 pt-5 border-bottom"><h1 align="center"><?php echo ORGNAME ?> Compositions</h1></div>
+            <div class="row pt-3">
+                <div class="col-md-10">
+                    <div id="search_form">
+                        <form action="" method="POST">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto"><button type="submit" name="submitButton" class="btn btn-secondary">Search</button></div>
+                                <div class="col-auto"><input type="text" id="search" name="search" class="form-control" aria-describedby="searchHelp"></div>
+                                <div class="col-auto">
+                                    <span id="searchHelp" class="form-text">
+                                        Search the name, description, composer, arranger, and comments
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div><!-- search_form -->
+                </div><!-- col -->
+                <div class="col-md-2">
 <?php if($u_librarian) : ?>
-        <div align="right">
-            <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
-            <br />
-        </div><!-- right -->
+                    <div align="right">
+                        <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+                        <br />
+                    </div><!-- right -->
 <?php endif; ?>
-    </div>    
-        </div><!-- row -->
+                </div><!-- col-md-2 -->
+            </div><!-- row -->
+        </div>
         <div id="composition_table" align="center">
 
-       </div><!-- composition_table -->
-
+        </div><!-- composition_table -->
         <div class="modal" id="view_data_modal"><!-- view data -->
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">

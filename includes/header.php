@@ -13,7 +13,11 @@
     <meta name="description" content="Music library system">
     <meta name="author" content="Warren Gill">
     <link rel="icon" href="favicon.ico">
-
+    <!-- Favorite icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
     <title><?php echo PAGE_TITLE ?></title>
 
     <!-- Bootstrap core CSS -->
@@ -22,6 +26,8 @@
     <!-- Font Awesome for icons -->
     <!-- https://use.fontawesome.com/releases/v5.0.8/css/all.css" -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+
+
     
     <!-- Prevent navbar overlay -->
     <style>
@@ -40,6 +46,8 @@
         display: none;
     }
     </style>
+
+
 <?php if (PAGE_NAME == 'Parts') : ?>
    <!-- this is the PARTS page 
         eventually you will be able to upload PDF parts here -->

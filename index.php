@@ -17,11 +17,15 @@
   ferror_log("RUNNING index.php");
 ?>
 <main role="main" class="container">
-	<div class="jumbotron">
-		<img class="d-block mx-auto mb-4" src="<?php echo ORGLOGO ?>" alt="<?php echo ORGDESC ?>" height="256">
-		<h1 class="display-4"><?php echo ORGDESC ?></h1>
-		<p class="lead">Music Library</p>
-		<br />
+	<div class="px-4 py-5 my-5 text-center align-items-center rounded-3 border shadow-lg"> <img class="d-block mx-auto mb-4" src="<?php echo ORGLOGO ?>" alt="<?php echo ORGDESC ?>" height="256">
+		<h1 class="display-5 fw-bold text-body-emphasis"><?php echo ORGDESC ?></h1>
+		<div class="col-lg-6 mx-auto">
+			<p class="lead mb-4">The <strong>music library</strong> is an application you can use to keep track of the sheet music in your library. While intended for full-size concert bands, brass bands, wind ensembles, and orchestras, the music database can be tailored to fit the complexity of any size library. </p>
+			<div class="d-grid gap-2 d-sm-flex justify-content-sm-center"> <a href="enter_menu.php" class="btn btn-primary btn-lg px-4 gap-3">Enter library</a> <a
+					href="about.php" class="btn btn-outline-secondary btn-lg px-4">About</a> </div>
+		</div>
+	</div>
+	<div>
 		<div class="card-group">
 			<div class="card">
 				<div class="card-body">

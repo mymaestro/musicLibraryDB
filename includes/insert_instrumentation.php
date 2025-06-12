@@ -20,7 +20,7 @@ require_once("navbar.php");
     ferror_log("RUNNING insert_instrumentation.php with catalog_num=". $_POST["catalog_number"]);
     ?>
     <div class="container">
-        <h1 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
+        <h1><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
         <?php if ($u_librarian) : ?>
         <?php if(!empty($_POST)) {
             $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);

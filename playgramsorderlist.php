@@ -18,7 +18,7 @@
 ?>
 <main role="main">
     <div class="container">
-        <h1 align="center"><?php echo ORGNAME . ' ' . PAGE_TITLE .'!!WARNING!!' ?></h1>
+        <h1><?php echo ORGNAME . ' ' . PAGE_TITLE .'!!WARNING!!' ?></h1>
 <?php if($u_librarian) : ?>
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>

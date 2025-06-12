@@ -35,7 +35,7 @@ if(!empty($_POST["catalog_number"])) {
 ?>
 <main role="main" class="container">
     <div class="container">
-        <h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1>
+        <h1><?php echo ORGNAME . ' '. PAGE_NAME ?></h1>
         <?php if($u_librarian) : ?>
         <div id="instrumentation">
             <form action="includes/insert_instrumentation.php" method="post" id="instrumentation_form">

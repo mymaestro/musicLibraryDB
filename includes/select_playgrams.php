@@ -12,9 +12,9 @@ if (isset($_POST["id_playgram"])) {
     $sql = "SELECT p.id_playgram            'Playgram ID',
                    p.name                   'Name',
                    if(p.enabled = 1, 'Yes', 'No') 'Enabled',
-                   p.description            'Description',
+                   p.description            'Description'
             FROM   playgrams p
-            WHERE  id_playgram = '".$_POST["id_playgram"]."'";
+            WHERE  id_playgram = ".$_POST["id_playgram"] . ";";
 
     ferror_log("Running SQL: ". $sql);
     if ($res = mysqli_query($f_link, $sql)) {

@@ -18,7 +18,7 @@
 ?>
 <main role="main">
     <div class="container">
-    <h1 align="center"><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
+    <h1><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
 <?php if($u_librarian) : ?>
     <div align="right">
         <p>Add instruments to parts

@@ -16,7 +16,7 @@ require_once("includes/navbar.php");
 ?>
 <main role="main" class="container">
     <div class="container">
-        <div class="row pb-3 pt-5 border-bottom"><h1 align="center"><?php echo ORGNAME ?> Concerts</h1></div>
+        <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME ?> Concerts</h1></div>
         <div class="row pt-3">
             <p>Nothing to see here yet</p>
         </div>

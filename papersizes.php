@@ -18,7 +18,7 @@
 ?>
 <main role="main">
     <div class="container">
-        <div class="row pb-3 pt-5 border-bottom"><h1 align="center"><?php echo ORGNAME . ' '. PAGE_TITLE ?></h1></div>
+        <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_TITLE ?></h1></div>
 <?php if($u_librarian) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">

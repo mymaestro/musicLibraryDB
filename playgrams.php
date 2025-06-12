@@ -21,7 +21,7 @@
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
-        <div class="row pb-3 pt-5 border-bottom"><h1 align="center"><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
+        <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
 <?php if($u_librarian) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
@@ -158,10 +158,6 @@ function backToTop() {
 }
 // jquery functions to add/update database records
 $(document).ready(function(){
-    // Enable edit buttons when row is selected
-    $('.select-radio').on('change', function() {
-        $('#editBtn, #deleteBtn').prop('disabled',false);
-    });
     $.ajax({
         url:"includes/fetch_playgrams.php",
         method:"POST",
@@ -183,6 +179,11 @@ $(document).ready(function(){
         $('#update').val("add");
         $('#insert_form')[0].reset();
     });
+    // Enable edit buttons when row is selected
+    $(document).on('change', '.select-radio', function() {
+        $('#editBtn, #deleteBtn').prop('disabled',false);
+    });
+
     $(document).on('click', '.edit_data', function(){
         var id_playgram = $(this).attr("id");
         $.ajax({

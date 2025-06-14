@@ -43,3 +43,6 @@ Then, edit *config.php* to match whatever settings you want.
     - User: librarian
     - Pass: superS3cretPa$$wo4d
 - Have fun.
+
+## Errata
+When you delete an item from tables, it doesn't refresh the table, it just shows you "Record `n` deleted from `table`"

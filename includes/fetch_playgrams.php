@@ -13,17 +13,30 @@ if(isset($_POST["user_role"])) {
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 if(isset($_POST["id_playgram"])) {
-    ferror_log("with id=". $_POST["id_playgram"]);
-    $sql = "SELECT * FROM playgrams WHERE id_playgram = '".$_POST["id_playgram"]."'";
+    ferror_log("playgrams with id=". $_POST["id_playgram"]);
+    $id_playgram = mysqli_real_escape_string($f_link, $_POST["id_playgram"]);
+    $sql = "SELECT * FROM playgrams WHERE id_playgram = ".$id_playgram.";";
     ferror_log("SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
-    $output = json_encode($rowList);
-    ferror_log("JSON: " . $output);
-    echo $output;
+    $playgram_data = json_encode($rowList);
+    ferror_log("===> Playgram data JSON: ".$playgram_data);
+
+    $sql = "SELECT * FROM playgram_items where id_playgram = '.$id_playgram.';";
+    $playgram_items = array();
+    $res = mysqli_query($f_link, $sql);
+    while($rowList = mysqli_fetch_array($res)) {
+        $playgram_items[] = $rowList;
+    }
+
+    $playgram_compositions = json_encode($playgram_items);
+
+    // spitting out JSON object of the playgram and its compositions
+    $return = json_encode('{"playgram":'.$playgram_data.',"compositions":'.$playgram_compositions . "}");
+    ferror_log("JSON: " . $return);
+    echo $return;
 } else {
     echo '            <div class="panel panel-default">
-        <form id="actionForm" method="post" action="handle_action.php">
            <div class="table-repsonsive">
                 <table class="table table-hover">
                 <caption class="title">Available program play lists (playgrams)</caption>
@@ -43,8 +56,8 @@ if(isset($_POST["id_playgram"])) {
         $name = $rowList['name'];
         $description = $rowList['description'];
         $enabled = $rowList['enabled'];
-        echo '<tr>
-                    <td><input type="radio" name="selected_id" value="'.$id_playgram.'" class="form-check-input select-radio"></td>
+        echo '<tr data-id="'.$id_playgram.'" >
+                    <td><input type="radio" name="record_select" value="'.$id_playgram.'" class="form-check-input select-radio"></td>
                     <td><a href="#" class="view_data" name="view" id="'.$id_playgram.'" >'.$name.'</a></td>
                     <td>'.$description.'</td>
                     <td>'. (($enabled == 1) ? "Yes": "No" ). '</td>

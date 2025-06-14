@@ -20,9 +20,14 @@
     <link rel="manifest" href="/site.webmanifest">
     <title><?php echo PAGE_TITLE ?></title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <!-- Bootswatch Yeti https://bootswatch.com/yeti/ -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     
+    <!-- Bootstrap core CSS -->
+    <!--
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    -->
+
     <!-- Font Awesome for icons -->
     <!-- https://use.fontawesome.com/releases/v5.0.8/css/all.css" -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">

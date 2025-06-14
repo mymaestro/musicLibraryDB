@@ -19,7 +19,6 @@ if(!empty($_POST)) {
     ferror_log("POST enabled=".$enabled);
     ferror_log("POST default_instrument=".$_POST["default_instrument"]);
     ferror_log("POST is_part_collection=".$_POST["is_part_collection"]);
-    ferror_log("POST is_part_collection=".$is_part_collection);
     $is_part_collection =  mysqli_real_escape_string($f_link, $_POST["is_part_collection"]);
     if (empty($is_part_collection)) {
         $is_part_collection = "NULL";

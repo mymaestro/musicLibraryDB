@@ -407,29 +407,22 @@ ferror_log("RUNNING compositions.php");
 <script src="js/auto-tables.js"></script>
 <!-- jquery function to add/update database records -->
 <script>
-// Scroll-to-top button
-let mybutton = document.getElementById("btn-back-to-top");
-// When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function () {
-    scrollFunction();
-};
-function scrollFunction() {
-    if (
-        document.body.scrollTop > 20 ||
-        document.documentElement.scrollTop > 20
-        ) {
-            mybutton.style.display = "block";
-        } else {
-            mybutton.style.display = "none";
-        }
-    }
-    // When the user chooses scrollbutton, scroll to the top of the document
-mybutton.addEventListener("click", backToTop);
-function backToTop() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
 $(document).ready(function() {
+    // Scroll-to-top button
+    let $upButton = $("#btn-back-to-top");
+    // When the user scrolls down 20px from the top of the document, show the button
+    $(window).on("scroll", function () {
+        if ($(document).scrollTop() > 20) {
+            $upButton.show();
+        } else {
+            $upButton.hide();
+        }
+    });
+    // When the user clicks the button, scroll to the top of the document
+    $upButton.on("click", function () {
+        $("html, body").animate({ scrollTop: 0 }, "fast");
+    });
+
     $.ajax({
         url:"includes/fetch_compositions.php",
         method:"POST",

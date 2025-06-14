@@ -25,17 +25,16 @@
 <?php if($u_librarian) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
-                <a href="playgramsorderlist.php" class="btn btn-info" role="button" name="sort" id="sort">Set program order</a>
-                <button id="editBtn" class="btn btn-primary" disabled>Edit</button>
-                <button id="deleteBtn" class="btn btn-danger" disabled>Delete</button>
-                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+                <a href="playgramsorderlist.php" class="btn btn-info" role="button" name="sort" id="sort" disabled>Set program order</a>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
             </div>
         </div><!-- right button -->
 <?php endif; ?>
-        <div id="playgram_table" align="center">
+        <div id="playgram_table">
             Loading table...
         </div><!-- playgram_table -->
-
         <div id="dataModal" class="modal"><!-- view data -->
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -52,11 +51,13 @@
             </div><!-- modal-dialog -->
         </div><!-- dataModal -->
         <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content rounded-4 shadow">
                     <div class="modal-body p-4 text-center">
-                        <h5 class="mb-0">Delete this program playlist?</h5>
-                        <p id="playgram2delete">You can cancel now.</p>
+                        <h5 class="mb-0">Delete program playlist <span id="playgram2delete">#</span>?</h5>
+                        <div class="modal-body text-start" id="playgram-delete_detail">
+                        <p>You can cancel now.</p>
+                        </div>
                     </div>
                     <div class="modal-footer flex-nowrap p-0">
                         <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
@@ -65,7 +66,7 @@
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
         </div><!-- deleteModal -->
-        <div id="add_data_Modal" class="modal"><!-- add/edit data -->
+        <div id="editModal" class="modal" tabindex="-1" aria-hidden="true"><!-- add/edit data -->
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -90,6 +91,29 @@
                                     <textarea class="form-control" id="description" name="description" rows="3" maxlength="2048"></textarea>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="d-flex" id="playgram_compositions">
+                                    <div class="col-md-2">
+                                        <label for="id_composition_list" class="col-form-label">Composition(s) on the program.</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select form-control text-muted d-flex" aria-label="Select composition" id="id_composition_list" name="id_composition_list[]" multiple>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                    </br>
+                                        <p class="text-center">
+                                            <button type="button" class="btn btn-light" name="add_composition" id="add_composition"><i class="fa fa-angle-right"></i></button>
+                                        </br>
+                                            <button type="button" class="btn btn-light" id="remove_composition"><i class="fa fa-angle-left"></i></button>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <select class="form-select form-control d-flex" aria-label="Select composition" id="id_composition" name="id_composition[]" multiple>
+                                        </select>
+                                    </div>
+                                </div><!-- part_compositions -->                                
+                            </div>
                             <hr />
                             <div class="row bg-white">
                                 <div class="col-md-12">
@@ -109,111 +133,127 @@
                     </div><!-- modal-footer -->
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
-        </div><!-- add_data_modal -->
+        </div><!-- editModal -->
     </div><!-- container -->
 </main>
 <?php require_once("includes/footer.php");?>
 <script>
-    // Load compositions data into a JSON array for frequent use
+// Load compositions data into a JSON array for frequent use
 <?php
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-$sql = "SELECT `id_instrument`, `collation`, `name` FROM instruments WHERE `enabled` = 1 ORDER BY collation;";
+$sql = "SELECT `catalog_number`, `name`, `composer`,`arranger` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
 ferror_log("Running " . $sql);
 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-$jsondata = "var instrumentdata = [";
+$jsondata = "var compositionData = [";
 while($rowList = mysqli_fetch_array($res)) {
-    $id_instrument = $rowList['id_instrument'];
-    $collation = $rowList['collation'];
-    $instrument_name = $rowList['name'];
-    $jsondata .= '{"collation":'.$collation.',"id":'.$id_instrument.',"name":"'.$instrument_name.'"},';
+    $comp_catno = $rowList['catalog_number'];
+    $comp_name = $rowList['name'];
+    $comp_composer = $rowList['composer'];
+    $comp_arranger = $rowList['arranger'];
+    $comp_display = $comp_name . " - " . $comp_catno;
+    if (("$comp_composer" <> "" ) || ("$comp_arranger" <> "")) $comp_display .= ' (';
+    if (("$comp_composer" <> "" ) && ("$comp_arranger" <> "")) $comp_display .= $comp_composer . ", arr. " . $comp_arranger . ")";
+    if (("$comp_composer" == "" ) && ("$comp_arranger" <> "")) $comp_display .= "arr. " . $comp_arranger . ")";
+    if (("$comp_composer" <> "" ) && ("$comp_arranger" == "")) $comp_display .=  $comp_composer . ")";
+    $jsondata .= '{"catalog_number":"'.$comp_catno.'","name":"'.$comp_display.'"},';
 }
 $jsondata = rtrim($jsondata, ',');
 $jsondata .= ']'.PHP_EOL;
 mysqli_close($f_link);
 echo $jsondata;
-ferror_log("returned: " . $sql);
 ?>
-
-// Scroll-to-top button
-let mybutton = document.getElementById("btn-back-to-top");
-// When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function () {
-    scrollFunction();
-};
-function scrollFunction() {
-    if (
-        document.body.scrollTop > 20 ||
-        document.documentElement.scrollTop > 20
-        ) {
-            mybutton.style.display = "block";
-        } else {
-            mybutton.style.display = "none";
-        }
-    }
-    // When the user chooses scrollbutton, scroll to the top of the document
-mybutton.addEventListener("click", backToTop);
-function backToTop() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
-// jquery functions to add/update database records
+// jQuery functions
 $(document).ready(function(){
+    // Scroll-to-top button
+    let $upButton = $("#btn-back-to-top");
+    // When the user scrolls down 20px from the top of the document, show the button
+    $(window).on("scroll", function () {
+        if ($(document).scrollTop() > 20) {
+            $upButton.show();
+        } else {
+            $upButton.hide();
+        }
+    });
+    // When the user clicks the button, scroll to the top of the document
+    $upButton.on("click", function () {
+        $("html, body").animate({ scrollTop: 0 }, "fast");
+    });
+
+    let id_playgram = null;  // Which row user clicks
+    alert("compositions " + compositionData );
     $.ajax({
         url:"includes/fetch_playgrams.php",
         method:"POST",
         data:{
             user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
-        },   
+        },
         success:function(data){
             $('#playgram_table').html(data);
             var selectitems = '';
-            $.each(instrumentdata, function(key, value) {
+            $.each(compositionData, function(key, value) {
                 selectitems += '<option value=' + value.id + '>' + value.name + '</option>';
                 $(".instrument_" + value.id).text(value.name);
             });
             $('#default_instrument').html(selectitems);
         }
     });
+
     $('#add').click(function(){
         $('#insert').val("Insert");
         $('#update').val("add");
         $('#insert_form')[0].reset();
     });
-    // Enable edit buttons when row is selected
-    $(document).on('change', '.select-radio', function() {
-        $('#editBtn, #deleteBtn').prop('disabled',false);
+    // Enable the edit and delete buttons, and get the playgram ID when a table row is clicked
+    $(document).on('click', '#playgram_table tbody tr', function(){
+        $(this).find('input[type="radio"]').prop('checked',true);
+        $('#edit, #delete').prop('disabled',false);
+        id_playgram = $(this).data('id'); // data-id attribute
     });
-
+    
     $(document).on('click', '.edit_data', function(){
-        var id_playgram = $(this).attr("id");
         $.ajax({
             url:"includes/fetch_playgrams.php",
             method:"POST",
-            data:{id_playgram:id_playgram},
+            data:{ id_playgram : id_playgram },
             dataType:"json",
-            success:function(data){
-                $('#id_playgram').val(data.id_playgram);
-                $('#name').val(data.name);
-                $('#description').val(data.description);
-                if ((data.enabled) == 1) {
+            success:function(result){
+                const obj = JSON.parse(result);
+                var playgram = obj.playgram;
+                var compositions = obj.compositions;
+                var selectitems = '';
+                $.each(compositionData, function(key, value) {
+                    selectitems += '<option value=' + value.id +'>'+ value.name+'</option>';
+                });
+                $('#id_playgram').val(playgram.id_playgram);
+                $('#name').val(playgram.name);
+                $('#description').val(playgram.description);
+                if ((playgram.enabled) == 1) {
                     $('#enabled').prop('checked',true);
-                }
+                };
+
+
+
                 $('#insert').val("Update");
                 $('#update').val("update");
-                $('#add_data_Modal').modal('show');
+                $('#editModal').modal('show');
             }
         });
     });
-    $(document).on('click', '.delete_data', function(){ // button that brings up modal
-        // input button name="delete" id="id_playgram" class="delete_data"
-        var id_playgram = $(this).attr("id");
-        $('#deleteModal').modal('show');
-        $('#confirm-delete').data('id', id_playgram);
-        $('#playgram2delete').text(id_playgram);
+    $(document).on('click', '.delete_data', function() { // button that brings up delete modal
+        if(id_playgram !== null) {
+            $.ajax({
+                url:"includes/select_playgrams.php",
+                method:"POST",
+                data:{id_playgram:id_playgram},
+                success:function(data){
+                    $('#playgram-delete_detail').html(data);
+                }
+            });
+        }
+        $('#confirm-delete').data('id', id_playgram); // Set the id for delete function
+        $('#playgram2delete').text(id_playgram); // Update ID in the modal
     });
-    $('#confirm-delete').click(function(){
-        // The confirm delete button
-        var id_playgram = $(this).data('id');
+    $('#confirm-delete').click(function(){ // The confirm delete button
         $.ajax({
             url:"includes/delete_records.php",
             method:"POST",
@@ -256,7 +296,7 @@ $(document).ready(function(){
                 },
                 success:function(data){
                     $('#insert_form')[0].reset();
-                    $('#add_data_Modal').modal('hide');
+                    $('#editModal').modal('hide');
                     $.ajax({
                         url:"includes/fetch_playgrams.php",
                         method:"POST",
@@ -265,9 +305,6 @@ $(document).ready(function(){
                         },
                         success:function(data){
                             $('#playgram_table').html(data);
-                            $.each(instrumentdata, function(key, value) {
-                                $(".instrument_" + key).text(value);
-                            });
                         }
                     });
                 }
@@ -276,8 +313,7 @@ $(document).ready(function(){
     });
     $(document).on('click', '.view_data', function(){
         var id_playgram = $(this).attr("id");
-        if(id_playgram != '')
-        {
+        if(id_playgram !== null) {
             $.ajax({
                 url:"includes/select_playgrams.php",
                 method:"POST",

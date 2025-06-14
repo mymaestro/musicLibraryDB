@@ -49,10 +49,10 @@ if(isset($_POST["id_part_type"])) {
         $default_instrument = $rowList['default_instrument'];
         $is_part_collection = $rowList['is_part_collection'];
         $enabled = $rowList['enabled'];
-        echo '<tr>
+        echo '<tr data-id="'.$id_part_type.'" >
                     <td>'.$collation.'</td>
                     <td>'.$name.'</td>
-                    <td class="instrument_'.$default_instrument.' text-muted"></td>
+                    <td class="instrument_'.$default_instrument.' text-muted">'.$default_instrument.'</td>
                     <td class="text-muted">'.$family.'</td>
                     <td>'.$description.'</td>
                     <td><div class="form-check form-switch">

@@ -147,7 +147,7 @@ if(!empty($_POST["catalog_number"])) {
                         $rowcount = 0;
                         ferror_log("Running " . $sql);
                         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                        $opt = "<select class='form-select form-control' aria-label='Select part types' id='parttypes' name='parttypes[]' size='17' multiple>";
+                        $opt = '<select class="form-select form-control" aria-label="Select part types" id="parttypes" name="parttypes[]" size="17" multiple>';
                         while ($rowList = mysqli_fetch_array($res)) {
                             $rowcount++;
                             $id_part_type = $rowList['id_part_type'];
@@ -164,6 +164,8 @@ if(!empty($_POST["catalog_number"])) {
                 <div class="row">
                     <div class="col-sm-4">
                         <button class="btn btn-primary" type="submit" name="submit" value="add">Add parts</button>
+                        <button type="reset" class="btn btn-secondary" id="revertSelect">Cancel</button>
+                        <a href="#" class="btn btn-link" role="button" onclick="goBack()">Back</a>
                         <a href="compositions.php" class="btn btn-link" role="button">Compositions</a>
                         <a href="parts.php" class="btn btn-link" role="button">Parts</a>
                     </div>
@@ -184,6 +186,13 @@ if(!empty($_POST["catalog_number"])) {
 <?php if($u_librarian) : ?>
 <!-- jquery function to add/update database records -->
 <script>
+function goBack() {
+    if (document.referrer) {
+        window.location = document.referrer;
+    } else {
+        window.history.back();
+    }
+}
 $(document).ready(function(){
     var catalog_number = $("#catalog_number").val();
     $.ajax({

@@ -180,7 +180,6 @@ $(document).ready(function(){
     });
 
     let id_playgram = null;  // Which row user clicks
-    alert("compositions " + compositionData );
     $.ajax({
         url:"includes/fetch_playgrams.php",
         method:"POST",
@@ -189,12 +188,6 @@ $(document).ready(function(){
         },
         success:function(data){
             $('#playgram_table').html(data);
-            var selectitems = '';
-            $.each(compositionData, function(key, value) {
-                selectitems += '<option value=' + value.id + '>' + value.name + '</option>';
-                $(".instrument_" + value.id).text(value.name);
-            });
-            $('#default_instrument').html(selectitems);
         }
     });
 
@@ -221,18 +214,25 @@ $(document).ready(function(){
                 var playgram = obj.playgram;
                 var compositions = obj.compositions;
                 var selectitems = '';
+                // Available compositions
                 $.each(compositionData, function(key, value) {
-                    selectitems += '<option value=' + value.id +'>'+ value.name+'</option>';
+                    selectitems += '<option value=' + value.catalog_number +'>'+ value.name+'</option>';
                 });
+                $('#id_composition_list').html(selectitems);
+                // Selected compositions
+                selectitems = '';
+                $.each(compositions, function(key, value) {
+                    const match = compositionData.find(item => item.catalog_number === value.catalog_number);
+                    if (match) { name = match.name } else { name = "Unknown"};
+                    selectitems += '<option value='+value.catalog_number+'>'+value.comp_order+'. '+name+'</option>';
+                });
+                $('#id_composition').html(selectitems);
                 $('#id_playgram').val(playgram.id_playgram);
                 $('#name').val(playgram.name);
                 $('#description').val(playgram.description);
                 if ((playgram.enabled) == 1) {
                     $('#enabled').prop('checked',true);
                 };
-
-
-
                 $('#insert').val("Update");
                 $('#update').val("update");
                 $('#editModal').modal('show');

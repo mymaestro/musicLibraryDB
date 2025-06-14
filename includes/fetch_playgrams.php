@@ -22,7 +22,30 @@ if(isset($_POST["id_playgram"])) {
     $playgram_data = json_encode($rowList);
     ferror_log("===> Playgram data JSON: ".$playgram_data);
 
-    $sql = "SELECT * FROM playgram_items where id_playgram = '.$id_playgram.';";
+    $sql = "SELECT * FROM playgram_items where id_playgram = ".$id_playgram.";"; // Compositions for this playgram
+
+
+/* NEED TO DO A JOIN WITH COMPOSITIONS TO GET name, composer, arranger in the same outputted field.
+
+        $sql = "SELECT `catalog_number`, `name`, `composer`,`arranger` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
+        ferror_log("Running " . $sql);
+        $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+        $jsondata = "var compositionData = [";
+        while($rowList = mysqli_fetch_array($res)) {
+            $comp_catno = $rowList['catalog_number'];
+            $comp_name = $rowList['name'];
+            $comp_composer = $rowList['composer'];
+            $comp_arranger = $rowList['arranger'];
+            $comp_display = $comp_name . " - " . $comp_catno;
+            if (("$comp_composer" <> "" ) || ("$comp_arranger" <> "")) $comp_display .= ' (';
+            if (("$comp_composer" <> "" ) && ("$comp_arranger" <> "")) $comp_display .= $comp_composer . ", arr. " . $comp_arranger . ")";
+            if (("$comp_composer" == "" ) && ("$comp_arranger" <> "")) $comp_display .= "arr. " . $comp_arranger . ")";
+            if (("$comp_composer" <> "" ) && ("$comp_arranger" == "")) $comp_display .=  $comp_composer . ")";
+            $jsondata .= '{"catalog_number":"'.$comp_catno.'","name":"'.$comp_display.'"},';
+        }
+*/
+
+    ferror_log("PGITEMS SQL " . $sql);
     $playgram_items = array();
     $res = mysqli_query($f_link, $sql);
     while($rowList = mysqli_fetch_array($res)) {
@@ -30,7 +53,7 @@ if(isset($_POST["id_playgram"])) {
     }
 
     $playgram_compositions = json_encode($playgram_items);
-
+    ferror_log("PLAYGRAM_ITEMS ".$playgram_compositions);
     // spitting out JSON object of the playgram and its compositions
     $return = json_encode('{"playgram":'.$playgram_data.',"compositions":'.$playgram_compositions . "}");
     ferror_log("JSON: " . $return);

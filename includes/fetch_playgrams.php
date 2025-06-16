@@ -12,7 +12,11 @@ if(isset($_POST["user_role"])) {
 
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
+
+    ferror_log(print_r($_POST,true));
+
 if(isset($_POST["id_playgram"])) {
+    ferror_log("AM HERE");
     ferror_log("playgrams with id=". $_POST["id_playgram"]);
     $id_playgram = mysqli_real_escape_string($f_link, $_POST["id_playgram"]);
     $sql = "SELECT * FROM playgrams WHERE id_playgram = ".$id_playgram.";";
@@ -23,35 +27,12 @@ if(isset($_POST["id_playgram"])) {
     ferror_log("===> Playgram data JSON: ".$playgram_data);
 
     $sql = "SELECT * FROM playgram_items where id_playgram = ".$id_playgram.";"; // Compositions for this playgram
-
-
-/* NEED TO DO A JOIN WITH COMPOSITIONS TO GET name, composer, arranger in the same outputted field.
-
-        $sql = "SELECT `catalog_number`, `name`, `composer`,`arranger` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
-        ferror_log("Running " . $sql);
-        $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-        $jsondata = "var compositionData = [";
-        while($rowList = mysqli_fetch_array($res)) {
-            $comp_catno = $rowList['catalog_number'];
-            $comp_name = $rowList['name'];
-            $comp_composer = $rowList['composer'];
-            $comp_arranger = $rowList['arranger'];
-            $comp_display = $comp_name . " - " . $comp_catno;
-            if (("$comp_composer" <> "" ) || ("$comp_arranger" <> "")) $comp_display .= ' (';
-            if (("$comp_composer" <> "" ) && ("$comp_arranger" <> "")) $comp_display .= $comp_composer . ", arr. " . $comp_arranger . ")";
-            if (("$comp_composer" == "" ) && ("$comp_arranger" <> "")) $comp_display .= "arr. " . $comp_arranger . ")";
-            if (("$comp_composer" <> "" ) && ("$comp_arranger" == "")) $comp_display .=  $comp_composer . ")";
-            $jsondata .= '{"catalog_number":"'.$comp_catno.'","name":"'.$comp_display.'"},';
-        }
-*/
-
     ferror_log("PGITEMS SQL " . $sql);
     $playgram_items = array();
     $res = mysqli_query($f_link, $sql);
     while($rowList = mysqli_fetch_array($res)) {
         $playgram_items[] = $rowList;
     }
-
     $playgram_compositions = json_encode($playgram_items);
     ferror_log("PLAYGRAM_ITEMS ".$playgram_compositions);
     // spitting out JSON object of the playgram and its compositions
@@ -68,21 +49,42 @@ if(isset($_POST["id_playgram"])) {
                     <th style="width: 50px;"></th>
                     <th>Name</th>
                     <th>Description</th>
+                    <th>Compositions</th>
+                    <th>Duration</th>
                     <th>Enabled</th>
                 </tr>
                 </thead>
                 <tbody>';
-    $sql = "SELECT * FROM playgrams;";
+   
+    $sql = "SELECT 
+        p.id_playgram AS id_playgram,
+        p.name AS playgram_name,
+        p.description AS playgram_description,
+        COUNT(pi.catalog_number) AS num_compositions,
+        SEC_TO_TIME(SUM(c.duration)) AS total_duration,
+        p.enabled
+    FROM playgrams p
+    LEFT JOIN playgram_items pi ON p.id_playgram = pi.id_playgram
+    LEFT JOIN compositions c ON pi.catalog_number = c.catalog_number
+    GROUP BY
+      p.id_playgram, p.name, p.description
+    ORDER BY
+    p.name;";
+
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
     while ($rowList = mysqli_fetch_array($res)) {
         $id_playgram = $rowList['id_playgram'];
-        $name = $rowList['name'];
-        $description = $rowList['description'];
+        $name = $rowList['playgram_name'];
+        $description = $rowList['playgram_description'];
+        $duration = $rowList['total_duration'];
+        $pieces = $rowList['num_compositions'];
         $enabled = $rowList['enabled'];
         echo '<tr data-id="'.$id_playgram.'" >
                     <td><input type="radio" name="record_select" value="'.$id_playgram.'" class="form-check-input select-radio"></td>
                     <td><a href="#" class="view_data" name="view" id="'.$id_playgram.'" >'.$name.'</a></td>
                     <td>'.$description.'</td>
+                    <td>'.$pieces.'</td>
+                    <td>'.$duration.'</td>
                     <td>'. (($enabled == 1) ? "Yes": "No" ). '</td>
                 </tr>';
     }

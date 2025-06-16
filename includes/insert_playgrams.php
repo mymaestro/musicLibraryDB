@@ -10,47 +10,135 @@ if(!empty($_POST)) {
     $output = '';
     $message = '';
     $timestamp = time();
-    ferror_log("POST id_playgram=".$_POST["id_playgram"]);
-    ferror_log("POST name=".$_POST["name"]);
-    ferror_log("POST description=".$_POST["description"]);
+    ferror_log(print_r($_POST,true));
+
+    $insert_mode = $_POST["update"]; // Either "add" or "update
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
-    ferror_log("POST enabled=".$enabled);
     $id_playgram = mysqli_real_escape_string($f_link, $_POST['id_playgram']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
     $description = mysqli_real_escape_string($f_link, $_POST['description']);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
 
-    ferror_log("POST update=".$_POST["update"]);
+    ferror_log("POST update=".$insert_mode);
 
-    if($_POST["update"] == "update") {
+    if( $insert_mode == "update") {
+        $sql = "SELECT id_playgram_item, catalog_number
+            FROM playgram_items
+            WHERE id_playgram = $id_playgram ;";
+        ferror_log("Get existing pgitems SQL " . $sql);
+        $existing = [];
+        $res = mysqli_query($f_link, $sql);
+        while($rowList = mysqli_fetch_assoc($res)) {
+            $existing[$rowList['catalog_number']] = $rowList['id_playgram_item'];
+        }
         $sql = "
-        UPDATE playgrams 
-        SET name ='$name',
-        description = '$description',
-        enabled = $enabled
-        WHERE id_playgram='".$_POST["id_playgram"]."'";
-        $message = 'Data Updated';
-    } elseif($_POST["update"] == "add") {
+        UPDATE playgrams
+            SET name = '$name',
+            description = '$description',
+            enabled = $enabled
+        WHERE id_playgram = $id_playgram ;
+        ";
+        ferror_log("41: Update playgram SQL ". $sql);
+        if(!mysqli_query($f_link, $sql)) {  
+            $error_message = mysqli_error($f_link);
+            ferror_log("Error updating playgram items " . $error_message);
+        }
+        // If any compositions are entered...
+        if(isset($_POST["id_composition"])) {
+            // Add new playgram items
+            $comp_order = 1;
+            foreach ($_POST['id_composition'] as $key => $value) {
+                $catalog_number = mysqli_real_escape_string($f_link, $value);
+
+                if (isset($existing[$catalog_number])) {
+                    $id_playgram_item = $existing[$catalog_number];
+                    ferror_log("54: Update existing " . $id_playgram_item);
+                    // Update the order
+                    $sql = "UPDATE playgram_items
+                        SET comp_order = $comp_order
+                        WHERE id_playgram_item = $id_playgram_item ;";
+                    ferror_log("58: update comp order SQL ". $sql);
+
+                    if(!mysqli_query($f_link, $sql)) {  
+                        $error_message = mysqli_error($f_link);
+                        ferror_log("Error updating playgram items " . $error_message);
+                    } else { // else success
+                        ferror_log("65: Covered, so Unsetting ". $id_playgram_item );
+                        unset($existing[$catalog_number]);
+                    };
+
+                } else {
+                    ferror_log("69: not existing, so add ". $catalog_number );
+                    // New item
+                    $sql = "INSERT INTO playgram_items
+                        ( id_playgram, catalog_number, comp_order )
+                        VALUES ( $id_playgram, '$catalog_number', $comp_order );";
+                    ferror_log("74: Inserting PGI SQL ". $sql);
+                    if(!mysqli_query($f_link, $sql)) {  
+                        $error_message = mysqli_error($f_link);
+                        ferror_log("Error adding playgram items " . $error_message);
+                    }
+                }
+                $comp_order++;
+            }
+            // Delete what's left
+            if (!empty($existing)) {
+                $playgram_delete = implode(",", array_map('intval', $existing));
+                $sql = "DELETE from playgram_items
+                    WHERE id_playgram_item IN ($playgram_delete) ;";
+                ferror_log("83: Delete existing PGI SQL ". $sql);
+                if(!mysqli_query($f_link, $sql)) {  
+                    $error_message = mysqli_error($f_link);
+                    ferror_log("Error deleting playgram items " . $error_message);
+                }
+            }
+        } else {
+            // Delete what's left
+            if (!empty($existing)) {
+                $playgram_delete = implode(",", array_map('intval', $existing));
+                $sql = "DELETE from playgram_items
+                    WHERE id_playgram_item IN ($playgram_delete) ;";
+                ferror_log("95: Delete existing (none left) SQL ". $sql);
+                if(!mysqli_query($f_link, $sql)) {  
+                    $error_message = mysqli_error($f_link);
+                    ferror_log("Error deleting playgram items " . $error_message);
+                }
+            }
+        }
+    } elseif( $insert_mode == "add") {
         $sql = "
         INSERT INTO playgrams(name, description, enabled)
         VALUES('$name', '$description', $enabled);
         ";
-        $message = 'Data Inserted';
+        ferror_log("107: Insert PG SQL ". $sql);
+        if(!mysqli_query($f_link, $sql)) {  
+            $error_message = mysqli_error($f_link);
+            ferror_log("Error deleting playgram items " . $error_message);
+        }
+        // If any compositions are entered...
+        if(isset($_POST["id_composition"])) {
+            // Add new playgram items
+            $comp_order = 1;
+            foreach ($_POST['id_composition'] as $key => $value) {
+                $catalog_number = mysqli_real_escape_string($f_link, $value);
+                // New item
+                $sql = "INSERT INTO playgram_items
+                    (id_playgram, catalog_number, comp_order)
+                    VALUES ( $id_playgram, '$catalog_number', $comp_order );";
+                ferror_log("122: Insert PGI SQL ". $sql);
+                if(!mysqli_query($f_link, $sql)) {  
+                    $error_message = mysqli_error($f_link);
+                    ferror_log("Error adding playgram items " . $error_message);
+                }
+                $comp_order++;
+            }
+        }
     }
-    ferror_log("Running SQL ". $sql);
     $referred = $_SERVER['HTTP_REFERER'];
     $referred .= "/#" . $id_playgram;
-    if(mysqli_query($f_link, $sql)) {
-        $output .= '<label class="text-success">' . $message . '</label>';
-        $query = parse_url($referred, PHP_URL_QUERY);
-        $referred = str_replace(array('?', $query), '', $referred);
-    } else {
-        $message = "Failed";
-        $error_message = mysqli_error($f_link);
-        $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
-           ';
-        ferror_log("Error: " . $error_message);
-    }
+    $output .= '<label class="text-success">' . $message . '</label>';
+    $query = parse_url($referred, PHP_URL_QUERY);
+    $referred = str_replace(array('?', $query), '', $referred);
  } else {
     require_once("header.php");
     echo '<body>

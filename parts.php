@@ -326,7 +326,6 @@ $(document).ready(function() {
     });
     $("#add_instrument").click(function() {
         $("#id_instrument_list :selected").each(function(){
-            //alert("selected " + key + ":"+ value);
             optionval = $(this).val();
             optiontext = instrumentdata[optionval];
             $('#id_instrument').append($('<option/>',{

@@ -92,15 +92,17 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-md-12">
+                                    <label for="id_composition_list" class="col-form-label">Composition(s) on the program.</label>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="d-flex" id="playgram_compositions">
-                                    <div class="col-md-2">
-                                        <label for="id_composition_list" class="col-form-label">Composition(s) on the program.</label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select class="form-select form-control text-muted d-flex" aria-label="Select composition" id="id_composition_list" name="id_composition_list[]" multiple>
+                                    <div class="col-md-5">
+                                        <select class="form-select form-control text-muted d-flex" aria-label="Select composition" size="19" id="id_composition_list" name="id_composition_list[]" multiple>
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-2">
                                     </br>
                                         <p class="text-center">
                                             <button type="button" class="btn btn-light" name="add_composition" id="add_composition"><i class="fa fa-angle-right"></i></button>
@@ -109,7 +111,7 @@
                                         </p>
                                     </div>
                                     <div class="col-md-5">
-                                        <select class="form-select form-control d-flex" aria-label="Select composition" id="id_composition" name="id_composition[]" multiple>
+                                        <select class="form-select form-control d-flex" aria-label="Select composition" size="19" id="id_composition" name="id_composition[]" multiple>
                                         </select>
                                     </div>
                                 </div><!-- part_compositions -->                                
@@ -195,6 +197,11 @@ $(document).ready(function(){
         $('#insert').val("Insert");
         $('#update').val("add");
         $('#insert_form')[0].reset();
+        var selectitems = '';
+        $.each(compositionData, function(key, value) {
+            selectitems += '<option value=' + value.catalog_number +'>'+ value.name+'</option>';
+        });
+        $('#id_composition_list').html(selectitems);
     });
     // Enable the edit and delete buttons, and get the playgram ID when a table row is clicked
     $(document).on('click', '#playgram_table tbody tr', function(){
@@ -202,7 +209,7 @@ $(document).ready(function(){
         $('#edit, #delete').prop('disabled',false);
         id_playgram = $(this).data('id'); // data-id attribute
     });
-    
+
     $(document).on('click', '.edit_data', function(){
         $.ajax({
             url:"includes/fetch_playgrams.php",
@@ -220,13 +227,23 @@ $(document).ready(function(){
                 });
                 $('#id_composition_list').html(selectitems);
                 // Selected compositions
-                selectitems = '';
+                //selectitems = '';
+                $('#id_composition').empty();
                 $.each(compositions, function(key, value) {
                     const match = compositionData.find(item => item.catalog_number === value.catalog_number);
                     if (match) { name = match.name } else { name = "Unknown"};
-                    selectitems += '<option value='+value.catalog_number+'>'+value.comp_order+'. '+name+'</option>';
+                    //selectitems += '<option value='+value.catalog_number+'>'+name+'</option>';
+                    $('#id_composition').append($('<option>', {
+                        value: value.catalog_number,
+                        text: name
+                    }))
                 });
-                $('#id_composition').html(selectitems);
+                //$('#id_composition').html(selectitems);
+                // Remove already selected items from available options
+                $('#id_composition option').each(function () {
+                    let val = $(this).val();
+                    $('#id_composition_list option[value="'+ val + '"]').remove();
+                });
                 $('#id_playgram').val(playgram.id_playgram);
                 $('#name').val(playgram.name);
                 $('#description').val(playgram.description);
@@ -239,6 +256,19 @@ $(document).ready(function(){
             }
         });
     });
+
+    // Move compositions left or right
+    $("#add_composition").click(function() {
+        $("#id_composition_list :selected").each(function(){
+            $(this).remove().appendTo('#id_composition');
+        });
+    });
+    $('#remove_composition').click(function() {
+        $("#id_composition :selected").each(function(){
+            $(this).remove().appendTo('#id_composition_list');
+        });
+    });
+
     $(document).on('click', '.delete_data', function() { // button that brings up delete modal
         if(id_playgram !== null) {
             $.ajax({
@@ -274,19 +304,23 @@ $(document).ready(function(){
                 alert("Unexpected XHR error " + error);
             }
         });
+        // NEED TO ALSO DELETE MATCHING PLAYGRAM_ITEMS
     });
     $('#insert_form').on("submit", function(event){
         event.preventDefault();
+        console.log($('#insert_form').serialize());
+
+        if ($('#id_composition') === undefined || $('#id_composition').length === 0) {
+            alert("No compositions!");
+        }
+
+        $('#id_composition option').prop('selected',true);
+
+
         if($('#name').val() == "")
         {
             alert("Program playlist name is required");
-        }
-        else if($('#collation').val() == '')
-        {
-            alert("Sort order is required");
-        }
-        else
-        {
+        } else {
             $.ajax({
                 url:"includes/insert_playgrams.php",
                 method:"POST",

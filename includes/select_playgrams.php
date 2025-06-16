@@ -27,8 +27,8 @@ if (isset($_POST["id_playgram"])) {
     ) AS 'Compositions'
     FROM
         playgrams p
-        JOIN playgram_items pi ON p.id_playgram = pi.id_playgram
-        JOIN compositions c ON pi.catalog_number = c.catalog_number
+        LEFT JOIN playgram_items pi ON p.id_playgram = pi.id_playgram
+        LEFT JOIN compositions c ON pi.catalog_number = c.catalog_number
     WHERE
         p.id_playgram = $id_playgram
     ORDER BY
@@ -36,6 +36,7 @@ if (isset($_POST["id_playgram"])) {
 
     ferror_log("Running SQL: ". $sql);
     if ($res = mysqli_query($f_link, $sql)) {
+        ferror_log("1 Returned rows: " . mysqli_num_rows($res));
         $col = 0;
         while ($fieldinfo = mysqli_fetch_field($res)) {
             $fields[$col] =  $fieldinfo -> name;
@@ -59,6 +60,7 @@ if (isset($_POST["id_playgram"])) {
     pi.id_playgram = $id_playgram ; ";
     ferror_log("Running SQL: ". $sql);
     if ($res = mysqli_query($f_link, $sql)) {
+        ferror_log("2 Returned rows: " . mysqli_num_rows($res));
         $col = 0;
         while ($fieldinfo = mysqli_fetch_field($res)) {
             $fields[$col] =  $fieldinfo -> name;
@@ -70,6 +72,8 @@ if (isset($_POST["id_playgram"])) {
                 $output .= '<td id="'.$fields[$row].'-data">'. $rowList[$row] . '</td></tr>';
             }
         }
+    } else {
+        ferror_log("Something went wrong with " . $sql);
     };
 
     $output .= '

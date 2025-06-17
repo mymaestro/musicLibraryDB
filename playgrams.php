@@ -308,15 +308,10 @@ $(document).ready(function(){
     });
     $('#insert_form').on("submit", function(event){
         event.preventDefault();
-        console.log($('#insert_form').serialize());
-
         if ($('#id_composition') === undefined || $('#id_composition').length === 0) {
             alert("No compositions!");
         }
-
         $('#id_composition option').prop('selected',true);
-
-
         if($('#name').val() == "")
         {
             alert("Program playlist name is required");

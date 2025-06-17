@@ -11,35 +11,263 @@ if (isset($_SESSION['username'])) {
     $u_librarian = (strpos(htmlspecialchars($_SESSION['roles']), 'librarian') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
 }
-require_once("includes/config.php");
-require_once("includes/navbar.php");
+  require_once('includes/config.php');
+  require_once('includes/functions.php');
+  require_once("includes/navbar.php");
+  ferror_log("RUNNING concerts.php");
 ?>
-<main role="main" class="container">
+<main role="main">
     <div class="container">
-        <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME ?> Concerts</h1></div>
-        <div class="row pt-3">
-            <p>Nothing to see here yet</p>
-        </div>
-    </div>
+        <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
+<?php if($u_librarian) : ?>
+        <div class="row pt-3 justify-content-end">
+            <div class="col-auto">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
+            </div>
+        </div><!-- right button -->
+<?php endif; ?>
+        <div id="concert_table">
+        <?php
+        echo '
+            <div class="panel panel-default">
+               <div class="table-repsonsive">
+                    <table class="table table-hover">
+                    <caption class="title">Concerts</caption>
+                    <thead>
+                    <tr>
+                        <th style="width: 50px;"></th>
+                        <th>Playgram</th>
+                        <th>Performance date</th>
+                        <th>Venue</th>
+                        <th>Conductor</th>
+                        <th>Notes</th>
+                    </tr>
+                    </thead>
+                    <tbody>';
+        $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+        $sql = "SELECT * FROM concerts ORDER BY performance_date DESC;";
+        $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+        while ($rowList = mysqli_fetch_array($res)) {
+            $id_concert = $rowList['id_concert'];
+            $id_playgram = $rowList['id_playgram'];
+            $performance_date = $rowList['performance_date'];
+            $venue = $rowList['venue'];
+            $conductor = $rowList['conductor'];
+            $notes = $rowList['notes'];
+            echo '<tr data-id="'.$id_concert.'" >
+                        <td><input type="radio" name="record_select" value="'.$id_concert.'" class="form-check-input select-radio"></td>
+                        <td>'.$id_playgram.'</td>
+                        <td>'.$performance_date.'</td>
+                        <td>'.$venue.'</td>
+                        <td>'.$conductor.'</td>
+                        <td>'.$notes.'</td>
+                  </tr>';
+        }
+        echo '
+                    </tbody>
+                    </table>
+                </div><!-- table-responsive -->
+            </div><!-- class panel -->
+           ';
+        mysqli_close($f_link);
+        // ferror_log("returned: " . $sql);
+        ?>
+        </div><!-- concert_table -->
+        <div id="dataModal" class="modal"><!-- view data -->
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Concert details</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div><!-- modal-header -->
+                    <div class="modal-body" id="concert_detail">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- dataModal -->
+        <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content rounded-4 shadow">
+                    <div class="modal-body p-4 text-center">
+                        <h5 class="mb-0">Delete concert <span id="concert2delete">#</span>?</h5>
+                        <div class="modal-body text-start" id="concert-delete_detail">
+                        <p>You can cancel now.</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer flex-nowrap p-0">
+                        <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
+                        <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0" data-bs-dismiss="modal">No thanks</button>
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- deleteModal -->
+        <div id="editModal" class="modal" tabindex="-1" aria-hidden="true"><!-- add/edit data -->
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Concert information</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div><!-- modal-header -->
+                    <div class="modal-body">
+                    <div class="container-fluid">
+                        <form method="post" id="insert_form">
+                            <input type="hidden" name="id_concert" id="id_concert" />
+                            <div class="row bg-white">
+                                <div class="col-md-3">
+                                    <label for="conductor" class="col-form-label">Conductor*</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control" id="conductor" name="conductor" placeholder="Baton Rough" required/>
+                                </div>
+                            </div>
+                            <div class="row bg-white">
+                                <div class="col-md-3">
+                                    <label for="venue" class="col-form-label">Concert venue*</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control" id="venue" name="venue" placeholder="Big Recital Hall" required/>
+                                </div>
+                            </div>
+                            <div class="row bg-white">
+                                <div class="col-md-3">
+                                    <label for="performance_date" class="col-form-label">Performance date*</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="date" class="form-control" id="performance_date" name="performance_date" placeholder="2030-12-25" required />
+                                </div>
+                            </div>
+                            <div class="row bg-white">
+                                <div class="col-md-12">
+                                    <label for="notes" class="col-form-label">Notes</label>
+                                    <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="row bg-white">
+                                <div class="col-md-4">
+                                    <label for="id_playgram" class="col-form-label">Playgram (program playlist)</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <label for="link" class="col-form-label">Playgram, program playlist</label>
+                                    <select class="form-select form-control" aria-label="Select playgram" id="id_playgram" name="id_playgram">
+                                    </select>
+                                </div>
+                            </div>
+                        </div><!-- container-fluid -->
+                    </div><!-- modal-body -->
+                    <div class="modal-footer">  
+                            <input type="hidden" name="update" id="update" value="0" />
+                            <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
+                        </form>  
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- editModal -->
+    </div><!-- container -->
 </main>
 <?php require_once("includes/footer.php"); ?>
 <script>
-    $(document).on('click', '.missing_parts', function() {
-        var catalog_number = $(this).attr("id");
-        if (catalog_number != '') {
-            $.ajax({
-                url: "includes/report_missing_parts.php",
-                type: "POST",
-                data: {
-                    report: "missing_parts"
-                },
-                success: function(data) {
-                    $('#report_detail').html(data);
-                    $('#view_data_modal').modal('show');
-                }
-            });
+    // Load playgrams into a JSON array for frequent use
+<?php
+$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$sql = "SELECT `id_playgram`, `name`, `description` FROM playgrams WHERE `enabled` = 1 ORDER BY name;";
+ferror_log("Running " . $sql);
+echo "// -----" . PHP_EOL;
+$res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+$jsondata = "var playgramData = [";
+while($rowList = mysqli_fetch_array($res)) {
+    $id_playgram = $rowList['id_playgram'];
+    $playgram_name = $rowList['name'];
+    $playgram_description = $rowList['description'];
+    $playgram_display = $playgram_name . " - " . $playgram_description;
+    $jsondata .= '{"id_playgram":"'.$id_playgram.'","name":"'.$playgram_display.'"},';
+}
+$jsondata = rtrim($jsondata, ',');
+$jsondata .= ']'.PHP_EOL;
+mysqli_close($f_link);
+echo $jsondata;
+?>
+// jQuery functions
+$(document).ready(function(){
+    // Scroll-to-top button
+    let $upButton = $("#btn-back-to-top");
+    // When the user scrolls down 20px from the top of the document, show the button
+    $(window).on("scroll", function () {
+        if ($(document).scrollTop() > 20) {
+            $upButton.show();
+        } else {
+            $upButton.hide();
         }
     });
+    // When the user clicks the button, scroll to the top of the document
+    $upButton.on("click", function () {
+        $("html, body").animate({ scrollTop: 0 }, "fast");
+    });
+
+    let id_concert = null; // Which concert the user clicks
+
+    // When user clicks add button
+    $('#add').click(function(){
+        $('#insert').val("Insert");
+        $('#update').val("add");
+        $('#insert_form')[0].reset();
+        $.each(playgramData, function(key, value) {
+            $('#id_playgram').append($('<option>', {
+                value: value.id_playgram,
+                text: value.name
+            }));
+        });
+    });
+
+    // Enable the edit and delete buttons, and get the playgram ID when a table row is clicked
+    $(document).on('click', '#concert_table tbody tr', function(){
+        $(this).find('input[type="radio"]').prop('checked',true);
+        $('#edit, #delete').prop('disabled',false);
+        id_concert = $(this).data('id'); // data-id attribute
+    });
+
+    $(document).on('click', '.edit_data', function() {
+        $.ajax({
+            url: "includes/fetch_concerts.php",
+            method: "POST",
+            data:{ id_concert : id_concert },
+            dataType: "text",
+            success:function(result) {
+                const concert = JSON.parse(result);          
+                $('#id_concert').val(concert.id_concert);
+                $('#performance_date').val(concert.performance_date);
+                $('#venue').val(concert.venue);
+                $('#conductor').val(concert.conductor);
+                $('#notes').val(concert.notes);
+                // Populate the select options
+                var selectedPlaygram = concert.id_playgram;
+                var $select = $("#id_playgram").empty();
+                playgramData.forEach(function(opt) {
+                    var $option = $('<option></option>')
+                    .val(opt.id_playgram)
+                    .text(opt.name);
+                    
+                    if(opt.id_playgram === selectedPlaygram) {
+                        $option.prop('selected',true);
+                    }
+                    $select.append($option);
+                });
+
+                $('#insert').val("Update"); // Set button name to Update
+                $('#update').val("update"); // Set control to 'update'
+            }
+        });
+    });
+});
+
 </script>
 </body>
 

@@ -12,12 +12,10 @@ if(isset($_POST["user_role"])) {
 
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-
-    ferror_log(print_r($_POST,true));
+ferror_log(print_r($_POST,true));
 
 if(isset($_POST["id_playgram"])) {
-    ferror_log("AM HERE");
-    ferror_log("playgrams with id=". $_POST["id_playgram"]);
+    ferror_log("Fetch playgrams with id=". $_POST["id_playgram"]);
     $id_playgram = mysqli_real_escape_string($f_link, $_POST["id_playgram"]);
     $sql = "SELECT * FROM playgrams WHERE id_playgram = ".$id_playgram.";";
     ferror_log("SQL: ". $sql);
@@ -27,7 +25,6 @@ if(isset($_POST["id_playgram"])) {
     ferror_log("===> Playgram data JSON: ".$playgram_data);
 
     $sql = "SELECT * FROM playgram_items where id_playgram = ".$id_playgram.";"; // Compositions for this playgram
-    ferror_log("PGITEMS SQL " . $sql);
     $playgram_items = array();
     $res = mysqli_query($f_link, $sql);
     while($rowList = mysqli_fetch_array($res)) {

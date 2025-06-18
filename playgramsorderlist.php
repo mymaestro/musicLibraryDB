@@ -1,6 +1,6 @@
 <?php
-  define('PAGE_TITLE', 'Program order');
-  define('PAGE_NAME', 'Playgrams order');
+  define('PAGE_TITLE', 'Playgram order');
+  define('PAGE_NAME', 'Playgram order');
   require_once("includes/header.php");
   $u_admin = FALSE;
   $u_librarian = FALSE;
@@ -15,10 +15,12 @@
   require_once('includes/functions.php');
   require_once("includes/navbar.php");
   ferror_log("RUNNING playgramsorderlist.php");
+
+  ferror_log(print_r($_GET, true));
 ?>
 <main role="main">
     <div class="container">
-        <h1><?php echo ORGNAME . ' ' . PAGE_TITLE .'!!WARNING!!' ?></h1>
+        <h1><?php echo ORGNAME . ' ' . PAGE_TITLE ?></h1>
 <?php if($u_librarian) : ?>
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
@@ -35,20 +37,39 @@
         echo '           
                <ul class="list-group" id="playgramlistorder">';
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $sql = "SELECT * FROM playgram_items ORDER BY comp_order;";
-        $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-        while ($rowList = mysqli_fetch_array($res)) {
-            $id_playgram_item = $rowList['id_playgram_item'];
-            $collation = $rowList['comp_order'];
-            $name = $rowList['catalog_number'];
-            echo '<li class="list-group-item" id="part_'.$id_playgram_item.'">'.$name.'</li>';
+        $id = $_GET['id'] ?? null;
+        if ( $id ) {
+            $sql = "SELECT * FROM playgram_items ORDER BY comp_order;";
+            $sql = "SELECT
+                p.id_playgram_item as pgi,
+                p.catalog_number as catalog_number,
+                c.name as name,
+                IFNULL(c.composer,'Unknown') as composer
+            FROM playgram_items p
+            JOIN compositions c ON p.catalog_number = c.catalog_number
+            WHERE
+                p.id_playgram = $id
+            ORDER BY
+                p.comp_order; ";
+
+            $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+            while ($rowList = mysqli_fetch_array($res)) {
+                $id_playgram_item = $rowList['pgi'];
+                $catalog_number = $rowList['catalog_number'];
+                $name = $rowList['name'];
+                $composer = $rowList['composer'];
+                echo '<li class="list-group-item" id="pg_'.$id_playgram_item.'">'.$catalog_number.': '.$name.' ('.$composer.')</li>';
+            }
+            echo '</ul>
+            ';
+            mysqli_close($f_link);
+        } else {
+            echo '<li class="list-group-item-danger" id="pg_0">No ID found.</li>
+                </ul>';
         }
-        echo '</ul>
-            </div><div class="col align-self-end">&nbsp</div>
-            </div><!-- class col -->
-           ';
-        mysqli_close($f_link);
-        // ferror_log("returned: " . $sql);
+        echo '            </div><div class="col align-self-end">&nbsp</div>
+        </div><!-- class col -->
+        ';
         ?>
     </div><!-- container -->
 <?php else: ?>
@@ -90,7 +111,7 @@ $(document).ready(function(){
     $("#update").click(function(){
         var order=$("ul#playgramlistorder").sortable("serialize");
         $('#playgramlistordermessage').html('Saving changes.');
-        $.post("includes/update_playgramsorder.php",order,function(theResponse){
+        $.post("includes/update_playgramorder.php",order,function(theResponse){
             $('#playgramlistordermessage').html(theResponse);
             $('#playgramlistordermessage').css("color", "green");
         });

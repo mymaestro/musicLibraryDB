@@ -24,17 +24,15 @@ if(isset($_POST["id_playgram"])) {
     $playgram_data = json_encode($rowList);
     ferror_log("===> Playgram data JSON: ".$playgram_data);
 
-    $sql = "SELECT * FROM playgram_items where id_playgram = ".$id_playgram.";"; // Compositions for this playgram
+    $sql = "SELECT * FROM playgram_items where id_playgram = ".$id_playgram." ORDER BY comp_order;"; // Compositions for this playgram
     $playgram_items = array();
     $res = mysqli_query($f_link, $sql);
     while($rowList = mysqli_fetch_array($res)) {
         $playgram_items[] = $rowList;
     }
     $playgram_compositions = json_encode($playgram_items);
-    ferror_log("PLAYGRAM_ITEMS ".$playgram_compositions);
     // spitting out JSON object of the playgram and its compositions
     $return = json_encode('{"playgram":'.$playgram_data.',"compositions":'.$playgram_compositions . "}");
-    ferror_log("JSON: " . $return);
     echo $return;
 } else {
     echo '            <div class="panel panel-default">

@@ -25,7 +25,7 @@
 <?php if($u_librarian) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
-                <a href="playgramsorderlist.php" class="btn btn-info disabled" role="button" name="sort" id="sort">Set program order</a>
+                <button type="button" name="sort" id="sort" class="btn btn-info" disabled>Set program order</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
@@ -206,8 +206,7 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the playgram ID when a table row is clicked
     $(document).on('click', '#playgram_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete').prop('disabled',false);
-        $('#sort').removeClass('disabled');
+        $('#edit, #delete, #sort').prop('disabled',false);
         id_playgram = $(this).data('id'); // data-id attribute
     });
 
@@ -233,7 +232,6 @@ $(document).ready(function(){
                 $.each(compositions, function(key, value) {
                     const match = compositionData.find(item => item.catalog_number === value.catalog_number);
                     if (match) { name = match.name } else { name = "Unknown"};
-                    //selectitems += '<option value='+value.catalog_number+'>'+name+'</option>';
                     $('#id_composition').append($('<option>', {
                         value: value.catalog_number,
                         text: name
@@ -269,7 +267,11 @@ $(document).ready(function(){
             $(this).remove().appendTo('#id_composition_list');
         });
     });
-
+    $('#sort').click(function() {
+        if (id_playgram !== null) {
+            window.location.href = 'playgramsorderlist.php?id=' + encodeURIComponent(id_playgram);
+        }
+    });
     $(document).on('click', '.delete_data', function() { // button that brings up delete modal
         if(id_playgram !== null) {
             $.ajax({

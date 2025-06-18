@@ -22,7 +22,14 @@ if (isset($_POST["id_playgram"])) {
         p.name 'Name',
         p.description 'Description',
     GROUP_CONCAT(
-        CONCAT(pi.comp_order, '. ', c.catalog_number, ' <em>', c.name, '</em> (', IFNULL(c.composer, 'Unknown'), ', ', SEC_TO_TIME(c.duration), ', Grade ', c.grade, ')')
+        CONCAT(pi.comp_order, '. ',
+            IFNULL(c.catalog_number, '[No catalog]'), ' <em>',
+            IFNULL(c.name, '[Unknown title]'), '</em> (',
+            IFNULL(c.composer, 'Unknown'), ', ',
+            IFNULL(SEC_TO_TIME(c.duration),'00:00:00'), ', Grade ',
+            IFNULL(c.grade,'?'), ')'
+        )
+        ORDER BY pi.comp_order
         SEPARATOR '</br>'
     ) AS 'Compositions'
     FROM
@@ -31,8 +38,8 @@ if (isset($_POST["id_playgram"])) {
         LEFT JOIN compositions c ON pi.catalog_number = c.catalog_number
     WHERE
         p.id_playgram = $id_playgram
-    ORDER BY
-        pi.comp_order;";
+    GROUP BY
+        p.id_playgram;";
 
     ferror_log("Running SQL: ". $sql);
     if ($res = mysqli_query($f_link, $sql)) {
@@ -57,7 +64,8 @@ if (isset($_POST["id_playgram"])) {
         playgram_items pi
     JOIN compositions c ON pi.catalog_number = c.catalog_number
     WHERE
-    pi.id_playgram = $id_playgram ; ";
+    pi.id_playgram = $id_playgram 
+    ORDER BY pi.comp_order; ";
     ferror_log("Running SQL: ". $sql);
     if ($res = mysqli_query($f_link, $sql)) {
         ferror_log("2 Returned rows: " . mysqli_num_rows($res));

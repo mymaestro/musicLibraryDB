@@ -25,7 +25,7 @@
 <?php if($u_librarian) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
-                <a href="playgramsorderlist.php" class="btn btn-info" role="button" name="sort" id="sort" disabled>Set program order</a>
+                <a href="playgramsorderlist.php" class="btn btn-info disabled" role="button" name="sort" id="sort">Set program order</a>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
@@ -207,6 +207,7 @@ $(document).ready(function(){
     $(document).on('click', '#playgram_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
         $('#edit, #delete').prop('disabled',false);
+        $('#sort').removeClass('disabled');
         id_playgram = $(this).data('id'); // data-id attribute
     });
 

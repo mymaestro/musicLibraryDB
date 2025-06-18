@@ -30,7 +30,7 @@
         </div><!-- right button -->
         <div class="row">
             <div class="col align-self-start">&nbsp</div>
-        <div class="col align-self-center" id="part_type_list">
+        <div class="col align-self-center" id="playgram_item_list">
         <?php
         echo '           
                <ul class="list-group" id="playgramlistorder">';
@@ -90,7 +90,7 @@ $(document).ready(function(){
     $("#update").click(function(){
         var order=$("ul#playgramlistorder").sortable("serialize");
         $('#playgramlistordermessage').html('Saving changes.');
-        $.post("includes/update_scoreorder.php",order,function(theResponse){
+        $.post("includes/update_playgramsorder.php",order,function(theResponse){
             $('#playgramlistordermessage').html(theResponse);
             $('#playgramlistordermessage').css("color", "green");
         });

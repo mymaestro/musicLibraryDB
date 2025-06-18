@@ -264,7 +264,7 @@ $(document).ready(function(){
             success:function(response){
                 $('#insert_form')[0].reset();
                 if (response.success) {
-                    $('#part_type_table').html('<p class="text-success">Record ' + response.message + ' deleted from part types</p>');
+                    $('#part_type_table').html('<p><a href="#" onclick="window.location.reload(true)">Return</a></p><p class="text-success">Record ' + response.message + ' deleted from part types</p>');
                 } else {
                     $('#part_type_table').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');                
                 }

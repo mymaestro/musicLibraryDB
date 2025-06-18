@@ -12,10 +12,8 @@ if(!empty($_POST)) {
     $message = '';
     $timestamp = time();
 
-    foreach($_POST as $key => $value ) {
-        ferror_log("key: $key");
-        ferror_log("==> value: $value");
-    }
+    ferror_log(print_r($_POST, true));
+
     if (!empty($_POST['id_instrument'])) {
         ferror_log('POST id_instrument=*not_empty*');
     } else {

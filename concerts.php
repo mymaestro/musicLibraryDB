@@ -98,7 +98,7 @@ if (isset($_SESSION['username'])) {
                 <div class="modal-content rounded-4 shadow">
                     <div class="modal-body p-4 text-center">
                         <h5 class="mb-0">Delete concert <span id="concert2delete">#</span>?</h5>
-                        <div class="modal-body text-start" id="concert-delete_detail">
+                        <div class="modal-body text-start">
                         <p>You can cancel now.</p>
                         </div>
                     </div>
@@ -263,6 +263,59 @@ $(document).ready(function(){
 
                 $('#insert').val("Update"); // Set button name to Update
                 $('#update').val("update"); // Set control to 'update'
+            }
+        });
+    });
+    $('#insert_form').on("submit", function(event){
+        event.preventDefault();
+        if ($('#id_concert') === undefined || $('#id_concert').length === 0) {
+            alert("No concert!");
+        }
+        // $('#id_playgram option').prop('selected',true);
+        if($('#id_playgram').val() == "")
+        {
+            alert("Program playlist name is required");
+        } else {
+            $.ajax({
+                url:"includes/insert_concerts.php",
+                method:"POST",
+                data:$('#insert_form').serialize(),
+                beforeSend:function(){
+                    $('#insert').val("Inserting");
+                },
+                success:function(data){
+                    $('#insert_form')[0].reset();
+                    $('#editModal').modal('hide');
+                    $('#concert_table').html(data);
+                }
+            });
+        }
+    });
+    $(document).on('click', '.delete_data', function() { // button that brings up delete modal
+        if(id_concert !== null) {
+        $('#confirm-delete').data('id', id_concert); // Set the id for delete function
+        $('#concert2delete').text(id_concert); // Update ID in the modal
+        }
+    });
+    $('#confirm-delete').click(function(){ // The confirm delete button
+        $.ajax({
+            url:"includes/delete_records.php",
+            method:"POST",
+            data:{
+                table_name: "concerts",
+                table_key_name: "id_concert",
+                table_key: id_concert
+            },
+            success:function(response){
+                $('#insert_form')[0].reset();
+                if (response.success) {
+                    $('#concert_table').html('<p><a href="#" onclick="window.location.reload(true)">Return</a></p><p class="text-success">Record ' + response.message + ' deleted from concerts</p>');
+                } else {
+                    $('#concert_table').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');                
+                }
+            },
+            error:function(xhr, status, error){
+                alert("Unexpected XHR error " + error);
             }
         });
     });

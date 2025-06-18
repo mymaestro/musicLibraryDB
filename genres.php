@@ -207,7 +207,7 @@ $(document).ready(function(){
             success:function(response){
                 if (response.success) {
                     $('#insert_form')[0].reset();
-                    $('#genre_table').html('<p class="text-success">Record ' + response.message + ' deleted from genres</p>');
+                    $('#genre_table').html('<p><a href="#" onclick="window.location.reload(true)">Return</a></p><p class="text-success">Record ' + response.message + ' deleted from genres</p>');
                 } else {
                     $('#genre_table').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');
                 }

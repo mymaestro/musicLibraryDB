@@ -61,7 +61,7 @@ if (isset($_SESSION['username'])) {
             $notes = $rowList['notes'];
             echo '<tr data-id="'.$id_concert.'" >
                         <td><input type="radio" name="record_select" value="'.$id_concert.'" class="form-check-input select-radio"></td>
-                        <td>'.$id_playgram.'</td>
+                        <td><a href="#" class="view_data" name="view" id="'.$id_playgram.'">'.$id_playgram.'</a></td>
                         <td>'.$performance_date.'</td>
                         <td>'.$venue.'</td>
                         <td>'.$conductor.'</td>
@@ -82,10 +82,10 @@ if (isset($_SESSION['username'])) {
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title">Concert details</h3>
+                        <h3 class="modal-title">Concert playgram details</h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div><!-- modal-header -->
-                    <div class="modal-body" id="concert_detail">
+                    <div class="modal-body" id="playgram_detail">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -318,6 +318,20 @@ $(document).ready(function(){
                 alert("Unexpected XHR error " + error);
             }
         });
+    });
+    $(document).on('click', '.view_data', function(){
+        var id_playgram = $(this).attr("id");
+        if(id_playgram !== null) {
+            $.ajax({
+                url:"includes/select_playgrams.php",
+                method:"POST",
+                data:{id_playgram:id_playgram},
+                success:function(data){
+                    $('#playgram_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+            });
+        }
     });
 });
 

@@ -1,5 +1,5 @@
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" aria-label="Main navigation">
+    <nav class="navbar navbar-expand-lg fixed-top bg-body-tertiary" aria-label="Main navigation">
         <div class="container-xl">
             <a class="navbar-brand" href="/#"><img src="<?php echo ORGLOGO ?>" alt="<?php echo ORGNAME ?>" height="32"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">

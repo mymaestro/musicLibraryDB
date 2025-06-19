@@ -21,7 +21,7 @@
     <title><?php echo PAGE_TITLE ?></title>
 
     <!-- Bootswatch Yeti https://bootswatch.com/yeti/ -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Bootstrap core CSS -->
     <!--

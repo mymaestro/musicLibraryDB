@@ -146,7 +146,7 @@ $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $sql = "SELECT `catalog_number`, `name`, `composer`,`arranger` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
 ferror_log("Running " . $sql);
 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-$jsondata = "var compositionData = [";
+$compositionData = [];
 while($rowList = mysqli_fetch_array($res)) {
     $comp_catno = $rowList['catalog_number'];
     $comp_name = $rowList['name'];
@@ -157,12 +157,15 @@ while($rowList = mysqli_fetch_array($res)) {
     if (("$comp_composer" <> "" ) && ("$comp_arranger" <> "")) $comp_display .= $comp_composer . ", arr. " . $comp_arranger . ")";
     if (("$comp_composer" == "" ) && ("$comp_arranger" <> "")) $comp_display .= "arr. " . $comp_arranger . ")";
     if (("$comp_composer" <> "" ) && ("$comp_arranger" == "")) $comp_display .=  $comp_composer . ")";
-    $jsondata .= '{"catalog_number":"'.$comp_catno.'","name":"'.$comp_display.'"},';
+
+    $compositionData[] = [
+        'catalog_number' => $comp_catno,
+        'name' => $comp_display
+    ];
 }
-$jsondata = rtrim($jsondata, ',');
-$jsondata .= ']'.PHP_EOL;
+
+echo "var compositionData = " . json_encode($compositionData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ";". PHP_EOL;
 mysqli_close($f_link);
-echo json_encode($jsondata);
 ?>
 // jQuery functions
 $(document).ready(function(){

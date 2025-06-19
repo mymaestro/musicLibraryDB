@@ -32,8 +32,6 @@
     <!-- https://use.fontawesome.com/releases/v5.0.8/css/all.css" -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
 
-
-    
     <!-- Prevent navbar overlay -->
     <style>
     body {

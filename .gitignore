@@ -5,3 +5,7 @@ error_log
 images/dbicon-sm.png
 images/musicLibraryDB.png
 images/musicLibraryDBlogo.png
+migrate-recordings-dry-run.php
+migrate-recordings-dry-run.txt
+migrate-recordings.php
+migrate-recordings.txt

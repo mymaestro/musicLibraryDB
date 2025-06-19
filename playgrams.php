@@ -162,7 +162,7 @@ while($rowList = mysqli_fetch_array($res)) {
 $jsondata = rtrim($jsondata, ',');
 $jsondata .= ']'.PHP_EOL;
 mysqli_close($f_link);
-echo $jsondata;
+echo json_encode($jsondata);
 ?>
 // jQuery functions
 $(document).ready(function(){

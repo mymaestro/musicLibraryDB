@@ -5,7 +5,30 @@ ferror_log("Running select_recordings.php with id=". $_POST["id_recording"]);
 if (isset($_POST["id_recording"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    $sql = "SELECT * FROM recordings WHERE id_recording = '".$_POST["id_recording"]."'";
+    $id_recording = $_POST["id_recording"];
+    $sql = "SELECT * FROM recordings WHERE id_recording = $id_recording";
+
+    $sql = "SELECT
+        r.id_recording       AS id_recording,
+        c.catalog_number     AS catalog_number,
+        c.name               AS composition_name,
+        r.name               AS name,
+        r.ensemble           AS ensemble,
+        r.id_ensemble        AS id_ensemble,
+        r.composer           AS composer,
+        r.arranger           AS arranger,
+        r.link               AS link,
+        con.performance_date AS date,
+        con.venue            AS venue,
+        con.notes            AS concert_notes,
+        r.enabled            AS enabled
+    FROM recordings r
+    LEFT JOIN compositions c ON r.catalog_number = c.catalog_number
+    LEFT JOIN concerts con   ON r.id_concert = con.id_concert
+    WHERE r.id_recording = $id_recording
+    ORDER BY con.performance_date DESC, r.id_recording; ";
+
+
     ferror_log("Running SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $output .= '
@@ -36,7 +59,7 @@ if (isset($_POST["id_recording"])) {
             </tr>
             <tr>
                 <td><label>Information</label></td>
-                <td>'.$rowList["concert"] .'</td>
+                <td>'.$rowList["concert_notes"] .'</td>
             </tr>
             <tr>
                 <td><label>Composer</label></td>

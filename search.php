@@ -30,13 +30,15 @@
           <dt><a href="ensembles.php">Ensembles</a></dt>
             <dd>List ensembles. Bands and smaller ensembles</dd>
           <dt><a href="genres.php">Genres</a></dt>
-            <dd>Search genres. Types of music genre such as "March" or "Symphonic transcription" or "Showtune"</dd>
+            <dd>List genres. Types of music genre such as "March" or "Symphonic transcription" or "Showtune"</dd>
           <dt><a href="parttypes.php">Part types</a></dt>
-            <dd>Search types of parts. Examples are Flute 1 or Tuba</dd>
-          <dt><a href="partcollections.php">Part type collections</a></dt>
-            <dd>Search types of parts that are collections. A "collection" part type contains two or more instruments on one part. For example, "percussion 1" contains "Cymbal" and "Bass drum"</dd>
+            <dd>List types of parts. Examples are Flute 1 or Tuba</dd>
           <dt><a href="papersizes.php">Paper sizes</a></dt>
-            <dd>Search sizes of parts. This is a lookup table for which size of paper the parts are printed, for example Folio, march or book</dd>
+            <dd>List sizes of parts. This is a lookup table for which size of paper the parts are printed, for example Folio, march or book</dd>
+          <dt><a href="playgrams.php">Playgrams</a></dt>
+            <dd>List program playlists. Lists of compositions to be played at (one or more) concerts.</dd>
+          <dt><a href="concerts.php">Concerts</a></dt>
+            <dd>List concerts. Lists of concerts performed on a specific date.</dd>
           <dt><a href="recordings.php">Recordings</a></dt>
             <dd>A catalog of performance recordings of each composition</dd>
           <dt><?php

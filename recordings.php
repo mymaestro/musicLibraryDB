@@ -90,6 +90,7 @@
                                 </div>
                                 <div class="col-md-7">
                                     <?php
+                                    // Build the reference compositions
                                     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                                     $sql = "SELECT `catalog_number`, `name`, `composer`,`arranger` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
                                     //ferror_log("Running " . $sql);

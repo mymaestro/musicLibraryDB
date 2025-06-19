@@ -32,40 +32,76 @@ if(isset($_POST["id_recording"])) {
     echo '            <div class="panel panel-default">
         <div class="table-repsonsive-sm">
                 <table class="table table-hover tablesort tablesearch-table" id="cpdatatable">
-                <caption class="title">Available recordings</caption>
-                <thead>
-                <tr>
-                    <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
-                    <th data-tablesort-type="string">Catalog number <i class="fa fa-sort" aria-hidden="true"></i></th>
-                    <th data-tablesort-type="string">Name <i class="fa fa-sort" aria-hidden="true"></i></th>
-                    <th data-tablesort-type="string">Composer <i class="fa fa-sort" aria-hidden="true"></i></th>
-                    <th data-tablesort-type="date">Date <i class="fa fa-sort" aria-hidden="true"></i></th>
-                    <th data-tablesort-type="string">Venue <i class="fa fa-sort" aria-hidden="true"></i></th>
-                    <th>Enabled</th>
-                </tr>
-                </thead>
-                <tbody>';
-    $sql = "SELECT * FROM recordings ORDER BY date DESC;";
+                <caption class="title">Available recordings</caption>';
+    echo '<thead><tr>
+        <th data-tablesort-type="date">Date</th>
+        <th data-tablesort-type="string">Composition</th>
+        <th data-tablesort-type="string">Composer</th>
+        <th data-tablesort-type="string">Ensemble</th>
+        <th data-tablesort-type="string">Venue</th>
+        <th>Enabled</th>
+      </tr></thead>
+      <tbody>';
+
+    $sql = "SELECT
+        r.id_recording       AS id_recording,
+        c.catalog_number     AS catalog_number,
+        c.name               AS composition_name,
+        r.name               AS name,
+        r.ensemble           AS ensemble,
+        r.id_ensemble        AS id_ensemble,
+        r.composer           AS composer,
+        r.link               AS link,
+        con.performance_date AS date,
+        con.venue            AS venue,
+        con.notes            AS concert_notes,
+        r.enabled            AS enabled
+    FROM recordings r
+    LEFT JOIN compositions c ON r.catalog_number = c.catalog_number
+    LEFT JOIN concerts con   ON r.id_concert = con.id_concert
+    ORDER BY con.performance_date DESC, r.id_recording; ";
+
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
     while ($rowList = mysqli_fetch_array($res)) {
         $id_recording = $rowList["id_recording"];
-        $ensemble = $rowList["ensemble"];
         $catalog_number = $rowList["catalog_number"];
+        $composition_name = $rowList["composition_name"];
+        $name = $rowList["name"];
+        $ensemble = $rowList["ensemble"];
+        $id_ensemble = $rowList["id_ensemble"];
         $composer = $rowList["composer"];
         $date = $rowList["date"];
-        $name = $rowList["name"];
+        $notes = $rowList["notes"];
         $link = $rowList["link"];
-        $concert = $rowList["concert"];
+        $notes = $rowList["concert_notes"];
         $venue = $rowList["venue"];
         $enabled = $rowList["enabled"];
-        echo '<tr><!-- '. $concert . ' -->
-                <td>'. $ensemble . '</td>
-                <td>'. $catalog_number . '</td>
-                <td><strong>'. $name . '</strong></td>
-                <td>'. $composer . '</td>
-                <td>'. $date . '</td>
-                <td>'. $venue . '</td>
-                <td><div class="form-check form-switch">
+
+    while ($rowList = mysqli_fetch_array($res)) {
+        $id_recording     = $rowList["id_recording"];
+        $catalog_number   = $rowList["catalog_number"];
+        $composition_name = htmlspecialchars($rowList["composition_name"]);
+        $name             = htmlspecialchars($rowList["name"]);
+        $ensemble         = htmlspecialchars($rowList["ensemble"]);
+        $composer         = htmlspecialchars($rowList["composer"]);
+        $date             = $rowList["date"];
+        $venue            = htmlspecialchars($rowList["venue"]);
+        $notes            = nl2br(htmlspecialchars($rowList["concert_notes"]));
+        $link             = htmlspecialchars($rowList["link"]);
+        $enabled          = $rowList["enabled"] ? "Yes" : "No";
+
+        $the_name = $name ; 
+        if ( $name != $composition_name ) {
+            $the_name = $the_name . "*";
+        }
+
+        echo "<tr>
+        <td>$date</td>
+        <td><strong>$the_name</strong></td>
+        <td>$composer</td>
+        <td>$ensemble</td>
+        <td>$venue</td>";
+        echo'<td><div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
                 </div></td>';
         if ($u_librarian) { echo '
@@ -73,15 +109,15 @@ if(isset($_POST["id_recording"])) {
                     <td><input type="button" name="edit" value="Edit" id="'.$id_recording.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
         echo '
                     <td><input type="button" name="view" value="Details" id="'.$id_recording.'" class="btn btn-secondary btn-sm view_data" /></td>
-                </tr>
-                ';
+                </tr>';
+        }
     }
     echo '
-                </tbody>
-                </table>
-            </div><!-- table-responsive -->
-        </div><!-- class panel -->
-       ';
+            </tbody>
+            </table>
+        </div><!-- table-responsive -->
+    </div><!-- class panel -->
+    ';
     ferror_log("returned: " . $sql);
 }
 mysqli_close($f_link);

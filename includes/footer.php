@@ -3,10 +3,10 @@
         <p class="col-md-4 mb-0 text-body-secondary">&copy; 2025 <?php echo ORGDESC ?></p> <a href="/"
             class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none" aria-label="Logo"> <img src="<?php echo ORGLOGO ?>" alt="<?php echo ORGNAME ?>" height="32"></a>
         <ul class="nav col-md-4 justify-content-end">
-            <li class="nav-item"><a href="index.php" class="nav-link px-2 text-body-secondary">Home</a></li>
-            <li class="nav-item"><a href="privacy-statement.php" class="nav-link px-2 text-body-secondary">Privacy</a></li>
-            <li class="nav-item"><a href="terms-conditions.php" class="nav-link px-2 text-body-secondary">Terms</a></li>
-            <li class="nav-item"><a href="about.php" class="nav-link px-2 text-body-secondary">About</a></li>
+            <li class="nav-item<?php echo ( PAGE_NAME === 'home' ? ' active">' : '">') ?><a class="nav-link px-2 text-body-secondary" href="index.php"><i class="fa fa-home"></i> Home</a></li>
+            <li class="nav-item"><a href="privacy-statement.php" class="nav-link px-2 text-body-secondary"><i class="fas fa-shield"></i> Privacy</a></li>
+            <li class="nav-item"><a href="terms-conditions.php" class="nav-link px-2 text-body-secondary"><i class="fas fa-file-lines"></i> Terms</a></li>
+            <li class="nav-item<?php echo ( PAGE_NAME === 'about' ? ' active">' : '">') ?><a class="nav-link px-2 text-body-secondary" href="about.php"><i class="fas fa-info-circle"></i> About</a></li>
         </ul>
     </footer>
 </div>

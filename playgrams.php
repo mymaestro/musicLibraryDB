@@ -33,7 +33,7 @@
         </div><!-- right button -->
 <?php endif; ?>
         <div id="playgram_table">
-            Loading table...
+            <p class="text-center">Loading table...</p>
         </div><!-- playgram_table -->
         <div id="dataModal" class="modal"><!-- view data -->
             <div class="modal-dialog modal-lg">

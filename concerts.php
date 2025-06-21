@@ -35,10 +35,10 @@ if (isset($_SESSION['username'])) {
         <?php
         echo '
             <div class="panel panel-default">
-               <div class="table-repsonsive">
+               <div class="table-repsonsive" style="max-height: 750px; overflow-y: auto;">
                     <table class="table table-hover">
                     <caption class="title">Concerts</caption>
-                    <thead>
+                    <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">
                     <tr>
                         <th style="width: 50px;"></th>
                         <th>Playgram</th>

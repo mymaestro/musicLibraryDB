@@ -34,8 +34,10 @@
 
     <!-- Prevent navbar overlay -->
     <style>
-    body {
-        padding-top: 60px;
+    html, body {
+        padding-top: 30px;
+        height: 100%;
+        margin: 0;
     }
     @media (max-width: 979px) {
         body {
@@ -48,6 +50,7 @@
         right: 20px;
         display: none;
     }
+
     </style>
 
 
@@ -60,4 +63,4 @@
 <?php endif; ?>
 
 </head>
-<body>
+<body class="d-flex flex-column h-100">

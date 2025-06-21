@@ -36,10 +36,10 @@ if(isset($_POST["id_playgram"])) {
     echo $return;
 } else {
     echo '            <div class="panel panel-default">
-           <div class="table-repsonsive">
+           <div class="table-repsonsive" style="max-height: 750px; overflow-y: auto;">
                 <table class="table table-hover">
                 <caption class="title">Available program play lists (playgrams)</caption>
-                <thead>
+                <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">
                 <tr>
                     <th style="width: 50px;"></th>
                     <th>Name</th>

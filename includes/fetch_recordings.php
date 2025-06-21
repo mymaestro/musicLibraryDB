@@ -10,6 +10,7 @@ if(isset($_POST["user_role"])) {
 }
 
 ferror_log("Running fetch_recordings.php");
+ferror_log(print_r($_POST, true));
 
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
@@ -20,6 +21,7 @@ if(isset($_POST["id_recording"])) {
     ferror_log("SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
+    ferror_log("JSON: " . json_encode($rowList));
     echo json_encode($rowList);
 } elseif(isset($_POST["catalog_number"])) {
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
@@ -30,14 +32,15 @@ if(isset($_POST["id_recording"])) {
     echo json_encode($rowList);
 } else {
     echo '            <div class="panel panel-default">
-        <div class="table-repsonsive-sm">
+        <div class="table-repsonsive" style="max-height: 750px; overflow-y: auto;">
                 <table class="table table-hover tablesort tablesearch-table" id="cpdatatable">
                 <caption class="title">Available recordings</caption>';
-    echo '<thead><tr>
+    echo '<thead class="thead-light" style="position: sticky; top: 0; z-index: 1;"><tr>
+        <th style="width: 50px;"></th>
+        <th data-tablesort-type="string">Ensemble</th>
         <th data-tablesort-type="date">Date</th>
         <th data-tablesort-type="string">Composition</th>
         <th data-tablesort-type="string">Composer</th>
-        <th data-tablesort-type="string">Ensemble</th>
         <th data-tablesort-type="string">Venue</th>
         <th>Enabled</th>
       </tr></thead>
@@ -62,20 +65,6 @@ if(isset($_POST["id_recording"])) {
     ORDER BY con.performance_date DESC, r.id_recording; ";
 
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-    while ($rowList = mysqli_fetch_array($res)) {
-        $id_recording = $rowList["id_recording"];
-        $catalog_number = $rowList["catalog_number"];
-        $composition_name = $rowList["composition_name"];
-        $name = $rowList["name"];
-        $ensemble = $rowList["ensemble"];
-        $id_ensemble = $rowList["id_ensemble"];
-        $composer = $rowList["composer"];
-        $date = $rowList["date"];
-        $notes = $rowList["notes"];
-        $link = $rowList["link"];
-        $notes = $rowList["concert_notes"];
-        $venue = $rowList["venue"];
-        $enabled = $rowList["enabled"];
 
     while ($rowList = mysqli_fetch_array($res)) {
         $id_recording     = $rowList["id_recording"];
@@ -83,6 +72,7 @@ if(isset($_POST["id_recording"])) {
         $composition_name = htmlspecialchars($rowList["composition_name"]);
         $name             = htmlspecialchars($rowList["name"]);
         $ensemble         = htmlspecialchars($rowList["ensemble"]);
+        $id_ensemble      = $rowList["id_ensemble"];
         $composer         = htmlspecialchars($rowList["composer"]);
         $date             = $rowList["date"];
         $venue            = htmlspecialchars($rowList["venue"]);
@@ -95,22 +85,15 @@ if(isset($_POST["id_recording"])) {
             $the_name = $the_name . "*";
         }
 
-        echo "<tr>
+        echo '<tr data-id="'. $id_recording .'" >
+        <td><input type="radio" name="record_select" value="'.$id_recording.'" class="form-check-input select-radio"></td>'."
+        <td>$ensemble</td>
         <td>$date</td>
         <td><strong>$the_name</strong></td>
         <td>$composer</td>
-        <td>$ensemble</td>
-        <td>$venue</td>";
-        echo'<td><div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
-                </div></td>';
-        if ($u_librarian) { echo '
-                    <td><input type="button" name="delete" value="Delete" id="'.$id_recording.'" class="btn btn-danger btn-sm delete_data" /></td>
-                    <td><input type="button" name="edit" value="Edit" id="'.$id_recording.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
-        echo '
-                    <td><input type="button" name="view" value="Details" id="'.$id_recording.'" class="btn btn-secondary btn-sm view_data" /></td>
-                </tr>';
-        }
+        <td>$venue</td>
+        <td>".(($enabled == 1) ? "Yes" : "No") ."</td>
+        </tr>";
     }
     echo '
             </tbody>

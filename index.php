@@ -11,7 +11,16 @@
 	$u_librarian = (strpos(htmlspecialchars($_SESSION['roles']), 'librarian') !== FALSE ? TRUE : FALSE);
     $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
   }
-  require_once('includes/config.php'); 
+  $configFile = 'includes/config.php';
+  if (!file_exists($configFile)) {
+	echo "<div class='alert alert-danger'>Error: failed to read required config.php. Did you create it yet?</div>
+	</body>
+</html>";
+	exit; // we are done here
+  } else {
+	require_once($configFile);
+  };
+
   require_once("includes/navbar.php");
   require_once('includes/functions.php');
   ferror_log("RUNNING index.php");

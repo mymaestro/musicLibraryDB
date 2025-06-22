@@ -428,13 +428,16 @@ $(document).ready(function() {
         method:"POST",
         data: {
             <?php
-            if (isset($_POST["submitButton"])) echo 'submitButton: "' . $_POST["submitButton"] . '",'.PHP_EOL;
-            if (isset($_POST["ensemble"])) echo "ensemble: '" . json_encode($_POST["ensemble"]) . "',".PHP_EOL;
-            if (isset($_POST["genre"])) echo "genre: '" . json_encode($_POST["genre"]) . "',".PHP_EOL;
-            if (isset($_POST["search"])) echo "search: " . json_encode($_POST["search"]) . ",".PHP_EOL;
+            // If the user submitted the search form, pass the search parameters
+            // to the fetch_compositions.php script so it can filter the results
+            if (isset($_POST["submitButton"])){ echo 'submitButton: "' . $_POST["submitButton"] . '",'.PHP_EOL; }
+            if (isset($_POST["ensemble"])){ echo "ensemble: '" . json_encode($_POST["ensemble"]) . "',".PHP_EOL;}
+            if (isset($_POST["genre"])){ echo "genre: '" . json_encode($_POST["genre"]) . "',".PHP_EOL;}
+            if (isset($_POST["search"])){ echo "search: " . json_encode($_POST["search"]) . ",".PHP_EOL;}
             ?>
             user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
         },
+
         success:function(data){
             $('#composition_table').html(data);
         }
@@ -559,8 +562,8 @@ $(document).ready(function() {
                         method:"POST",
                         data:{
                             <?php 
-                            if (isset($_POST["submitButton"])) echo 'submitButton: "' . $_POST["submitButton"] . '",'.PHP_EOL;
-                            if (isset($_POST["search"])) echo "search: " . json_encode($_POST["search"]) . ",".PHP_EOL;
+                            if (isset($_POST["submitButton"])){ echo 'submitButton: "' . $_POST["submitButton"] . '",'.PHP_EOL; }
+                            if (isset($_POST["search"])){ echo "search: " . json_encode($_POST["search"]) . ",".PHP_EOL; }
                             ?>
                             user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
                         },

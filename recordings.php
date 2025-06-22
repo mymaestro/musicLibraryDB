@@ -77,7 +77,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div><!-- modal-header -->
                     <div class="modal-body">
-                        <form>
+                        <form method="post" id="insert_form" enctype="multipart/form-data">
                         <div class="hidden">
                             <input type="text" name="id_recording" id="id_recording" class="form-control-plaintext" placeholder="0" readonly />
                         </div>
@@ -85,7 +85,7 @@
                             <?php
                             // Build the reference concerts
                             $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                            $sql = "SELECT `id_concert`, `id_playgram`, `performance_date`,`venue`, `conductor` FROM concerts ORDER BY performance_date;";
+                            $sql = "SELECT `id_concert`, `id_playgram`, `performance_date`,`venue`, `conductor` FROM concerts ORDER BY performance_date DESC;";
                             //ferror_log("Running " . $sql);
                             $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
                             $opt = "<select class='form-select form-control' aria-label='Choose concert' id='id_concert' name='concert'>";
@@ -186,17 +186,16 @@
                         </div>
                         <div class="col-md-8">
                             <div class="input-group mb-3">
-                                <input type="file" class="form-control" name="link" id="link">
+                                <input type="file" class="form-control" name="link" id="link" accept=".mp3,.flac,.ogg" />
                                 <label class="input-group-text" for="link">Upload</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <p class="text-info text-center"><?php echo ORGFILES ?><span id="filedate">0000-00-00</span>/<span id="filebase">00file.mp3</span></p>
+                                <p class="text-info text-center"><?php echo ORGFILES ?><span id="filedate">0000-00-00</span>/<span id="filebase">-----.---</span></p>
                             </div>
                         </div>            
                     </div><!-- modal-body -->
-
                     <div class="modal-footer">  
                             <input type="hidden" name="update" id="update" value="0" />
                             <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
@@ -206,10 +205,6 @@
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
         </div><!-- editModal -->
-
-        
-
-
         <div id="messageModal" class="modal"><!-- message feedback -->
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -232,8 +227,17 @@
 <script src="js/auto-tables.js"></script>
 <!-- jquery function to add/update database records -->
 <script>
-$("#link").change(function(){
-    $('#filebase').text($('#link').val());
+// Load concert date and file name when the user selects a concert or file
+$("#id_concert").change(function(){
+    let concert = $('#id_concert option:selected').text();
+    $('#concert').val(concert);
+    // Set the file date to the concert date
+    let date = concert.split(' at ')[0]; // Get the date part
+    $('#filedate').text(date);
+    console.log("Concert date set to: " + date);
+});
+$("#filebase").change(function(){
+    $('#filebase').text($('#filebase').val());
 });
 $("#concert").change(function(){
     $('#filedate').text($('#concert').val());
@@ -304,28 +308,35 @@ $(document).ready(function(){
             dataType:"json",
             success:function(result){
                 console.log(JSON.stringify(result));
+
+                console.log("id_recording: " + result.id_recording + "\nid_concert: " + result.id_concert+ "\ncatalog_number: " + result.catalog_number);
+                console.log("name: " + result.name + "\nid_ensemble: " + result.id_ensemble + "\nensemble: " + result.ensemble);
+                console.log("date: " + result.date + "\nconcert_notes: " + result.concert_notes + "\nvenue: " + result.venue + "\ncomposer: " + result.composer + "\narranger: " + result.arranger);
+                console.log("filebase/link: " + result.link);
+                console.log("enabled: " + result.enabled);
+
                 $('#id_recording').val(result.id_recording);
-                //$('#id_recording_hold').val(result.id_recording);
+                $('#id_concert').val(result.id_concert);
                 $('#catalog_number').val(result.catalog_number);
                 $('#name').val(result.name);
-                //$('#date').val(result.date);
-                $('#ensemble').val(result.ensemble);
                 $('#id_ensemble').val(result.id_ensemble);
-                $('#link').val(result.link);
-                $('#concert').val(result.notes);
-                //$('#venue').val(result.venue);
+                $('#ensemble').val(result.ensemble);
+                $('#date').val(result.date);
+                $('#concert').val(result.concert_notes);
+                $('#venue').val(result.venue);
                 $('#composer').val(result.composer);
                 $('#arranger').val(result.arranger);
+
                 if ((result.enabled) == 1) {
                     $('#enabled').prop('checked',true);
+                } else {
+                    $('#enabled').prop('checked',false);
                 }
+                $('#filedate').text(result.date);
                 $('#filebase').text(result.link);
-                //$('#filedate').text(result.date);
-                var date = '2000-01-01';
-                $('#filedate').text(date);
+                // Form is ready to update
                 $('#insert').val("Update");
                 $('#update').val("update");
-                //$('#editModal').modal('show');
             }
         });
     });

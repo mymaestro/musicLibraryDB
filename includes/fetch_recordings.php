@@ -59,8 +59,8 @@ if(isset($_POST["id_recording"])) {
                 <caption class="title">Available recordings</caption>';
     echo '<thead class="thead-light" style="position: sticky; top: 0; z-index: 1;"><tr>
         <th style="width: 50px;"></th>
-        <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th data-tablesort-type="date">Date <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th data-tablesort-type="string">Composition <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th data-tablesort-type="string">Composer <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th data-tablesort-type="string">Venue <i class="fa fa-sort" aria-hidden="true"></i></th>
@@ -103,19 +103,19 @@ if(isset($_POST["id_recording"])) {
         $enabled          = $rowList["enabled"] ? "Yes" : "No";
 
         $the_name = $name ; 
-        if ( $name != $composition_name ) {
+        if ( $composition_name == "" ) {
             $the_name = $the_name . "*";
-        }
+        };
 
-        echo '<tr data-id="'. $id_recording .'" >
-        <td><input type="radio" name="record_select" value="'.$id_recording.'" class="form-check-input select-radio"></td>'."
-        <td>$ensemble</td>
-        <td>$date</td>
-        <td><strong>$the_name</strong></td>
-        <td>$composer</td>
-        <td>$venue</td>
-        <td>".(($enabled == 1) ? "Yes" : "No") ."</td>
-        </tr>";
+        echo '<tr data-id="'. $id_recording .'">
+        <td><input type="radio" name="record_select" value="'.$id_recording.'" class="form-check-input select-radio"></td>
+        <td><a href="#" class="view_data" name="view" id="view_'.$id_recording.'">'.$date.'</a></td>
+        <td>'.$ensemble.'</td>
+        <td><strong>'.$the_name.'</strong></td><!-- '.$composition_name.' -->
+        <td>'.$composer.'</td>
+        <td>'.$venue.'</td>
+        <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>
+        </tr>';
     }
     echo '
             </tbody>

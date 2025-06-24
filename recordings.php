@@ -146,7 +146,7 @@
                             while ($rowList = mysqli_fetch_array($res)) {
                                 $id_ensemble = $rowList['id_ensemble'];
                                 $name = $rowList['name'];
-                                $opt .= "<option value='" . $$id_ensemble . "'>" . $name . "</option>";
+                                $opt .= "<option value='" . $id_ensemble . "'>" . $name . "</option>";
                             }
                             $opt .= "</select>";
                             mysqli_close($f_link);
@@ -322,7 +322,7 @@ $(document).ready(function(){
                 $('#id_ensemble').val(result.id_ensemble);
                 $('#ensemble').val(result.ensemble);
                 $('#date').val(result.date);
-                $('#concert').val(result.concert_notes);
+                $('#notes').val(result.concert_notes);
                 $('#venue').val(result.venue);
                 $('#composer').val(result.composer);
                 $('#arranger').val(result.arranger);
@@ -418,9 +418,12 @@ $(document).ready(function(){
         }
     });
     $(document).on('click', '.view_data', function(){
-        var id_recording = $(this).attr("id");
-        if(id_recording != '')
+        var view_id_recording = $(this).attr("id");
+        // id_recording will look like "view_123"
+        if(view_id_recording != '')
         {
+            let id_recording = view_id_recording.substr(6);
+            console.log("View recording " + id_recording);
             $.ajax({
                 url:"includes/select_recordings.php",
                 method:"POST",

@@ -22,6 +22,19 @@
     <div class="container">
         <h1><?php echo ORGNAME . ' ' . PAGE_TITLE ?></h1>
 <?php if($u_librarian) : ?>
+        <?php
+        $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+        $id = $_GET['id'] ?? null;
+        if ( $id ) {
+            $sql = "SELECT id_playgram, name FROM playgrams WHERE id_playgram = $id;";
+            $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+            while ($rowList = mysqli_fetch_array($res)) {
+                $id_playgram = $rowList['id_playgram'];
+                $name = $rowList['name'];
+                echo '<h3 class="text-secondary">'.$name.'</h3>';
+            }
+        };
+        ?>
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>

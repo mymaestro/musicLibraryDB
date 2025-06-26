@@ -20,10 +20,11 @@ if(!empty($_POST)) {
     $id_recording_hold = mysqli_real_escape_string($f_link, $_POST['id_recording_hold']);
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
-    $date = mysqli_real_escape_string($f_link, $_POST['date']);
+    //$date = mysqli_real_escape_string($f_link, $_POST['date']);
+    $id_ensemble = mysqli_real_escape_string($f_link, $_POST['id_ensemble']);
     $ensemble = mysqli_real_escape_string($f_link, $_POST['ensemble']);
-    $link = mysqli_real_escape_string($f_link, $_POST['link']);
-    $concert = mysqli_real_escape_string($f_link, $_POST['concert']);
+    $link = mysqli_real_escape_string($f_link, $_POST['filebase']);
+    $notes = mysqli_real_escape_string($f_link, $_POST['notes']);
     $venue = mysqli_real_escape_string($f_link, $_POST['venue']);
     $composer = mysqli_real_escape_string($f_link, $_POST['composer']);
     $arranger = mysqli_real_escape_string($f_link, $_POST['arranger']);
@@ -32,21 +33,21 @@ if(!empty($_POST)) {
         $sql = "
         UPDATE recordings 
         SET catalog_number = '$catalog_number',
+        id_concert = '$id_concert',
         name ='$name',
-        date = '$date',
         ensemble = '$ensemble',
+        id_ensemble = '$id_ensemble',
         link = '$link',
-        concert = '$concert',
-        venue = '$venue',
+        notes = '$notes',
         composer = '$composer',
         arranger = '$arranger',
         enabled = $enabled
-        WHERE id_recording='".$_POST["id_recording_hold"]."'";
+        WHERE id_recording='".$_POST["id_recording"]."'";
         $message = 'Data Updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO recordings(name, catalog_number, date, ensemble, link, concert, venue, composer, arranger, enabled)
-        VALUES('$name', '$catalog_number', '$date', '$ensemble', '$link', '$concert', '$venue', '$composer', '$arranger', $enabled);
+        INSERT INTO recordings(catalog_number, id_concert, name, ensemble, id_ensemble, link, notes, composer, arranger, enabled)
+        VALUES('$catalog_number', $id_concert, '$name', '$ensemble', '$id_ensemble', '$link', '$notes', '$composer', '$arranger', $enabled);
         ";
         $message = 'Data Inserted';
     }

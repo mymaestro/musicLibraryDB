@@ -316,6 +316,7 @@ $(document).ready(function(){
                 console.log("enabled: " + result.enabled);
 
                 $('#id_recording').val(result.id_recording);
+                //$('#id_recording_hold').val(result.id_recording_hold);
                 $('#id_concert').val(result.id_concert);
                 $('#catalog_number').val(result.catalog_number);
                 $('#name').val(result.name);
@@ -422,7 +423,7 @@ $(document).ready(function(){
         // id_recording will look like "view_123"
         if(view_id_recording != '')
         {
-            let id_recording = view_id_recording.substr(6);
+            let id_recording = view_id_recording.substr(5);
             console.log("View recording " + id_recording);
             $.ajax({
                 url:"includes/select_recordings.php",

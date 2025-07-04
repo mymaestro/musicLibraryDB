@@ -212,7 +212,11 @@ $(document).ready(function(){
         $('#edit, #delete, #sort').prop('disabled',false);
         id_playgram = $(this).data('id'); // data-id attribute
     });
-
+    $('#editModal').modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: false
+    });
     $(document).on('click', '.edit_data', function(){
         $.ajax({
             url:"includes/fetch_playgrams.php",
@@ -291,12 +295,10 @@ $(document).ready(function(){
     });
     $('#confirm-delete').click(function(){ // The confirm delete button
         $.ajax({
-            url:"includes/delete_records.php",
+            url:"includes/delete_playgrams.php",
             method:"POST",
             data:{
-                table_name: "playgrams",
-                table_key_name: "id_playgram",
-                table_key: id_playgram
+                id_playgram: id_playgram
             },
             success:function(response){
                 $('#insert_form')[0].reset();

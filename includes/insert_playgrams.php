@@ -113,7 +113,17 @@ if(!empty($_POST)) {
         ferror_log("107: Insert PG SQL ". $sql);
         if(!mysqli_query($f_link, $sql)) {  
             $error_message = mysqli_error($f_link);
-            ferror_log("Error deleting playgram items " . $error_message);
+            // Send the error back, check if the error is due to a duplicate name
+            if (strpos($error_message, 'Duplicate entry') !== false) {
+                $message = "Playgram with this name already exists.";
+            } else {
+                $message = "Error inserting playgram: " . $error_message;
+            }
+            ferror_log("Error inserting playgram items " . $error_message);
+        } else {
+            $id_playgram = mysqli_insert_id($f_link);
+            ferror_log("Inserted playgram with id " . $id_playgram);
+            $message = "Playgram added successfully.";
         }
         // If any compositions are entered...
         if(isset($_POST["id_composition"])) {

@@ -73,7 +73,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate confirm password
     if (isset($_POST['confirm_password'])) {
         $confirm_password = mysqli_real_escape_string($f_link, $_POST['confirm_password']);
-        ferror_log("Send confirmation password ". str_repeat("*",strlen($confirm_password));
+        ferror_log("Send confirmation password ". str_repeat("*",strlen($confirm_password)));
         $number = preg_match('@[0-9]@', $confirm_password);
         $uppercase = preg_match('@[A-Z]@', $confirm_password);
         $lowercase = preg_match('@[a-z]@', $confirm_password);

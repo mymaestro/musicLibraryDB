@@ -60,7 +60,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate password
     if (isset($_POST['password'])) {
         $password = mysqli_real_escape_string($f_link, $_POST['password']);
-        ferror_log("Sent password ". $password);
+        ferror_log("Sent password ". str_repeat("*",strlen($password)));
         $number = preg_match('@[0-9]@', $password);
         $uppercase = preg_match('@[A-Z]@', $password);
         $lowercase = preg_match('@[a-z]@', $password);
@@ -73,7 +73,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate confirm password
     if (isset($_POST['confirm_password'])) {
         $confirm_password = mysqli_real_escape_string($f_link, $_POST['confirm_password']);
-        ferror_log("send confirmation password ". $confirm_password);
+        ferror_log("Send confirmation password ". str_repeat("*",strlen($confirm_password));
         $number = preg_match('@[0-9]@', $confirm_password);
         $uppercase = preg_match('@[A-Z]@', $confirm_password);
         $lowercase = preg_match('@[a-z]@', $confirm_password);
@@ -84,11 +84,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     } else $confirm_password_err = "Please enter a password.";
 
-    ferror_log("Username: " . $username . ", address: " . $address);
+    ferror_log("Working with username: " . $username . ", address: " . $address);
 
     // Check input errors before inserting in database
     if(empty($username_err) && empty($name_err) && empty($password_err) && empty($confirm_password_err) && empty($address_err)) {
-        
+    
         // Prepare an insert statement
         $sql = "INSERT INTO users (username, name, password, address) VALUES (?, ?, ?, ?)";
         ferror_log($sql);

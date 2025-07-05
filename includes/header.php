@@ -21,8 +21,13 @@
     <title><?php echo PAGE_TITLE ?></title>
 
     <!-- Bootswatch Yeti https://bootswatch.com/yeti/ -->
+    <?php if (PAGE_NAME == 'Insert instrumentation') : ?>
+    <!-- this is the INSERT INSTRUMENTATION page it's from the includes -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <?php else  : ?>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    
+    <?php endif; ?>
+
     <!-- Bootstrap core CSS -->
     <!--
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">

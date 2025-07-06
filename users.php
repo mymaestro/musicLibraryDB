@@ -189,6 +189,21 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- add_data_modal -->
+    <div id="messageModal" class="modal"><!-- message feedback -->
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Message</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div><!-- modal-header -->
+                <div class="modal-body" id="message_detail">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- messageModal -->
     <?php else: ?>
         <div class="row mb-3">
             <p class="text-center">You must be logged in as an administrator to see this page</p>
@@ -237,24 +252,30 @@ $(document).ready(function(){
         // The confirm delete button
         var id_users = $(this).data('id');
         $.ajax({
-            url:"includes/delete_records.php",
+            url:"includes/delete_records.php", 
             method:"POST",
             data:{
                 table_name: "users",
                 table_key_name: "id_users",
                 table_key: id_users
             },
-            success:function(resppnse){
+            success:function(response){
                 $('#insert_form')[0].reset();
                 if (response.success) {
-                    $('#user_table').html('<p class="text-success">Record ' + response.message + ' deleted from users</p>');
-                } else {
-                    $('#user_table').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');                
+                    $('#message_detail').html('<p class="text-success">User ' + response.message + ' deleted from recordings</p>');
+                    $('#messageModal').modal('show');
+                 } else {
+                    $('#message_detail').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');
+                    $('#messageModal').modal('show');
                 }
             },
             error:function(xhr, status, error){
                 alert("Unexpected XHR error " + error);
             }
+        });
+        $('#messageModal').on('hidden.bs.modal', function () {
+            // Reload the page after the modal is closed
+            location.reload(); // Reload the page to reflect changes
         });
     });
     $('#insert_form').on("submit", function(event){

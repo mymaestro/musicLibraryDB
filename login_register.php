@@ -10,7 +10,9 @@ require_once('includes/password_hash.php');
 $username = $password = $confirm_password = "";
 $username_err = $password_err = $confirm_password_err = "";
 $address = $address_err = $name = $name_err = "";
- 
+
+$success_msg = "";
+
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
@@ -105,8 +107,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
-                // Redirect to login page
-                header("location: login.php");
+                $success_msg = "Registration successful! You can now <a href='login.php'>log in</a>.";
+                // Reset form fields
+                $username = $name = $address = $password = $confirm_password = "";
             } else{
                 echo "Something went wrong. Please try again later.";
             }
@@ -126,6 +129,11 @@ require_once('includes/navbar.php');
     <div class="py-5 text-center">
         <h1>Sign up for <?php echo ORGNAME ?> library access.</h1>
     </div>
+    <?php if (!empty($success_msg)): ?>
+        <div class="alert alert-success" role="alert">
+            <?php echo $success_msg; ?>
+        </div>
+    <?php endif; ?>
     <div class="row g-5">
         <div class="col-md-7">
             <p class="lead">Please submit this form to create an account.</p>

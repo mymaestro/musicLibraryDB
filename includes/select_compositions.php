@@ -21,17 +21,11 @@ if (isset($_POST["catalog_number"])) {
                    c.grade                  'Grade',
                    c.last_performance_date  'Last performed',
                    c.duration               'Duration (secs)',
-                   c.comments               'Comments',
                    c.performance_notes      'Performance notes',
-                   c.storage_location       'Storage location',
-                   c.date_acquired          'Date acquired', 
-                   c.cost                   'Cost',
                    c.listening_example_link 'Listening link',
-                   c.checked_out            'Checkout',
                    p.name                   'Paper size',
                    c.image_path             'Picture',
                    c.windrep_link           'windrep.org link',
-                   c.last_inventory_date    'Inventory date',
                    c.last_update            'Record updated'
             FROM   compositions c
             LEFT JOIN genres g ON c.genre = g.id_genre

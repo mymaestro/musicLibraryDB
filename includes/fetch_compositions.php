@@ -38,8 +38,6 @@ if(isset($_POST["catalog_number"])) {
                     <th data-tablesort-type="string">Name <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="string">Composer <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="string">Arranger <i class="fa fa-sort" aria-hidden="true"></i></th>
-                    <th data-tablesort-type="string">Description <i class="fa fa-sort" aria-hidden="true"></i></th>
-                    <th data-tablesort-type="string">Comments <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="number">Grade <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="string">Genre <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
@@ -82,7 +80,6 @@ if(isset($_POST["catalog_number"])) {
         $sql = "SELECT c.catalog_number,
                        c.name,
                        c.description,
-                       c.comments,
                        c.composer,
                        c.arranger,
                        c.grade,
@@ -108,7 +105,6 @@ if(isset($_POST["catalog_number"])) {
         $sql = "SELECT c.catalog_number,
                        c.name,
                        c.description,
-                       c.comments,
                        c.composer,
                        c.arranger,
                        g.name genre,
@@ -132,7 +128,6 @@ if(isset($_POST["catalog_number"])) {
         $catalog_number = $rowList['catalog_number'];
         $name = $rowList['name'];
         $description = $rowList['description'];
-        $comments = $rowList['comments'];
         $composer = $rowList['composer'];
         $arranger = $rowList['arranger'];
         $genre = $rowList['genre'];
@@ -145,8 +140,7 @@ if(isset($_POST["catalog_number"])) {
                     <td>'.$name.'</td>
                     <td>'.$composer.'</td>
                     <td>'.$arranger.'</td>
-                    <td>'.$description.'</td>
-                    <td>'.$comments.'</td>
+                    <!-- DESCRIPTION: '.$description.'-->
                     <td>'.$grade.'</td>
                     <td>'.$genre.'</td>
                     <td>'.$ensemble.'</td>

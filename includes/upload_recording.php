@@ -1,5 +1,9 @@
 <?php
-// Settings
+define('PAGE_TITLE', 'Upload Recording');
+define('PAGE_NAME','upload_recording');
+require_once('config.php');
+require_once('functions.php');
+
 $uploadDir = __DIR__ . '/uploads/';
 $maxFileSize = 20 * 1024 * 1024; // 20 MB
 
@@ -8,6 +12,7 @@ if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
 
+// ORGFILES
 require 'vendor/autoload.php';
 
 // Settings

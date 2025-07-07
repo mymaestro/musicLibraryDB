@@ -45,7 +45,7 @@ if (isset($_POST["id_recording"])) {
             <tr>
                 <td><label>Play</label></td>
                 <td><audio controls>
-			<source src="'. ORGFILES . $date. '/'.$link . '">
+			<source src="'. ORGRECORDINGS . $date. '/'.$link . '">
                     Your browser does not support the audio element.
                     </audio></td>
             </tr>

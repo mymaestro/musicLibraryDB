@@ -7,8 +7,16 @@
 */
 define('ORGNAME', '4th Wind');
 define('ORGDESC', 'Fourth Wind Wind Ensemble');
+// with trailing slash
 define('ORGHOME', 'http://library.local/');
-define('ORGFILES', 'https://library.local/files/recordings/'); // with trailing slash
+define('ORGRECORDINGS', 'http://library.local/files/recordings/'); 
+/* Define the path to the recordings directory.
+ * This is used for file uploads and downloads.
+ * Make sure this path is correct and accessible by the web server. */
+define('ORGPUBLIC', 'files/recordings/'); // Where to put recordings
+define('ORGPRIVATE', 'files/parts/'); // Where to put parts
+define('ORGUPLOADS', 'files/uploads/'); // not sure if this is used
+
 define('ORGLOGO', 'images/logo.png');
 define('ORGMAIL', 'librarian@musicLibraryDB.com');
 define('DB_HOST', 'localhost');

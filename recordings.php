@@ -108,31 +108,10 @@
                             ?>
                             <label for="id_concert" class="col-form-label">Concert*</label>
                         </div><!-- row -->
-                        <div class="form-floating"> 
-                            <?php
-                            // Build the reference compositions
-                            $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                            $sql = "SELECT `catalog_number`, `name`, `composer`,`arranger` FROM compositions WHERE `enabled` = 1 ORDER BY name;";
-                            //ferror_log("Running " . $sql);
-                            $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                            $opt = "<select class='form-select form-control' aria-label='Select composition' id='catalog_number' name='catalog_number'>";
-                            while ($rowList = mysqli_fetch_array($res)) {
-                                $comp_catno = $rowList['catalog_number'];
-                                $comp_name = $rowList['name'];
-                                $comp_composer = $rowList['composer'];
-                                $comp_arranger = $rowList['arranger'];
-                                $comp_display = $comp_name . " - " . $comp_catno;
-                                if (("$comp_composer" <> "" ) || ("$comp_arranger" <> "")) $comp_display .= ' (';
-                                if (("$comp_composer" <> "" ) && ("$comp_arranger" <> "")) $comp_display .= $comp_composer . ", arr. " . $comp_arranger . ")";
-                                if (("$comp_composer" == "" ) && ("$comp_arranger" <> "")) $comp_display .= "arr. " . $comp_arranger . ")";
-                                if (("$comp_composer" <> "" ) && ("$comp_arranger" == "")) $comp_display .=  $comp_composer . ")";
-                                $opt .= "<option value='" . $comp_catno . "'>" . $comp_display . "</option>";
-                            }
-                            $opt .= "</select>";
-                            mysqli_close($f_link);
-                            echo $opt;
-                            //error_log("returned: " . $sql);
-                            ?>
+                        <div class="form-floating"><!-- catalog number, from playgram_items -->
+                            <select class='form-select form-control' aria-label='Choose composition' id='catalog_number' name='catalog_number'>
+                                <option value="">Select catalog number</option>
+                            </select>
                             <label for="catalog_number" class="col-form-label">Catalog number*</label>
                         </div><!-- row -->
                         <div class="form-floating">
@@ -187,12 +166,12 @@
                         <div class="col-md-8">
                             <div class="input-group mb-3">
                                 <input type="file" class="form-control" name="link" id="link" accept=".mp3,.flac,.ogg" />
-                                <label class="input-group-text" for="link">Upload</label>
+                                <label class="input-group-text" for="link">Uplo3ad</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <p class="text-info text-center"><?php echo ORGFILES ?><span id="filedate">0000-00-00</span>/<span id="filebase">-----.---</span></p>
+                                <p class="text-info text-center"><?php echo ORGRECORDINGS ?><span id="filedate">0000-00-00</span>/<span id="filebase">-----.---</span></p>
                             </div>
                         </div>            
                     </div><!-- modal-body -->
@@ -235,6 +214,21 @@ $("#id_concert").change(function(){
     let date = concert.split(' at ')[0]; // Get the date part
     $('#filedate').text(date);
     console.log("Concert date set to: " + date);
+
+    // Dynamically update catalog_number options based on selected concert
+    let id_concert = $('#id_concert').val();
+    $.ajax({
+        url: "includes/fetch_playgram_items.php",
+        method: "POST",
+        data: { id_concert: id_concert },
+        success: function(options) {
+            if (options.trim() !== "") {
+                $('#catalog_number').html(options);
+            } else {
+                $('#catalog_number').html('<option value="">No compositions for this concert</option>');
+            }
+        }
+    });
 });
 $("#filebase").change(function(){
     $('#filebase').text($('#filebase').val());

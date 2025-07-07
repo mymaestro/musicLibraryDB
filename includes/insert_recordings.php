@@ -1,6 +1,6 @@
 <?php
- //insert_recordings.php
- define('PAGE_TITLE', 'Insert recordings');
+//insert_recordings.php
+define('PAGE_TITLE', 'Insert recordings');
 define('PAGE_NAME', 'Insert recordings');
 require_once('config.php');
 require_once('functions.php');

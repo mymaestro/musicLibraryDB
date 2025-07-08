@@ -40,6 +40,7 @@ CREATE TABLE `compositions` (
   `comments` varchar(4096) DEFAULT NULL COMMENT 'Comments about the piece, liner notes',
   `performance_notes` varchar(4096) DEFAULT NULL COMMENT 'Performance notes (how to rehearse it, for example)',
   `storage_location` varchar(255) DEFAULT NULL COMMENT 'Where it is kept (which drawer)',
+  `provenance` varchar(255) DEFAULT NULL COMMENT 'Where did this piece come from? (P)urchased (R)ented (B)orrowed (D)onated',
   `date_acquired` date DEFAULT NULL COMMENT 'When the piece was acquired',
   `cost` decimal(8,2) DEFAULT NULL COMMENT 'How much did it cost, in dollars and cents',
   `listening_example_link` varchar(255) DEFAULT NULL COMMENT 'A link to a listening example, maybe on YouTube',

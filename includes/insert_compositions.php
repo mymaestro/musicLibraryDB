@@ -27,6 +27,7 @@ if(!empty($_POST)) {
     ferror_log("POST comments=".$_POST["comments"]);
     ferror_log("POST performance_notes=".$_POST["performance_notes"]);
     ferror_log("POST storage_location=".$_POST["storage_location"]);
+    ferror_log("POST provenance=".$_POST["provenance"]);
     ferror_log("POST date_acquired=".$_POST["date_acquired"]);
     ferror_log("POST cost=".$_POST["cost"]);
     ferror_log("POST listening_example_link=".$_POST["listening_example_link"]);
@@ -48,6 +49,7 @@ if(!empty($_POST)) {
     $comments = mysqli_real_escape_string($f_link, $_POST['comments']);
     $performance_notes = mysqli_real_escape_string($f_link, $_POST['performance_notes']);
     $storage_location = mysqli_real_escape_string($f_link, $_POST['storage_location']);
+    $provenance = mysqli_real_escape_string($f_link, $_POST['provenance']);
     $listening_example_link = mysqli_real_escape_string($f_link, $_POST['listening_example_link']);
     $image_path = mysqli_real_escape_string($f_link, $_POST['image_path']);
     $checked_out = mysqli_real_escape_string($f_link, $_POST['checked_out']);
@@ -121,6 +123,7 @@ if(!empty($_POST)) {
         comments = '$comments',
         performance_notes = '$performance_notes',
         storage_location = '$storage_location',
+        provenance = '$provenance',
         date_acquired = $date_acquired,
         cost = $cost,
         listening_example_link = '$listening_example_link',
@@ -135,8 +138,8 @@ if(!empty($_POST)) {
         $message = 'Composition '.$catalog_number.' updated';
     } elseif($_POST["update"] == "add") {
         $sql = "
-        INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration, comments, performance_notes, storage_location, date_acquired, cost, listening_example_link, checked_out, paper_size, image_path, windrep_link, last_inventory_date, last_update, enabled)
-        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, $last_performance_date, $duration, '$comments', '$performance_notes', '$storage_location', $date_acquired, $cost, '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$winrep_link', $last_inventory_date, CURRENT_TIMESTAMP(), $enabled);
+        INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration, comments, performance_notes, storage_location, provenance, date_acquired, cost, listening_example_link, checked_out, paper_size, image_path, windrep_link, last_inventory_date, last_update, enabled)
+        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, $last_performance_date, $duration, '$comments', '$performance_notes', '$storage_location', '$provenance', $date_acquired, $cost, '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$windrep_link', $last_inventory_date, CURRENT_TIMESTAMP(), $enabled);
         ";
         $message = 'Composition '.$catalog_number.' added';
     }

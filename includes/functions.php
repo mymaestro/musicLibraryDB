@@ -93,7 +93,12 @@ function f_fieldExists($link, $table, $column, $column_attr = "VARCHAR( 255 ) NU
 /* Custom error logging */
 function ferror_log($error){
     if (DEBUG == 1) {
-        error_log($error);
+        if (isset($_SESSION['username'])) {
+            $username = $_SESSION['username'];
+        } else {
+            $username = 'anon';
+        }
+        error_log($username."> ".$error);
     }
 }
 ?>

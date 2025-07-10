@@ -3,6 +3,7 @@
 require_once('config.php');
 require_once('functions.php');
 error_log("Running fetch_login.php with id=". $_POST["username"]);
+ferror_log("LOGIN! " . $_POST["username"]);
 $message = "error";
 if(isset($_POST["username"]) && isset($_POST["password"])) {
     // Connect to the database

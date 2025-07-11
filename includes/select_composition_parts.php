@@ -1,7 +1,7 @@
 <?php
 require_once('config.php');
 require_once('functions.php');
-error_log("Running select_composition_parts.php with id=". $_POST["catalog_number"]);
+ferror_log("Running select_composition_parts.php with id=". $_POST["catalog_number"]);
 if (isset($_POST["catalog_number"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);

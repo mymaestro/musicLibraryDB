@@ -2,7 +2,7 @@
  //fetch_parts.php
 require_once('config.php');
 require_once('functions.php');
-error_log("Running fetch_composition_parts.php with id=". $_POST["catalog_number"]);
+ferror_log("Running fetch_composition_parts.php with id=". $_POST["catalog_number"]);
 
 if(isset($_POST["user_role"])) {
     $u_librarian = (($_POST["user_role"] == 'librarian') !== FALSE ? TRUE : FALSE);

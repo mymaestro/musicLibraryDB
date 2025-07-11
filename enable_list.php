@@ -3,7 +3,7 @@
  //Multi-row set Enabled flag
 require_once('includes/config.php');
 require_once('includes/functions.php');
-error_log("Running enable_list.php");
+ferror_log("Running enable_list.php");
 $u_admin = FALSE;
 $u_librarian = FALSE;
 $u_user = FALSE;
@@ -111,7 +111,7 @@ if(!empty($_POST)) {
          }
         endif;
 
-error_log($output);
+ferror_log($output);
 //echo json_encode($message);
 }
 ?>

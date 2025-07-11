@@ -2,7 +2,7 @@
  //fetch_genres.php
 require_once('config.php');
 require_once('functions.php');
-error_log("Running fetch_genres.php with id=". $_POST["id_genre"]);
+ferror_log("Running fetch_genres.php with id=". $_POST["id_genre"]);
 if(isset($_POST["id_genre"])) {
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $sql = "SELECT * FROM genres WHERE id_genre = '".$_POST["id_genre"]."'";

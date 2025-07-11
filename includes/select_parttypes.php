@@ -1,7 +1,7 @@
 <?php
 require_once('config.php');
 require_once('functions.php');
-error_log("Running select_parttypes.php with id=". $_POST["id_part_type"]);
+ferror_log("Running select_parttypes.php with id=". $_POST["id_part_type"]);
 if (isset($_POST["id_part_type"])) {
     $output = '
     <div class="table-responsive">

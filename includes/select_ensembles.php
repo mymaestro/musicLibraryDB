@@ -1,7 +1,7 @@
 <?php
 require_once('config.php');
 require_once('functions.php');
-error_log("Running select_ensembles.php with id=". $_POST["id_ensemble"]);
+ferror_log("Running select_ensembles.php with id=". $_POST["id_ensemble"]);
 if (isset($_POST["id_ensemble"])) {
     $output = '
     <div class="table-responsive">

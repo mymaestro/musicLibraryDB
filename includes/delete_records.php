@@ -3,7 +3,7 @@
  // remodel to fit music library database
 require_once('config.php');
 require_once('functions.php');
-error_log("Running delete_records.php");
+ferror_log("Running delete_records.php");
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 if (isset($_POST["table_name"])) $table_name = mysqli_real_escape_string($f_link, $_POST['table_name']);

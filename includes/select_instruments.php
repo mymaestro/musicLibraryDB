@@ -1,7 +1,7 @@
 <?php
 require_once('config.php');
 require_once('functions.php');
-error_log("Running select_instruments.php with id=". $_POST["id_instrument"]);
+ferror_log("Running select_instruments.php with id=". $_POST["id_instrument"]);
 if (isset($_POST["id_instrument"])) {
     $output = '
     <div class="table-responsive">

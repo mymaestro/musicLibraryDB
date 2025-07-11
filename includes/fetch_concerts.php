@@ -2,7 +2,7 @@
  //fetch_concerts.php
 require_once('config.php');
 require_once('functions.php');
-error_log("Hi! Running fetch_concerts.php with id=". $_POST["id_concert"]);
+ferror_log("Running fetch_concerts.php with id=". $_POST["id_concert"]);
 
 if(isset($_POST["id_concert"])) {
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);

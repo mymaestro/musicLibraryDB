@@ -1,7 +1,7 @@
 <?php
 require_once('config.php');
 require_once('functions.php');
-error_log("Running select_papersizes.php with id=". $_POST["id_paper_size"]);
+ferror_log("Running select_papersizes.php with id=". $_POST["id_paper_size"]);
 if (isset($_POST["id_paper_size"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);

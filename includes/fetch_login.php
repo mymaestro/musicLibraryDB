@@ -2,8 +2,7 @@
  //fetch_login.php
 require_once('config.php');
 require_once('functions.php');
-error_log("Running fetch_login.php with id=". $_POST["username"]);
-ferror_log("LOGIN! " . $_POST["username"]);
+ferror_log("Running LOGIN at fetch_login.php with id=". $_POST["username"]);
 $message = "error";
 if(isset($_POST["username"]) && isset($_POST["password"])) {
     // Connect to the database
@@ -32,9 +31,7 @@ if(isset($_POST["username"]) && isset($_POST["password"])) {
                         session_start();
                         $_SESSION['username'] = $username;
                         $_SESSION['roles'] = $roles;
-                        ferror_log("Session starting.");
-                        ferror_log("SESSION username = " . $_SESSION['username']);
-                        ferror_log("SESSION roles = " . $_SESSION['roles']);
+                        ferror_log("Session starting with SESSION username = " . $_SESSION['username'] . " and SESSION roles = '" . $_SESSION['roles']."'");
                         $message = "success";
                     } else {
                         // Display an error message if password is not valid

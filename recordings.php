@@ -82,30 +82,8 @@
                             <input type="text" name="id_recording" id="id_recording" class="form-control-plaintext" placeholder="0" readonly />
                         </div>
                         <div class="form-floating">
-                            <?php
-                            // Build the reference concerts
-                            $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                            $sql = "SELECT `id_concert`, `id_playgram`, `performance_date`,`venue`, `conductor` FROM concerts ORDER BY performance_date DESC;";
-                            //ferror_log("Running " . $sql);
-                            $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                            $opt = "<select class='form-select form-control' aria-label='Choose concert' id='id_concert' name='concert'>";
-                            while ($rowList = mysqli_fetch_array($res)) {
-                                $id_concert = $rowList['id_concert'];
-                                $id_playgram = $rowList['id_playgram'];
-                                $performance_date = $rowList['performance_date'];
-                                $venue = $rowList['venue'];
-                                $conductor = $rowList['conductor'];
-                                $concert_display = $performance_date . " at " . $venue;
-                                if ($conductor <> "") {
-                                    $concert_display .= " (conducted by " . $conductor . ")";
-                                }
-                                $opt .= "<option value='" . $id_concert . "'>" . $concert_display . "</option>";
-                            }
-                            $opt .= "</select>";
-                            mysqli_close($f_link);
-                            echo $opt;
-                            //error_log("returned: " . $sql);
-                            ?>
+                            <select class='form-select form-control' aria-label='Choose concert' id='id_concert' name='concert'>
+                                <option value=''>Select concert</option>
                             <label for="id_concert" class="col-form-label">Concert*</label>
                         </div><!-- row -->
                         <div class="form-floating"><!-- catalog number, from playgram_items -->
@@ -116,7 +94,7 @@
                         </div><!-- row -->
                         <div class="form-floating">
                             <?php
-                            // Build the reference compositions
+                            // Build the reference ensembles
                             $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                             $sql = "SELECT `id_ensemble`, `name` FROM ensembles WHERE `enabled` = 1 ORDER BY name;";
                             //ferror_log("Running " . $sql);
@@ -130,7 +108,6 @@
                             $opt .= "</select>";
                             mysqli_close($f_link);
                             echo $opt;
-                            //error_log("returned: " . $sql);
                             ?>
                             <label for="id_ensemble" class="col-form-label">Ensemble*</label>
                         </div><!-- row -->
@@ -139,7 +116,7 @@
                             <label for="ensemble" class="col-form-label">Ensemble description</label>
                          </div><!-- row -->
                         <div class="form-floating mb-1">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Musical comedy" minlength="3" maxlength="255"/>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Musical comedy" maxlength="255"/>
                             <label for="name" class="col-form-label">Recording name</label>
                         </div>
                         <div class="row">
@@ -166,12 +143,14 @@
                         <div class="col-md-8">
                             <div class="input-group mb-3">
                                 <input type="file" class="form-control" name="link" id="link" accept=".mp3,.flac,.ogg" />
-                                <label class="input-group-text" for="link">Uplo3ad</label>
+                                <button class="btn btn-primary" type="button" id="uploadRecording">Upload</button>
                             </div>
+                            <div id="uploadStatus" class="text-info small"></div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <p class="text-info text-center"><?php echo ORGRECORDINGS ?><span id="filedate">0000-00-00</span>/<span id="filebase">-----.---</span></p>
+                                <input type="hidden" id="filedate" name="filedate" value="0000-00-00" />
+                                <p class="text-info text-center"><?php echo ORGRECORDINGS ?><span id="filedateDisplay">0000-00-00</span>/<span id="linkDisplay">-----.---</span></p>
                             </div>
                         </div>            
                     </div><!-- modal-body -->
@@ -204,6 +183,27 @@
 <?php require_once("includes/footer.php");?>
 <!-- script to sort and filter table views -->
 <script src="js/auto-tables.js"></script>
+<!-- Reference concerts data -->
+<?php
+// Build the reference concerts as a JSON array for JavaScript
+$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$sql = "SELECT `id_concert`, `id_playgram`, `performance_date`, `venue`, `conductor` FROM concerts ORDER BY performance_date DESC;";
+$res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+$concerts = [];
+while ($rowList = mysqli_fetch_assoc($res)) {
+    $concerts[] = [
+        'id_concert' => $rowList['id_concert'],
+        'id_playgram' => $rowList['id_playgram'],
+        'performance_date' => $rowList['performance_date'],
+        'venue' => $rowList['venue'],
+        'conductor' => $rowList['conductor']
+    ];
+}
+mysqli_close($f_link);
+?><!-- Use window.concerts in JavaScript to reference concerts data -->
+<script>
+    window.concerts = <?php echo json_encode($concerts, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+</script>
 <!-- jquery function to add/update database records -->
 <script>
 // Load concert date and file name when the user selects a concert or file
@@ -212,7 +212,9 @@ $("#id_concert").change(function(){
     $('#concert').val(concert);
     // Set the file date to the concert date
     let date = concert.split(' at ')[0]; // Get the date part
-    $('#filedate').text(date);
+
+    $('#filedateDisplay').text(date); // Set the display text
+    $('#filedate').val(date); // Set the hidden input value
     console.log("Concert date set to: " + date);
 
     // Dynamically update catalog_number options based on selected concert
@@ -230,11 +232,12 @@ $("#id_concert").change(function(){
         }
     });
 });
-$("#filebase").change(function(){
-    $('#filebase').text($('#filebase').val());
-});
+//$("#linkDisplay").change(function(){
+//    $('#linkDisplay').text($('#linkDisplay').val());
+//});
 $("#concert").change(function(){
     $('#filedate').text($('#concert').val());
+    $('#filedateDisplay').text($('#concert').val());
 });
 $(document).ready(function(){
     // Scroll-to-top button
@@ -264,12 +267,34 @@ $(document).ready(function(){
             $('#recordings_table').html(data);
         }
     });
+
+    // Populate the concert select with options from window.concerts
+    var $concertSelect = $('#id_concert');
+    $concertSelect.empty();
+    $concertSelect.append("<option value=''>Select concert</option>");
+    window.concerts.forEach(function(concert) {
+        var display = concert.performance_date + " at " + concert.venue;
+        if (concert.conductor) {
+            display += " (conducted by " + concert.conductor + ")";
+        }
+        $concertSelect.append(
+            $("<option>")
+                .val(concert.id_concert)
+                .text(display)
+        );
+    });
+
+    // Add button click handler
+    // This will reset the form for a new recording
     $('#add').click(function(){
         $('#insert').val("Insert");
         $('#update').val("add");
         $('#insert_form')[0].reset();
     });
-    $('#catalog_number').change(function() {
+    $('#catalog_number').change(function() { // when user selects a catalog number get its details
+        // Get the catalog number from the selected option
+        // and fetch its details via AJAX
+        console.log("Catalog number changed");
         var catalog_number = this.value;
         $.ajax({
             url:"includes/fetch_recordings.php",
@@ -293,8 +318,8 @@ $(document).ready(function(){
         id_recording = $(this).data('id'); // data-id attribute
     });
 
+    // Get recording when user clicks the edit button
     $(document).on('click', '.edit_data', function(){
-        //var id_recording = $(this).attr("id");
         $.ajax({
             url:"includes/fetch_recordings.php",
             method:"POST",
@@ -306,7 +331,7 @@ $(document).ready(function(){
                 console.log("id_recording: " + result.id_recording + "\nid_concert: " + result.id_concert+ "\ncatalog_number: " + result.catalog_number);
                 console.log("name: " + result.name + "\nid_ensemble: " + result.id_ensemble + "\nensemble: " + result.ensemble);
                 console.log("date: " + result.date + "\nconcert_notes: " + result.concert_notes + "\nvenue: " + result.venue + "\ncomposer: " + result.composer + "\narranger: " + result.arranger);
-                console.log("filebase/link: " + result.link);
+                console.log("linkDisplay/link: " + result.link);
                 console.log("enabled: " + result.enabled);
 
                 $('#id_recording').val(result.id_recording);
@@ -328,7 +353,7 @@ $(document).ready(function(){
                     $('#enabled').prop('checked',false);
                 }
                 $('#filedate').text(result.date);
-                $('#filebase').text(result.link);
+                $('#linkDisplay').text(result.link);
                 // Form is ready to update
                 $('#insert').val("Update");
                 $('#update').val("update");
@@ -376,18 +401,67 @@ $(document).ready(function(){
             }
         });
     });
+    $('#link').on('change', function() {
+        var fileInput = this;
+        if (fileInput.files && fileInput.files[0]) {
+            var fileName = fileInput.files[0].name;
+            $('#linkDisplay').text(fileName);
+        } else {
+            $('#linkDisplay').text('-----.---');
+        }
+    });
+    // Handle file upload
+    $('#uploadRecording').click(function() {
+        var fileInput = $('#link')[0];
+        var file = fileInput.files[0];
+        if (!file) {
+            $('#uploadStatus').text('Please select a file to upload.');
+            return;
+        }
+        var formData = new FormData();
+        formData.append('link', file);
+        // Add extra fields
+        formData.append('catalog_number', $('#catalog_number').val());
+        formData.append('composer', $('#composer').val());
+        formData.append('date', $('#date').val());
+
+        $('#uploadStatus').text('Uploading file...');
+        $.ajax({
+            url: "includes/upload_recording.php",
+            method: "POST",
+            data: formData,
+            contentType: false, // Important: Set contentType to false
+            cache: false,
+            // Set processData to false to prevent jQuery from automatically transforming the data into a query string
+            processData: false,
+            success: function (response) {
+                // Get from the PHP response
+                $('#uploadStatus').text(response.message);
+                // Set the file date and base name
+                if (response.success) {
+                    $('#filedate').text(response.filedate);
+                    $('#linkDisplay').text(response.linkDisplay);
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#uploadStatus').text('Error uploading file.');
+            }
+        });
+
+    });
     $('#insert_form').on("submit", function(event){
         event.preventDefault();
-        if($('#name').val() == "")
-        {
-            alert("Recording name is required");
-        }
-        else if($('#ensemble').val() == '')
-        {
-            alert("Ensemble is required");
-        }
-        else
-        {
+        if ($('#catalog_number').val() === "") {
+            alert("Please choose a composition (catalog number)");
+        } else if ($('#id_concert').val() === "") {
+            alert("Please choose a concert");
+        } else if ($('#id_ensemble').val() === "") {
+            alert("Please choose an ensemble");
+        } else if (!$('#link')[0].files.length) {
+            alert("Please choose a file to upload");
+        } else if ($('#filedate').val() === "0000-00-00") {
+            alert("Please set the file date to the concert date");
+        } else {
             $.ajax({
                 url:"includes/insert_recordings.php",
                 method:"POST",

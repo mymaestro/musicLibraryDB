@@ -14,11 +14,10 @@ ferror_log(print_r($_POST, true));
 
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-if(isset($_POST["id_recording"])) {
+if(isset($_POST["id_recording"])) {  // EDIT
+    // Fetch a specific recording for editing
     ferror_log("with id=". $_POST["id_recording"]);
     $id_recording = mysqli_real_escape_string($f_link, $_POST['id_recording']);
-//    $sql = "SELECT * FROM recordings WHERE id_recording = '".$id_recording."'";
-
 
     $sql = "SELECT
         r.id_recording       AS id_recording,
@@ -37,22 +36,66 @@ if(isset($_POST["id_recording"])) {
     FROM recordings r
     LEFT JOIN compositions c ON r.catalog_number = c.catalog_number
     LEFT JOIN concerts con   ON r.id_concert = con.id_concert
-    WHERE id_recording = $id_recording; ";
+    WHERE id_recording = ?";
+
+    $stmt = mysqli_prepare($f_link, $sql);
+    mysqli_stmt_bind_param($stmt, 'i', $id_recording);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $rowList = mysqli_fetch_array($res);
 
     ferror_log("SQL: ". $sql);
-    $res = mysqli_query($f_link, $sql);
-    $rowList = mysqli_fetch_array($res);
     ferror_log("JSON for $id_recording: " . json_encode($rowList));
     echo json_encode($rowList);
 
-} elseif(isset($_POST["catalog_number"])) {
+} elseif(isset($_POST["catalog_number"])) { // CHOOSE COMPOSITION
+    // Get composition from the catalog number
+    // Called ajax when user selects a composition in the edit form
+    ferror_log("with catalog_number=". $_POST["catalog_number"]); 
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $sql = "SELECT catalog_number, composer, arranger FROM compositions WHERE catalog_number = '" . $catalog_number ."';";
     ferror_log("SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     echo json_encode($rowList);
+
+} elseif(isset($_POST["id_concert"]) && isset($_POST["catalog_number"])) {
+    // Get the playgram item order for a specific concert and catalog number
+    ferror_log("with id_concert=". $_POST["id_concert"] . " and catalog_number=". $_POST["catalog_number"]);
+    $id_concert = mysqli_real_escape_string($f_link, $_POST['id_concert']);
+    $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
+
+    $sql = "
+    SELECT pi.comp_order
+    FROM recordings r
+    JOIN concerts c ON r.id_concert = c.id_concert
+    JOIN playgram_items pi ON c.id_playgram = pi.id_playgram AND r.catalog_number = pi.catalog_number
+    WHERE r.catalog_number = ? AND r.id_concert = ?
+    ";
+
+    $stmt = mysqli_prepare($link, $sql);
+    mysqli_stmt_bind_param($stmt, 'si', $catalog_number, $id_concert);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $orders = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $orders[] = $row['comp_order'];
+    }
+
+    mysqli_stmt_close($stmt);
+    mysqli_close($link);
+
+    if (empty($orders)) {
+        echo json_encode(['success' => true, 'orders' => [], 'message' => 'No order found for this catalog_number and concert.']);
+    } elseif (count($orders) === 1) {
+        echo json_encode(['success' => true, 'orders' => $orders, 'message' => 'One order found.']);
+    } else {
+        echo json_encode(['success' => true, 'orders' => $orders, 'message' => 'Multiple orders found.']);
+    }
+
 } else {
+    // Fetch all recordings for display in the table
     echo '            <div class="panel panel-default">
         <div class="table-repsonsive" style="max-height: 750px; overflow-y: auto;">
                 <table class="table table-hover tablesort tablesearch-table" id="cpdatatable">

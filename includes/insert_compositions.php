@@ -139,7 +139,7 @@ if(!empty($_POST)) {
     } elseif($_POST["update"] == "add") {
         $sql = "
         INSERT INTO compositions(catalog_number, name, description, composer, arranger, editor, publisher, genre, ensemble, grade, last_performance_date, duration, comments, performance_notes, storage_location, provenance, date_acquired, cost, listening_example_link, checked_out, paper_size, image_path, windrep_link, last_inventory_date, last_update, enabled)
-        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, $last_performance_date, $duration, '$comments', '$performance_notes', '$storage_location', '$provenance', $date_acquired, $cost, '$listening_example_link', '$checked_out', '$paper_size', '$image_path', '$windrep_link', $last_inventory_date, CURRENT_TIMESTAMP(), $enabled);
+        VALUES('$catalog_number', '$name', '$description', '$composer', '$arranger', '$editor', '$publisher', '$genre', '$ensemble', $grade, $last_performance_date, $duration, '$comments', '$performance_notes', '$storage_location', '$provenance', $date_acquired, $cost, '$listening_example_link', '$checked_out', '$paper_size', '$image_path', $windrep_link, $last_inventory_date, CURRENT_TIMESTAMP(), $enabled);
         ";
         $message = 'Composition '.$catalog_number.' added';
     }

@@ -8,6 +8,28 @@ if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
 
+function generatePartFilename($title, $composer, $instrument, $ext = 'pdf') {
+    $input = trim("$title - $composer - $instrument");
+    $hash = substr(md5($input), 0, 12); // or sha1() for longer hash
+    return $hash . '.' . $ext;
+}
+
+$hash = generatePartHash($title, $composer, $instrument);
+$targetPath = "uploads/$hash.pdf";
+
+move_uploaded_file($_FILES['pdfpart']['tmp_name'], $targetPath);
+
+
+// Include the FPDI library
+// Make sure you have installed the FPDI library via Composer or manually
+// composer require setasign/fpdi
+// or download from https://www.setasign.com/products/fpdi/download/
+if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
+    die("Please run 'composer install' to install dependencies.");
+}
+
+
+
 require 'vendor/autoload.php';
 
 use setasign\Fpdi\Fpdi;
@@ -73,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['pdfFile'])) {
     echo "No file uploaded.";
 }
 
-
+embedPdfMetadata($targetPath, $title, $composer, $instrument);
 // Add this .htaccess file to the uploads
 //
 // <FilesMatch "\.pdf$">

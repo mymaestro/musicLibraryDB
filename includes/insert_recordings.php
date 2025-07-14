@@ -1,9 +1,39 @@
 <?php
-//insert_recordings.php
+/* insert_recordings.php
+#############################################################################
+# Licensed Materials - Property of ACWE*
+# (C) Copyright Austin Civic Wind Ensemble, 2022, 2025 All rights reserved.
+#############################################################################
+*/
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 define('PAGE_TITLE', 'Insert recordings');
 define('PAGE_NAME', 'Insert recordings');
 require_once('config.php');
 require_once('functions.php');
+
+// Settings
+$maxFileSize = 40 * 1024 * 1024; // 40 MB
+// You might need to adjust these settings in your php.ini file as well
+//ini_set('upload_max_filesize', '40M');
+//ini_set('post_max_size', '40M');
+
+$uploadMax = ini_get('upload_max_filesize');
+$postMax = ini_get('post_max_size');
+
+$uploadDir = __DIR__ . "/" . ORGPUBLIC ; // Directory to save uploaded files
+
+// Check if the getID3 library is available
+if (!file_exists('../getID3/getid3/getid3.php')) {
+    ferror_log("getID3 library not found at: ".__DIR__ . "../getID3/getid3/getid3.php");
+    die("getID3 library not found. Please ensure it is installed in the correct path.");
+} else {
+    ferror_log("getID3 library found at: ../getID3/getid3/getid3.php");
+}
+
+
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
     ferror_log("RUNNING insert_recordings.php with id_recording=". $_POST["id_recording"]);

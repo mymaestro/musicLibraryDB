@@ -84,6 +84,7 @@
                         <div class="form-floating">
                             <select class='form-select form-control' aria-label='Choose concert' id='id_concert' name='concert'>
                                 <option value=''>Select concert</option>
+                            </select>
                             <label for="id_concert" class="col-form-label">Concert*</label>
                         </div><!-- row -->
                         <div class="form-floating"><!-- catalog number, from playgram_items -->
@@ -93,22 +94,9 @@
                             <label for="catalog_number" class="col-form-label">Catalog number*</label>
                         </div><!-- row -->
                         <div class="form-floating">
-                            <?php
-                            // Build the reference ensembles
-                            $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                            $sql = "SELECT `id_ensemble`, `name` FROM ensembles WHERE `enabled` = 1 ORDER BY name;";
-                            //ferror_log("Running " . $sql);
-                            $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                            $opt = "<select class='form-select form-control' aria-label='Select ensemble' id='id_ensemble' name='id_ensemble'>";
-                            while ($rowList = mysqli_fetch_array($res)) {
-                                $id_ensemble = $rowList['id_ensemble'];
-                                $name = $rowList['name'];
-                                $opt .= "<option value='" . $id_ensemble . "'>" . $name . "</option>";
-                            }
-                            $opt .= "</select>";
-                            mysqli_close($f_link);
-                            echo $opt;
-                            ?>
+                            <select class='form-select form-control' aria-label='Select ensemble' id='id_ensemble' name='id_ensemble'>
+                                <option value=''>Select ensemble</option>
+                            </select>
                             <label for="id_ensemble" class="col-form-label">Ensemble*</label>
                         </div><!-- row -->
                         <div class="form-floating">
@@ -143,7 +131,7 @@
                         <div class="col-md-8">
                             <div class="input-group mb-3">
                                 <input type="file" class="form-control" name="link" id="link" accept=".mp3,.flac,.ogg" />
-                                <button class="btn btn-primary" type="button" id="uploadRecording">Upload</button>
+                                <!-- <button class="btn btn-primary" type="button" id="uploadRecording">Upload</button> -->
                             </div>
                             <div id="uploadStatus" class="text-info small"></div>
                         </div>
@@ -200,9 +188,23 @@ while ($rowList = mysqli_fetch_assoc($res)) {
     ];
 }
 mysqli_close($f_link);
-?><!-- Use window.concerts in JavaScript to reference concerts data -->
+// Build the reference ensembles
+$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$sql = "SELECT `id_ensemble`, `name` FROM ensembles WHERE `enabled` = 1 ORDER BY name;";
+$res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+$ensembles = [];
+while ($rowList = mysqli_fetch_assoc($res)) {
+    $ensembles[] = [
+        'id_ensemble' => $rowList['id_ensemble'],
+        'name' => $rowList['name']
+    ];
+}
+mysqli_close($f_link);
+?>
+<!-- Use window.concerts, and window.ensembles in JavaScript to reference concerts and ensembles data -->
 <script>
     window.concerts = <?php echo json_encode($concerts, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    window.ensembles = <?php echo json_encode($ensembles, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 </script>
 <!-- jquery function to add/update database records -->
 <script>
@@ -281,6 +283,18 @@ $(document).ready(function(){
             $("<option>")
                 .val(concert.id_concert)
                 .text(display)
+        );
+    });
+
+    // Populate the ensemble select with options from window.ensembles
+    var $ensembleSelect = $('#id_ensemble');
+    $ensembleSelect.empty();
+    $ensembleSelect.append("<option value=''>Select ensemble</option>");
+    window.ensembles.forEach(function(ensemble) {
+        $ensembleSelect.append(
+            $("<option>")
+                .val(ensemble.id_ensemble)
+                .text(ensemble.name)
         );
     });
 

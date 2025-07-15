@@ -349,7 +349,6 @@ $(document).ready(function(){
                 console.log("enabled: " + result.enabled);
 
                 $('#id_recording').val(result.id_recording);
-                //$('#id_recording_hold').val(result.id_recording_hold);
                 $('#id_concert').val(result.id_concert);
                 $('#catalog_number').val(result.catalog_number);
                 $('#name').val(result.name);
@@ -358,6 +357,8 @@ $(document).ready(function(){
                 $('#date').val(result.date);
                 $('#notes').val(result.concert_notes);
                 $('#venue').val(result.venue);
+                //$('#link').val(result.link);
+                // Setting this causes the file input to reset, so we set the display text instead
                 $('#composer').val(result.composer);
                 $('#arranger').val(result.arranger);
 
@@ -472,14 +473,27 @@ $(document).ready(function(){
         } else if ($('#id_ensemble').val() === "") {
             alert("Please choose an ensemble");
         } else if (!$('#link')[0].files.length) {
-            alert("Please choose a file to upload");
+            if ($('#id_recording').val() !== "" && $('#update').val() === "update") {
+                // If updating, allow no file to be selected
+                $('#link').val($('#linkDisplay').text()); // Set the link to the current file
+                console.log("No file selected, but updating existing recording");
+            } else {
+                alert("Please choose a file to upload");
+            }
         } else if ($('#filedate').val() === "0000-00-00") {
             alert("Please set the file date to the concert date");
         } else {
+
+            var formData = new FormData(this);
+            formData.append('filedate', $('#filedate').val());
+            formData.append('linkDisplay', $('#linkDisplay').text());
+            console.log("Form data: " + JSON.stringify(Object.fromEntries(formData)));
             $.ajax({
                 url:"includes/insert_recordings.php",
                 method:"POST",
-                data:$('#insert_form').serialize(),
+                data:formData,
+                contentType: false,
+                processData: false,
                 beforeSend:function(){
                     $('#insert').val("Inserting");
                 },

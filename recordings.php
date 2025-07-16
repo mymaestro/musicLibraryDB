@@ -472,21 +472,17 @@ $(document).ready(function(){
             alert("Please choose a concert");
         } else if ($('#id_ensemble').val() === "") {
             alert("Please choose an ensemble");
-        } else if (!$('#link')[0].files.length) {
-            if ($('#id_recording').val() !== "" && $('#update').val() === "update") {
-                // If updating, allow no file to be selected
-                $('#link').val($('#linkDisplay').text()); // Set the link to the current file
-                console.log("No file selected, but updating existing recording");
-            } else {
-                alert("Please choose a file to upload");
-            }
+        } else if (!$('#link')[0].files.length && !($('#id_recording').val() !== "" && $('#update').val() === "update")) {
+            // Only require a file if not updating
+            alert("Please choose a file to upload");
         } else if ($('#filedate').val() === "0000-00-00") {
             alert("Please set the file date to the concert date");
         } else {
-
             var formData = new FormData(this);
             formData.append('filedate', $('#filedate').val());
             formData.append('linkDisplay', $('#linkDisplay').text());
+            // Want to get venue in here too
+            //formData.append('venue', $('#venue').val());
             console.log("Form data: " + JSON.stringify(Object.fromEntries(formData)));
             $.ajax({
                 url:"includes/insert_recordings.php",

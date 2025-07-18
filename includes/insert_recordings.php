@@ -24,7 +24,7 @@ $uploadMax = ini_get('upload_max_filesize');
 $postMax = ini_get('post_max_size');
 
 // Check if the getID3 library is available
-if (!file_exists('../getID3/getid3/getid3.php')) {
+if (!file_exists('../getID3/getid3/getid3.php') || !file_exists('../getID3/getid3/write.php')) {
     ferror_log("getID3 library not found at: ".__DIR__ . "../getID3/getid3/getid3.php");
     die("getID3 library not found. Please ensure it is installed in the correct path.");
 } else {
@@ -50,6 +50,7 @@ if(!empty($_POST)) {
     $notes = mysqli_real_escape_string($f_link, $_POST['notes']);
     $composer = mysqli_real_escape_string($f_link, $_POST['composer']);
     $arranger = mysqli_real_escape_string($f_link, $_POST['arranger']);
+    $venue = mysqli_real_escape_string($f_link, $_POST['venue']);
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
     // Other important data
@@ -65,7 +66,7 @@ if(!empty($_POST)) {
         $fileType = $_FILES['link']['type'];
 
         require_once('../getID3/getid3/getid3.php');
-
+        require_once('../getID3/getid3/write.php');
         
         $uploadDir = __DIR__ . "/" . ORGPUBLIC . $filedate . '/'; // Directory to save uploaded files
         // Example: www/public/recordings/2023-10-01/
@@ -98,7 +99,6 @@ if(!empty($_POST)) {
         // Generate a safe file name with the correct extension
         $extension = $allowedMimes[$mime];
         $safeName = uniqid('audio_', true) . '.' . $extension;
-        //$destination = $uploadDir . $safeName;
         $destination = $uploadDir . $fileName; // Use original file name for simplicity
 
         // Move the uploaded file
@@ -109,6 +109,32 @@ if(!empty($_POST)) {
 
         // Analyze and save metadata as JSON
         $audio = new getID3();
+        $tagwriter = new getid3_writetags();
+        // Set up the tag writer
+        $tagwriter->filename = $destination;
+        $tagwriter->tagformats = ['id3v2.3', 'id3v2.4', 'id3v1'];
+        $tagwriter->overwrite_tags = true;
+        $tagwriter->remove_other_tags = false;
+        $tagwriter->tag_encoding = 'UTF-8';
+        // Set the tags to write from the form data
+
+        $tagData = array(
+            'title'   => array($name),
+            'artist'  => array($composer),
+            'album'   => array($ensemble),
+            'year'    => array(substr($filedate, 0, 4)),
+            'comment' => array($notes),
+            'genre'   => array('Classical'),
+        );
+        $tagwriter->tag_data = $tagData;
+
+        // Write the tags
+        if ($tagwriter->WriteTags()) {
+            ferror_log('Successfully wrote tags');
+        } else {
+            ferror_log('Failed to write tags: '.implode(', ', $tagwriter->errors));
+        }
+
         $info = $audio->analyze($destination);
         if (isset($info['error'])) {
             die("Error analyzing audio file: " . implode(', ', $info['error']));
@@ -124,7 +150,6 @@ if(!empty($_POST)) {
         ferror_log("Audio file uploaded and metadata saved.");
         ferror_log("File: " . htmlspecialchars(basename($safeName)));
         ferror_log("Metadata: " . htmlspecialchars(basename($metaFile)));
-
 
     } elseif ($_POST["update"] == "update") {
         // If updating, keep the existing link
@@ -156,23 +181,22 @@ if(!empty($_POST)) {
     }
     ferror_log("Running SQL ". $sql);
     $referred = $_SERVER['HTTP_REFERER'];
-/*
+
+    header('Content-Type: application/json');
     if(mysqli_query($f_link, $sql)) {
-        $output .= '<label class="text-success">' . $message . '</label>';
-        $query = parse_url($referred, PHP_URL_QUERY);
-        $referred = str_replace(array('?', $query), '', $referred);
-        echo '<p><a href="'.$referred.'">Return</a></p>';
-        echo $output;
+        ferror_log("SQL executed successfully: " . $sql);
+        echo json_encode([
+            'success' => true,
+            'message' => $message,
+        ]);
     } else {
-        $message = "Failed";
-        $error_message = mysqli_error($f_link);
-        $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
-           ';
-        echo '<p><a href="'.$referred.'">Return</a></p>';
-        echo $output;
-        ferror_log("Error: " . $error_message);
+        ferror_log("SQL execution failed: " . mysqli_error($f_link));
+        echo json_encode([
+            'success' => false,
+            'message' => 'Failed with error: ' . mysqli_error($f_link),
+        ]);
     }
-*/
+    mysqli_close($f_link);
  } else {
     require_once("header.php");
     echo '<body>

@@ -41,29 +41,37 @@ if (isset($_SESSION['username'])) {
                     <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">
                     <tr>
                         <th style="width: 50px;"></th>
-                        <th>Playgram</th>
                         <th>Performance date</th>
                         <th>Venue</th>
+                        <th>Playgram</th>
                         <th>Conductor</th>
                         <th>Notes</th>
                     </tr>
                     </thead>
                     <tbody>';
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $sql = "SELECT * FROM concerts ORDER BY performance_date DESC;";
+        //$sql = "SELECT * FROM concerts ORDER BY performance_date DESC;";
+            $sql = 'SELECT 
+                COUNT(pi.id_playgram_item) AS playgram_item_count,
+                c.*
+            FROM concerts c
+            LEFT JOIN playgram_items pi ON c.id_playgram = pi.id_playgram
+            GROUP BY c.id_concert
+            ORDER BY c.performance_date DESC;';
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
         while ($rowList = mysqli_fetch_array($res)) {
             $id_concert = $rowList['id_concert'];
             $id_playgram = $rowList['id_playgram'];
+            $playgram_count = $rowList['playgram_item_count'];
             $performance_date = $rowList['performance_date'];
             $venue = $rowList['venue'];
             $conductor = $rowList['conductor'];
             $notes = $rowList['notes'];
             echo '<tr data-id="'.$id_concert.'" >
                         <td><input type="radio" name="record_select" value="'.$id_concert.'" class="form-check-input select-radio"></td>
-                        <td><a href="#" class="view_data" name="view" id="'.$id_playgram.'">'.$id_playgram.'</a></td>
                         <td>'.$performance_date.'</td>
                         <td>'.$venue.'</td>
+                        <td><a href="#" class="view_data" name="view" id="'.$id_playgram.'">'.$playgram_count.' items</a></td>
                         <td>'.$conductor.'</td>
                         <td>'.$notes.'</td>
                   </tr>';

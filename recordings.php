@@ -138,6 +138,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="hidden" id="filedate" name="filedate" value="0000-00-00" />
+                                <input type="hidden" id="venue" name="venue" value="ACWE studio" />
                                 <p class="text-info text-center"><?php echo ORGRECORDINGS ?><span id="filedateDisplay">0000-00-00</span>/<span id="linkDisplay">-----.---</span></p>
                             </div>
                         </div>            
@@ -210,21 +211,27 @@ mysqli_close($f_link);
 <script>
 // Load concert date and file name when the user selects a concert or file
 $("#id_concert").change(function(){
-    let concert = $('#id_concert option:selected').text();
-    $('#concert').val(concert);
-    // Set the file date to the concert date
-    let date = concert.split(' at ')[0]; // Get the date part
+    let selectedConcert = $('#id_concert').val();
+    let concert = window.concerts.find(c => c.id_concert == selectedConcert);
 
-    $('#filedateDisplay').text(date); // Set the display text
-    $('#filedate').val(date); // Set the hidden input value
-    console.log("Concert date set to: " + date);
+    if (concert) {
+        $('#filedate').val(concert.performance_date); // Set the file date to the concert date
+        $('#filedateDisplay').text(concert.performance_date); // Set the display text
+        $('#venue').val(concert.venue || 'ACWE studio'); // Set the venue, default to ACWE studio if not set
+        console.log("Concert date set to: " + concert.performance_date);
+    } else {
+        $('#filedate').val('0000-00-00'); // Reset if no concert selected
+        $('#filedateDisplay').text('0000-00-00');
+        $('#venue').val('ACWE studio'); // Reset venue
+    }
+    let concertText = $('#id_concert option:selected').text();
+    $('#concert').val(concertText);
 
     // Dynamically update catalog_number options based on selected concert
-    let id_concert = $('#id_concert').val();
     $.ajax({
         url: "includes/fetch_playgram_items.php",
         method: "POST",
-        data: { id_concert: id_concert },
+        data: { id_concert: selectedConcert },
         success: function(options) {
             if (options.trim() !== "") {
                 $('#catalog_number').html(options);
@@ -234,9 +241,6 @@ $("#id_concert").change(function(){
         }
     });
 });
-//$("#linkDisplay").change(function(){
-//    $('#linkDisplay').text($('#linkDisplay').val());
-//});
 $("#concert").change(function(){
     $('#filedate').text($('#concert').val());
     $('#filedateDisplay').text($('#concert').val());
@@ -340,25 +344,24 @@ $(document).ready(function(){
             data:{id_recording:id_recording},
             dataType:"json",
             success:function(result){
-                console.log(JSON.stringify(result));
-
-                console.log("id_recording: " + result.id_recording + "\nid_concert: " + result.id_concert+ "\ncatalog_number: " + result.catalog_number);
-                console.log("name: " + result.name + "\nid_ensemble: " + result.id_ensemble + "\nensemble: " + result.ensemble);
-                console.log("date: " + result.date + "\nconcert_notes: " + result.concert_notes + "\nvenue: " + result.venue + "\ncomposer: " + result.composer + "\narranger: " + result.arranger);
-                console.log("linkDisplay/link: " + result.link);
-                console.log("enabled: " + result.enabled);
-
                 $('#id_recording').val(result.id_recording);
                 $('#id_concert').val(result.id_concert);
-                $('#catalog_number').val(result.catalog_number);
+
+                // Trigger change to load catalog numbers for this concert
+                $('#id_concert').trigger('change');
+
+                // Wait for AJAX call to finish before setting catalog number
+                // Use a small timeout to ensure the concert options are loaded
+                setTimeout(function() {
+                    $('#catalog_number').val(result.catalog_number);
+                }, 300);
+
                 $('#name').val(result.name);
                 $('#id_ensemble').val(result.id_ensemble);
                 $('#ensemble').val(result.ensemble);
                 $('#date').val(result.date);
                 $('#notes').val(result.concert_notes);
                 $('#venue').val(result.venue);
-                //$('#link').val(result.link);
-                // Setting this causes the file input to reset, so we set the display text instead
                 $('#composer').val(result.composer);
                 $('#arranger').val(result.arranger);
 
@@ -425,45 +428,6 @@ $(document).ready(function(){
             $('#linkDisplay').text('-----.---');
         }
     });
-    // Handle file upload
-    $('#uploadRecording').click(function() {
-        var fileInput = $('#link')[0];
-        var file = fileInput.files[0];
-        if (!file) {
-            $('#uploadStatus').text('Please select a file to upload.');
-            return;
-        }
-        var formData = new FormData();
-        formData.append('link', file);
-        // Add extra fields
-        formData.append('catalog_number', $('#catalog_number').val());
-        formData.append('composer', $('#composer').val());
-        formData.append('date', $('#date').val());
-
-        $('#uploadStatus').text('Uploading file...');
-        $.ajax({
-            url: "includes/upload_recording.php",
-            method: "POST",
-            data: formData,
-            contentType: false, // Important: Set contentType to false
-            cache: false,
-            // Set processData to false to prevent jQuery from automatically transforming the data into a query string
-            processData: false,
-            success: function (response) {
-                // Get from the PHP response
-                $('#uploadStatus').text(response.message);
-                // Set the file date and base name
-                if (response.success) {
-                    $('#filedate').text(response.filedate);
-                    $('#linkDisplay').text(response.linkDisplay);
-                }
-            },
-            error: function (xhr, status, error) {
-                $('#uploadStatus').text('Error uploading file.');
-            }
-        });
-
-    });
     $('#insert_form').on("submit", function(event){
         event.preventDefault();
         if ($('#catalog_number').val() === "") {
@@ -481,8 +445,7 @@ $(document).ready(function(){
             var formData = new FormData(this);
             formData.append('filedate', $('#filedate').val());
             formData.append('linkDisplay', $('#linkDisplay').text());
-            // Want to get venue in here too
-            //formData.append('venue', $('#venue').val());
+            formData.append('venue', $('#venue').val()); // Add the venue to the form data
             console.log("Form data: " + JSON.stringify(Object.fromEntries(formData)));
             $.ajax({
                 url:"includes/insert_recordings.php",
@@ -496,6 +459,10 @@ $(document).ready(function(){
                 success:function(data){
                     $('#insert_form')[0].reset();
                     $('#editModal').modal('hide');
+                    // Show the message modal with the response
+                    $('#message_detail').html('<p class="' + (data.success ? 'text-success' : 'text-danger') + '">' + data.message + '</p>');
+                    $('#messageModal').modal('show');
+                    // Refresh the table
                     $.ajax({
                         url:"includes/fetch_recordings.php",
                         method:"POST",

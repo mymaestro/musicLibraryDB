@@ -22,19 +22,22 @@
 <?php if($u_librarian) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
-                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
             </div>
-        </div><!-- right -->
+        </div><!-- right button -->
 <?php endif; ?>
         <div id="paper_size_table">
         <?php
         echo '
             <div class="panel panel-default">
-               <div class="table-repsonsive">
+               <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
                     <table class="table table-hover">
                     <caption class="title">Available paper sizes</caption>
-                    <thead>
+                    <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">
                     <tr>
+                        <th style="width: 50px;"></th>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Description</th>
@@ -54,22 +57,15 @@
             $vertical = $rowList['vertical'];
             $horizontal = $rowList['horizontal'];
             $enabled = $rowList['enabled'];
-            echo '<tr>
+            echo '<tr data-id="'.$id_paper_size.'">
+                        <td><input type="radio" name="record_select" value="'.$id_paper_size.'" class="form-check-input select-radio"></td>
                         <td>'.$id_paper_size.'</td>
-                        <td>'.$name.'</td>
+                        <td><strong><a href="#" class="view_data" id="'.$id_paper_size.'">'.$name.'</a></strong></td>
                         <td>'.$description.'</td>
                         <td>'.$vertical.'</td>
                         <td>'.$horizontal.'</td>
-                        <td><div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
-                        </div></td>                        ';
-            if ($u_librarian) { echo '
-                        <td><input type="button" name="delete" value="Delete" id="'.$id_paper_size.'" class="btn btn-danger btn-sm delete_data" /></td>
-                        <td><input type="button" name="edit" value="Edit" id="'.$id_paper_size.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
-            echo '
-                        <td><input type="button" name="view" value="View" id="'.$id_paper_size.'" class="btn btn-secondary btn-sm view_data" /></td>
-                    </tr>
-                    ';
+                        <td>' . (($enabled == 1) ? "Yes" : "No") .'</td>
+                        </tr>';
         }
         echo '
                     </tbody>
@@ -100,8 +96,10 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content rounded-4 shadow">
                 <div class="modal-body p-4 text-center">
-                    <h5 class="mb-0">Delete this paper size?</h5>
-                    <p id="papersize2delete">You can cancel now.</p>
+                    <h5 class="mb-0">Delete this paper size <span id="papersize2delete">#</span>?</h5>
+                    <div class="modal-body text-start">
+                        <p>You can cancel now.</p>
+                    </div>
                 </div>
                 <div class="modal-footer flex-nowrap p-0">
                     <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
@@ -110,7 +108,7 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- deleteModal -->
-    <div id="add_data_Modal" class="modal">
+    <div id="editModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true"><!-- edit data -->
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -174,19 +172,30 @@
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
-    </div><!-- add_data_modal -->
+    </div><!-- editModal -->
 </main>
 <?php require_once("includes/footer.php");?>
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function(){
+
+    let id_paper_size = null;
+
+    // When user clicks add button
     $('#add').click(function(){
         $('#insert').val("Insert");
         $('#update').val("add");
         $('#insert_form')[0].reset();
     });
+
+    // Enable the edit and delete buttons, and get the paper size ID when a table row is clicked
+    $(document).on('click', '#paper_size_table tbody tr', function(){
+        $(this).find('input[type="radio"]').prop('checked',true);
+        $('#edit, #delete').prop('disabled',false);
+        id_paper_size = $(this).data('id'); // data-id attribute
+    });
+
     $(document).on('click', '.edit_data', function(){
-        var id_paper_size = $(this).attr("id");
         $.ajax({
             url:"includes/fetch_papersizes.php",
             method:"POST",
@@ -204,20 +213,19 @@ $(document).ready(function(){
                 }
                 $('#insert').val("Update");
                 $('#update').val("update");
-                $('#add_data_Modal').modal('show');
+                $('#editModal').modal('show');
             }
         });
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
         // input button name="delete" id="id_paper_size" class="delete_data"
-        var id_paper_size = $(this).attr("id");
-        $('#deleteModal').modal('show');
-        $('#confirm-delete').data('id', id_paper_size);
-        $('#papersize2delete').text(id_paper_size);
+        if(id_paper_size !== null) {
+            $('#confirm-delete').data('id', id_paper_size);
+            $('#papersize2delete').text(id_paper_size);
+        }
     });
     $('#confirm-delete').click(function(){
         // The confirm delete button
-        var id_paper_size = $(this).data('id');
         $.ajax({
             url:"includes/delete_records.php",
             method:"POST",
@@ -256,7 +264,7 @@ $(document).ready(function(){
                 },
                 success:function(data){
                     $('#insert_form')[0].reset();
-                    $('#add_data_Modal').modal('hide');
+                    $('#editModal').modal('hide');
                     $('#paper_size_table').html(data);
                 }
             });

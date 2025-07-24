@@ -202,7 +202,7 @@ CREATE TABLE `part_types` (
   PRIMARY KEY (`id_part_type`),
   KEY `fk_instruments` (`default_instrument`),
   CONSTRAINT `fk_instruments` FOREIGN KEY (`default_instrument`) REFERENCES `instruments` (`id_instrument`)
-) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='This table holds kinds/types of parts for parts and part collections.';
+) ENGINE=InnoDB AUTO_INCREMENT=231 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='This table holds kinds/types of parts for parts and part collections.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -344,6 +344,42 @@ CREATE TABLE `recordings_old` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `section_part_types`
+--
+
+DROP TABLE IF EXISTS `section_part_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `section_part_types` (
+  `id_section` int(10) unsigned NOT NULL COMMENT 'Section ID',
+  `id_part_type` int(10) unsigned NOT NULL COMMENT 'Part type ID',
+  PRIMARY KEY (`id_section`,`id_part_type`),
+  KEY `fk_part_type` (`id_part_type`),
+  CONSTRAINT `fk_part_type` FOREIGN KEY (`id_part_type`) REFERENCES `part_types` (`id_part_type`) ON DELETE CASCADE,
+  CONSTRAINT `fk_section` FOREIGN KEY (`id_section`) REFERENCES `sections` (`id_section`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Links sections to part types (many-to-many)';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sections`
+--
+
+DROP TABLE IF EXISTS `sections`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sections` (
+  `id_section` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique ID for the section',
+  `name` varchar(255) NOT NULL COMMENT 'Section name, e.g. Brass, Woodwinds, Percussion',
+  `description` varchar(1024) DEFAULT NULL COMMENT 'Description of the section',
+  `enabled` tinyint(1) unsigned NOT NULL DEFAULT 1 COMMENT 'Set to 1 to enable this section',
+  `section_leader` int(10) unsigned DEFAULT NULL COMMENT 'User ID of the section leader',
+  PRIMARY KEY (`id_section`),
+  KEY `fk_section_leader` (`section_leader`),
+  CONSTRAINT `fk_section_leader` FOREIGN KEY (`section_leader`) REFERENCES `users` (`id_users`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Groups of part types (sections, e.g. Brass, Woodwinds)';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `users`
 --
 
@@ -370,4 +406,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-13 18:06:06
+-- Dump completed on 2025-07-20 18:38:26

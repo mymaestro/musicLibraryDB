@@ -22,7 +22,7 @@
             <i class="fas fa-arrow-up"></i>
         </button>
         <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME  . ' '. PAGE_NAME ?></h1></div>
-        <?php if($u_librarian) : ?>
+<?php if($u_librarian) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
                 <input type="text" class="tablesearch-input" data-tablesearch-table="#cpdatatable" placeholder="Search">
@@ -57,7 +57,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content rounded-4 shadow">
                     <div class="modal-body p-4 text-center">
-                        <h5 class="mb-0">Delete recording  <span id="recording2delete">#</span>?</h5>
+                        <h5 class="mb-0">Delete recording <span id="recording2delete">#</span>?</h5>
                         <div class="modal-body text-start" id="recording-delete_detail">
                         <p>You can cancel now.</p>
                         </div>
@@ -379,7 +379,7 @@ $(document).ready(function(){
         });
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
-        var id_recording = $(this).attr("id");
+        // var id_recording = $(this).attr("id");
         $('#deleteModal').modal('show');
         $('#confirm-delete').data('id', id_recording);
         $('#recording2delete').text(id_recording);

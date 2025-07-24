@@ -12,3 +12,4 @@ migrate-recordings.txt
 musicLibraryDB.sql
 phpinfo.php
 files/
+backups/

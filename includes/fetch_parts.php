@@ -54,8 +54,9 @@ if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) { // User
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     ferror_log("Get parts for catalog number " . $catalog_number);
     echo '<div class="panel"><div class="row border-bottom">';
-    echo '<div class="col-10"><div class="bg-white"><h4 id="composition_header">Composition parts</h4></div></div>';
-    if ($u_librarian) { echo '<div class="col-2"><form method="post" id="instr_data_'.$catalog_number.'" action="composition_instrumentation.php"><input type="hidden" name="catalog_number" value="'.$catalog_number.'" /><input type="submit" name="compositions" value="Instrumentation" id="'.$catalog_number.'" class="btn btn-warning btn-sm instr_data" /></form></div>';
+    echo '<div class="col-auto"><div class="bg-white"><h4 id="composition_header">Composition parts</h4></div></div>';
+    if ($u_librarian) { echo '<div class="col-auto"><form method="post" id="instr_data_'.$catalog_number.'" action="composition_instrumentation.php"><input type="hidden" name="catalog_number" value="'.$catalog_number.'" /><input type="submit" name="compositions" value="Instrumentation" id="'.$catalog_number.'" class="btn btn-warning instr_data" />
+        </form></div>';
         }
     echo '</div><!-- row -->
     <div class="row">

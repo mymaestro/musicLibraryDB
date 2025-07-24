@@ -10,6 +10,8 @@ if(isset($_POST["user_role"])) {
     $u_librarian = FALSE;
 }
 
+ferror_log(print_r($_POST, true));
+
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 if(isset($_POST["id_part_type"])) {
@@ -23,12 +25,13 @@ if(isset($_POST["id_part_type"])) {
     echo $output;
 } else {
     echo '            <div class="panel panel-default">
-           <div class="table-repsonsive">
+           <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
                 <table class="table table-hover">
                 <caption class="title">Available part types</caption>
-                <thead>
+                <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">
                 <tr>
-                    <th>Collation</th>
+                    <th style="width: 50px;"></th>
+                    <th>Order</th>
                     <th>Name</th>
                     <th>Instrument</th>
                     <th>Family</th>
@@ -50,22 +53,14 @@ if(isset($_POST["id_part_type"])) {
         $is_part_collection = $rowList['is_part_collection'];
         $enabled = $rowList['enabled'];
         echo '<tr data-id="'.$id_part_type.'" >
+                    <td><input type="radio" name="part_type_select" value="'.$id_part_type.'" class="form-check-input select-radio"></td>
                     <td>'.$collation.'</td>
-                    <td>'.$name.'</td>
+                    <td><strong><a href="#" class="view_data" name="view" id="view_'.$id_part_type.'">'.$name.'</a></strong></td>
                     <td class="instrument_'.$default_instrument.' text-muted">'.$default_instrument.'</td>
                     <td class="text-muted">'.$family.'</td>
                     <td>'.$description.'</td>
-                    <td><div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="typePartCollection" disabled '. (($is_part_collection > 0) ? "checked" : "") .'>
-                    </div></td>
-                    <td><div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
-                    </div></td>';
-        if ($u_librarian) { echo '
-                    <td><input type="button" name="delete" value="Delete" id="'.$id_part_type.'" class="btn btn-danger btn-sm delete_data" /></td>
-                    <td><input type="button" name="edit" value="Edit" id="'.$id_part_type.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
-        echo '
-                    <td><input type="button" name="view" value="View" id="'.$id_part_type.'" class="btn btn-secondary btn-sm view_data" /></td>
+                    <td>'. (($is_part_collection > 0) ? "Yes" : "No") .'</td>
+                    <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>
                 </tr>
                 ';
     }

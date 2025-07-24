@@ -21,6 +21,7 @@
                         <li><a class="dropdown-item" href="reports.php">Reports</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="ensembles.php">Ensembles</a></li>
+                        <li><a class="dropdown-item" href="sections.php">Sections</a></li>
                         <li><a class="dropdown-item" href="instruments.php">Instruments</a></li>
                         <li><a class="dropdown-item" href="genres.php">Genres</a></li>
                         <li><a class="dropdown-item" href="parttypes.php">Part types</a></li>

@@ -15,11 +15,18 @@ require_once('includes/config.php');
 require_once("includes/navbar.php");
 require_once('includes/functions.php');
 
+ferror_log("composition_instrumentation.php POST: " . print_r($_POST, TRUE));
+ferror_log("composition_instrumentation.php  GET: " . print_r($_GET, TRUE));
+
 if(!empty($_POST["catalog_number"])) {
     $catalog_number = $_POST['catalog_number'];
+} elseif(!empty($_GET["catalog_number"])) {
+    $catalog_number = $_GET['catalog_number'];
 } else {
-    $catalog_number = "";
+    $catalog_number = '';
 }
+
+ferror_log("Running composition_instrumentation.php with catalog_number: " . $catalog_number);
 
 // Ways to get here:
 // 1. Directly from the menu. Select Composition by name, enter default parts, click submit (need form validation)
@@ -49,9 +56,10 @@ if(!empty($_POST["catalog_number"])) {
                         <!-- check if we got here by instr button in list_compositions -->
                     <?php
                         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                        if(!empty($catalog_number)) $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
+                        if(!empty($catalog_number)) $catalog_number = mysqli_real_escape_string($f_link, $catalog_number);
                         // Clicked to get here
                         // $_POST catalog_number=C123
+                        // $_GET catalog_number=C123
                         // $_POST compositions=Instrumentation
                         if(!empty($catalog_number)) {
                             $sql = "SELECT `name` FROM compositions WHERE `catalog_number` = '".$catalog_number."' ORDER BY name;";

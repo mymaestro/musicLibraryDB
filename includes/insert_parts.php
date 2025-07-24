@@ -4,6 +4,16 @@ define('PAGE_TITLE', 'Insert parts');
 define('PAGE_NAME', 'Insert parts');
 require_once('config.php');
 require_once('functions.php');
+
+// Settings
+$maxFileSize = 20 * 1024 * 1024; // 20 MB
+// You might need to adjust these settings in your php.ini file as well
+//ini_set('upload_max_filesize', '20M');
+//ini_set('post_max_size', '20M');
+
+$uploadMax = ini_get('upload_max_filesize');
+$postMax = ini_get('post_max_size');
+
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
     ferror_log("------------------------------------------------");
@@ -20,139 +30,230 @@ if(!empty($_POST)) {
         ferror_log('POST id_instrument=*empty*');
     }
 
-    $catalog_number_hold = mysqli_real_escape_string($f_link, $_POST['catalog_number_hold']);
-    $id_part_type_hold = mysqli_real_escape_string($f_link, $_POST['id_part_type_hold']);
-    $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
-    $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
-
+    // Get values from POST and handle empty values properly
+    $catalog_number = !empty($_POST['catalog_number']) ? $_POST['catalog_number'] : null;
+    $catalog_number_hold = !empty($_POST['catalog_number_hold']) ? $_POST['catalog_number_hold'] : null;
+    $id_part_type = !empty($_POST['id_part_type']) ? (int)$_POST['id_part_type'] : null;
+    $id_part_type_hold = !empty($_POST['id_part_type_hold']) ? (int)$_POST['id_part_type_hold'] : null;
+    
     // Handle columns that can be NULL
-    $name = mysqli_real_escape_string($f_link, $_POST['name']);
-    if (empty($name)) {
-        $name = "NULL";
-    } else {
-        $name = "'" . $name . "'";
-    }
-    $description = mysqli_real_escape_string($f_link, $_POST['description']);
-    if (empty($description)) {
-        $description = "NULL";
-    } else {
-        $description = "'" . $description . "'";
-    }
-    // Expecting a number or nothing
-    $is_part_collection = mysqli_real_escape_string($f_link, $_POST['is_part_collection']);
-    if (!is_numeric($is_part_collection)) {
-        $is_part_collection = "NULL";
-    }
-    $paper_size = mysqli_real_escape_string($f_link, $_POST['paper_size']);
-    if (empty($paper_size)) {
-        $paper_size = "NULL";
-    } else {
-        $paper_size = "'" . $paper_size . "'";
-    }
-    $page_count = mysqli_real_escape_string($f_link, $_POST['page_count']);
-    if (!is_numeric($page_count)) {
-        $page_count = "NULL";
-    }
-    $image_path = mysqli_real_escape_string($f_link, $_POST['image_path']);
-    if (empty($image_path)) {
-        $image_path = "NULL";
-    } else {
-        $image_path = "'" . $image_path . "'";
-    }
-    $originals_count = mysqli_real_escape_string($f_link, $_POST['originals_count']);
-    // Will cause the SQL to return "originals_count cannot be NULL" if nothing, or non-number entered
-    if (!is_numeric($originals_count)) {
-        $originals_count = "NULL";
-    }
-    // Will cause the SQL to return "copies_count cannot be NULL"
-    $copies_count = mysqli_real_escape_string($f_link, $_POST['copies_count']);
-    if (!is_numeric($copies_count)) {
-        $copies_count = "NULL";
-    }
-    // Instruments on the part should be an array
-    if (isset($_POST['id_instrument'])){
-        if(!is_array($_POST['id_instrument'])){
-            $id_instrument = mysqli_real_escape_string($f_link, $_POST['id_instrument']);
+    $name = !empty($_POST['name']) ? $_POST['name'] : null;
+    $description = !empty($_POST['description']) ? $_POST['description'] : null;
+    $is_part_collection = is_numeric($_POST['is_part_collection']) ? (int)$_POST['is_part_collection'] : null;
+    $paper_size = !empty($_POST['paper_size']) ? $_POST['paper_size'] : null;
+    $page_count = is_numeric($_POST['page_count']) ? (int)$_POST['page_count'] : null;
+    $originals_count = is_numeric($_POST['originals_count']) ? (int)$_POST['originals_count'] : null;
+    $copies_count = is_numeric($_POST['copies_count']) ? (int)$_POST['copies_count'] : null;
+    
+    // Handle instrument array
+    $id_instruments = array();
+    if (isset($_POST['id_instrument'])) {
+        if (is_array($_POST['id_instrument'])) {
+            $id_instruments = array_map('intval', $_POST['id_instrument']);
         } else {
-            $id_instrument = $_POST['id_instrument'];
+            $id_instruments = [intval($_POST['id_instrument'])];
         }
     }
-    ferror_log("The REAL originals_count is ". $originals_count);
-    ferror_log("The REAL copies_count is ". $copies_count);
 
+    $image_path = null; // Default to NULL, will be set if file is uploaded
+    
+    // Handle file upload
+    if (isset($_FILES['image_path']) && $_FILES['image_path']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['image_path']['tmp_name'];
+        $fileName = $_FILES['image_path']['name'];
+        $fileSize = $_FILES['image_path']['size'];
+        $fileType = $_FILES['image_path']['type'];
+
+        // Check if the file is a valid PDF or image file
+        $allowedFileTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+        if (!in_array($fileType, $allowedFileTypes)) {
+            ferror_log("Invalid file type: " . $fileType);
+            die("Invalid file type. Only JPEG, PNG, and PDF files are allowed.");
+        }
+
+        $uploadDir = __DIR__ . "/" . ORGPRIVATE; // Directory to save uploaded files
+        
+        // Create the uploads directory if it doesn't exist
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true) && ferror_log("Uploads directory created: " . $uploadDir);
+        } else {
+            ferror_log("Uploads directory already exists: " . $uploadDir);  
+        }
+
+        // Check file size
+        if ($fileSize > $maxFileSize) {
+            die("File is too large. Max allowed size is 40MB.");
+        }
+
+        // Check MIME type
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($fileTmpPath);
+        $allowedMimes = [
+            'application/pdf' => 'pdf',
+            'image/jpeg' => 'jpeg',
+            'image/png' => 'png',
+        ];
+        if (!array_key_exists($mime, $allowedMimes)) {
+            die("Only PDF, JPEG, and PNG files are allowed. Detected: $mime");
+        }
+
+        // Get the part type name from the database using prepared statement
+        $part_type_stmt = mysqli_prepare($f_link, "SELECT name FROM part_types WHERE id_part_type = ?");
+        mysqli_stmt_bind_param($part_type_stmt, "i", $id_part_type);
+        mysqli_stmt_execute($part_type_stmt);
+        $part_type_result = mysqli_stmt_get_result($part_type_stmt);
+        
+        if ($part_type_result && mysqli_num_rows($part_type_result) > 0) {
+            $part_type_row = mysqli_fetch_assoc($part_type_result);
+            $part_type_name = $part_type_row['name'];
+            ferror_log("Part type name found: " . $part_type_name);
+        } else {
+            ferror_log("Part type name not found for ID: " . $id_part_type);
+            $part_type_name = "unknown_part_type";
+        }
+        mysqli_stmt_close($part_type_stmt);
+
+        // Generate a semi-unique file name based on catalog_number and part_type_name
+        $extension = $allowedMimes[$mime];
+        
+        // Create a consistent hash from catalog_number and part_type_name
+        $clean_part_type = preg_replace('/[^a-zA-Z0-9]/', '', $part_type_name);
+        $hashInput = $catalog_number . '_' . $clean_part_type;
+        $hash = substr(md5($hashInput), 0, 8);
+        
+        // Create filename using hash only (not readable as requested)
+        $safeName = $hash . '.' . $extension;
+        $destination = $uploadDir . $safeName;
+
+        // If file already exists, remove it before uploading the new one
+        if (file_exists($destination)) {
+            ferror_log("Existing file found, removing: " . $destination);
+            unlink($destination);
+        }
+
+        // Move the uploaded file
+        ferror_log("Attempting to move uploaded file from: " . $fileTmpPath . " to: " . $destination);
+        if (!move_uploaded_file($fileTmpPath, $destination)) {
+            die("Failed to save the uploaded file.");
+        }
+        ferror_log("File uploaded successfully: " . $destination);
+        
+        // Update the image_path variable to store the file name
+        $image_path = $safeName;
+    } else {
+        ferror_log("No file uploaded or upload error occurred.");
+    }
+
+    ferror_log("The REAL originals_count is ". ($originals_count ?? 'NULL'));
+    ferror_log("The REAL copies_count is ". ($copies_count ?? 'NULL'));
     ferror_log("POST update=". $_POST["update"]);
+    
     if($_POST["update"] == "update") {
-        $sql = "
-        UPDATE parts
-        SET id_part_type = '$id_part_type',
-        catalog_number = '$catalog_number',
-        name = $name,
-        description = $description,
-        is_part_collection = $is_part_collection,
-        paper_size = $paper_size,
-        page_count = $page_count,
-        image_path = $image_path,
-        originals_count = $originals_count,
-        copies_count = $copies_count,
-        last_update = CURRENT_TIMESTAMP()
-        WHERE catalog_number = '".$catalog_number_hold."' AND id_part_type = ".$id_part_type_hold.";";
-        ferror_log("Running SQL ". $sql);
-        if(mysqli_query($f_link, $sql)) {
+        // Prepare UPDATE statement
+        $update_sql = "UPDATE parts SET 
+                       id_part_type = ?, 
+                       catalog_number = ?, 
+                       name = ?, 
+                       description = ?, 
+                       is_part_collection = ?, 
+                       paper_size = ?, 
+                       page_count = ?, 
+                       image_path = ?,
+                       originals_count = ?, 
+                       copies_count = ?, 
+                       last_update = CURRENT_TIMESTAMP() 
+                       WHERE catalog_number = ? AND id_part_type = ?";
+        
+        ferror_log("Preparing UPDATE SQL: " . $update_sql);
+        
+        $update_stmt = mysqli_prepare($f_link, $update_sql);
+        if (!$update_stmt) {
+            die("Prepare failed: " . mysqli_error($f_link));
+        }
+        
+        mysqli_stmt_bind_param($update_stmt, "isssisisiisi", 
+            $id_part_type, $catalog_number, $name, $description, 
+            $is_part_collection, $paper_size, $page_count, $image_path, 
+            $originals_count, $copies_count, $catalog_number_hold, $id_part_type_hold
+        );
+        
+        if(mysqli_stmt_execute($update_stmt)) {
             $output = "Parts updated successfully.";
             ferror_log($output);
-            // Clean out instruments for this part type
-            $sql = "DELETE FROM part_collections 
-            WHERE catalog_number_key = '".$catalog_number."'
-            AND id_part_type_key = '".$id_part_type."';";
-            ferror_log("Running SQL: ". $sql);
-            if(mysqli_query($f_link, $sql)) {
+            mysqli_stmt_close($update_stmt);
+            
+            // Clean out instruments for this part type using prepared statement
+            $delete_stmt = mysqli_prepare($f_link, "DELETE FROM part_collections WHERE catalog_number_key = ? AND id_part_type_key = ?");
+            mysqli_stmt_bind_param($delete_stmt, "si", $catalog_number, $id_part_type);
+            
+            if(mysqli_stmt_execute($delete_stmt)) {
                 ferror_log("Part collection removed for ".$catalog_number." and ".$id_part_type.".");
             } else {
-                $error_message =  mysqli_error($f_link);
-                ferror_log("Part collection delete failed with error: ". $error_message);
+                ferror_log("Part collection delete failed with error: ". mysqli_stmt_error($delete_stmt));
             }
+            mysqli_stmt_close($delete_stmt);
+            
             // Add to part_collections table for each instrument in the part
-            foreach($_POST['id_instrument'] as $id_instrument_num) {
-                ferror_log("Adding instrument: ". $id_instrument_num . " to part_collections.");
-                $id_instrument_key = mysqli_real_escape_string($f_link, $id_instrument_num);
-                $sql = "INSERT INTO part_collections(
-                    catalog_number_key,
-                    id_part_type_key,
-                    id_instrument_key,
-                    name,
-                    description,
-                    last_update)
-                VALUES('$catalog_number', $id_part_type, $id_instrument_key, $name, $description, CURRENT_TIMESTAMP() );";
-                ferror_log("=-=-=-=-= Running SQL: ". $sql);
-                if(mysqli_query($f_link, $sql)) {
-                    ferror_log("Part collection added for ".$catalog_number." and part type = ".$id_part_type." and instrument = ".$id_instrument_key.".");
-                } else {
-                    $error_message =  mysqli_error($f_link);
-                    ferror_log("Part collection add failed with error: ". $error_message);
+            if (!empty($id_instruments)) {
+                ferror_log("Adding instruments to part_collections for catalog_number: " . $catalog_number . " and id_part_type: " . $id_part_type);
+                
+                $insert_collection_sql = "INSERT INTO part_collections(catalog_number_key, id_part_type_key, id_instrument_key, name, description, last_update) VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP())";
+                $insert_collection_stmt = mysqli_prepare($f_link, $insert_collection_sql);
+                
+                foreach($id_instruments as $id_instrument_num) {
+                    ferror_log("Adding instrument: ". $id_instrument_num . " to part_collections.");
+                    
+                    mysqli_stmt_bind_param($insert_collection_stmt, "siiss", 
+                        $catalog_number, $id_part_type, $id_instrument_num, $name, $description
+                    );
+                    
+                    if(mysqli_stmt_execute($insert_collection_stmt)) {
+                        ferror_log("Part collection added for ".$catalog_number." and part type = ".$id_part_type." and instrument = ".$id_instrument_num.".");
+                    } else {
+                        ferror_log("Part collection add failed with error: ". mysqli_stmt_error($insert_collection_stmt));
+                    }
                 }
+                mysqli_stmt_close($insert_collection_stmt);
+            } else {
+                ferror_log("No instruments to add to part_collections for catalog_number: " . $catalog_number . " and id_part_type: " . $id_part_type);
             }
+
         } else {
-            $error_message = mysqli_error($f_link);
+            $error_message = mysqli_stmt_error($update_stmt);
             $output = "Parts update failed with error = " . $error_message;
             ferror_log($output);
+            mysqli_stmt_close($update_stmt);
         }
+        
     } elseif($_POST["update"] == "add") {
-        ferror_log("Running SQL ". $sql);
-        $sql = "
-        INSERT INTO parts(catalog_number, id_part_type, name, description, is_part_collection, paper_size, page_count, image_path, originals_count, copies_count, last_update)
-        VALUES('$catalog_number', '$id_part_type', '$name', $description, $is_part_collection, $paper_size, $page_count, $image_path, $originals_count, $copies_count, CURRENT_TIMESTAMP() );
-        ";
-        if(mysqli_query($f_link, $sql)) {
+        // Prepare INSERT statement
+        $insert_sql = "INSERT INTO parts(catalog_number, id_part_type, name, description, is_part_collection, paper_size, page_count, image_path, originals_count, copies_count, last_update) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())";
+        
+        ferror_log("Preparing INSERT SQL: " . $insert_sql);
+        
+        $insert_stmt = mysqli_prepare($f_link, $insert_sql);
+        if (!$insert_stmt) {
+            die("Prepare failed: " . mysqli_error($f_link));
+        }
+        
+        mysqli_stmt_bind_param($insert_stmt, "sisssissii", 
+            $catalog_number, $id_part_type, $name, $description, 
+            $is_part_collection, $paper_size, $page_count, $image_path, 
+            $originals_count, $copies_count
+        );
+        
+        if(mysqli_stmt_execute($insert_stmt)) {
             $output = "Parts inserted successfully.";
             ferror_log($output);
         } else {
-            $error_message = mysqli_error($f_link);
+            $error_message = mysqli_stmt_error($insert_stmt);
             $output = "Parts insert failed with error = " . $error_message;
             ferror_log($output);
         }
+        mysqli_stmt_close($insert_stmt);
     }
 
- } else {
+} else {
     require_once("header.php");
     echo '<body>
 ';
@@ -163,5 +264,5 @@ if(!empty($_POST)) {
     <div><p align="center" class="text-danger">You can get here only from the Parts menu.</p></div>';
     require_once("footer.php");
     echo '</body>';
- }
- ?>
+}
+?>

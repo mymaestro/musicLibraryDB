@@ -49,13 +49,80 @@
         right: 20px;
         display: none;
     }
-
+    body {
+      display: flex;
+      flex-direction: column;
+    }
     </style>
-
 
 <?php if (PAGE_NAME == 'Parts') : ?>
    <!-- this is the PARTS page 
         eventually you will be able to upload PDF parts here -->
+    <style>
+    header .navbar {
+      height: 56px;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      margin-top: 18px; /* same height as navbar */
+    }
+
+    aside.left-panel {
+      width: 280px;
+      border-right: 1px solid #ccc;
+      background: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .left-menu-scroll,
+    .table-wrapper {
+      height: calc(100vh - 56px - 48px - 40px ); /* header height + title + footer height */
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    section.right-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 1rem;
+    }
+
+    .table-toolbar {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 2;
+      padding-bottom: 0.5rem;
+    }
+
+    .table-wrapper {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .table thead th {
+      position: sticky;
+      top: 0;
+      background-color: #f8f9fa;
+      z-index: 1;
+    }
+
+    footer {
+      flex-shrink: 0;
+    }
+
+    /* Fix heights */
+    .left-menu-scroll,
+    .table-wrapper {
+      height: calc(100vh - 56px - 40px); /* header height + footer height */
+    }
+  </style>    
 <?php elseif (PAGE_NAME == 'Recordings') : ?>
     <!-- this is the RECORDINGS page
         eventually you will be able to upload MP3 recordings here -->

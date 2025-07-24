@@ -23,7 +23,7 @@
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
                 <span id="updatemessage"></span>
-                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-warning">Add</button>
             </div>
         </div><!-- right button -->
         <div id="user_table">
@@ -127,7 +127,7 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- deleteModal -->
-    <div id="add_data_Modal" class="modal">
+    <div id="editModal" class="modal">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -188,7 +188,7 @@
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
-    </div><!-- add_data_modal -->
+    </div><!-- editModal -->
     <div id="messageModal" class="modal"><!-- message feedback -->
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -237,7 +237,7 @@ $(document).ready(function(){
                 $('#roles').val(data.roles);
                 $('#insert').val("Update");
                 $('#update').val("update");
-                $('#add_data_Modal').modal('show');
+                $('#editModal').modal('show');
             }
         });
     });
@@ -299,7 +299,7 @@ $(document).ready(function(){
                 },
                 success:function(data){
                     $('#insert_form')[0].reset();
-                    $('#add_data_Modal').modal('hide');
+                    $('#editModal').modal('hide');
                     $('#user_table').html(data);
                 }
             });

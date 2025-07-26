@@ -41,7 +41,6 @@
                     <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">
                     <tr>
                         <th style="width: 50px;"></th>
-                        <th>ID</th>
                         <th>Name</th>
                         <th>Description</th>
                         <th>Section leader</th>
@@ -74,7 +73,6 @@
             $enabled = $rowList['enabled'];
             echo '<tr data-id="'.$id_section.'">
                         <td><input type="radio" name="record_select" value="'.$id_section.'" class="form-check-input select-radio"></td>
-                        <td>'.$id_section.'</td>
                         <td><strong><a href="#" class="view_data" id="'.$id_section.'">'.$name.'</a></strong></td>
                         <td>'.htmlspecialchars($description ?? '').'</td>
                         <td>'.htmlspecialchars($section_leader ?? '').'</td>
@@ -439,7 +437,6 @@ $(document).ready(function(){
             assigned_part_types: assigned
         }, function(response) {
             if (response.success) {
-                alert('Assignments saved!');
                 $('#assignModal').modal('hide');
             } else {
                 alert('Error saving assignments.');

@@ -533,7 +533,7 @@ mysqli_close($f_link);
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5><i class="fas fa-sitemap"></i> Database Relationships</h5>
+                        <h5><i class="fas fa-sitemap"></i> Database relationships</h5>
                     </div>
                     <div class="card-body">
                         <div class="row text-center">

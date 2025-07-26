@@ -261,10 +261,10 @@ function generateSectionZip($f_link, $playgram_id, $section_id) {
     
     // Create ZIP file
     $zip_filename = $playgram_name . '_' . $section_name . '_Parts.zip';
-    $zip_path = __DIR__ . '/../files/distributions/' . $zip_filename;
+    $zip_path = __DIR__ . '/' . ORGDIST . $zip_filename;
     
     // Ensure distributions directory exists
-    $distributions_dir = __DIR__ . '/../files/distributions';
+    $distributions_dir = __DIR__ . '/' . ORGDIST;
     if (!is_dir($distributions_dir)) {
         if (!mkdir($distributions_dir, 0755, true)) {
             return ['success' => false, 'message' => 'Could not create distributions directory.'];
@@ -310,9 +310,9 @@ function generateSectionZip($f_link, $playgram_id, $section_id) {
         unlink($zip_path);
         return ['success' => false, 'message' => 'No PDF files could be added to ZIP.'];
     }
-    
-    $zip_url = 'files/distributions/' . $zip_filename;
-    
+
+    $zip_url = ORGPARTDISTRO . $zip_filename;
+
     return [
         'success' => true,
         'data' => [

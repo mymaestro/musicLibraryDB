@@ -284,8 +284,7 @@ mysqli_close($f_link);
             <div class="row d-flex justify-content-end"><div class="col-auto">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" value="View" id="view" class="btn btn-secondary view_data" disabled>View</button>
             {{#u_librarian}}
-                <a class="btn btn-warning instr_data" role="button" href="composition_instrumentation.php?catalog_number={{catalog_number}}">Instrumentation</a>
-                <button type="button" id="instrumentation" class="btn btn-info instrumentation_btn" disabled>Instrumentation</button>
+                <button type="button" id="instrumentation" class="btn btn-info instrumentation_btn">Instrumentation</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add" class="btn btn-warning add_data">Add</button>

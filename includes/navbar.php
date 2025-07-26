@@ -8,6 +8,7 @@
             <div class="collapse navbar-collapse" id="navbarTop">
                 <ul class="navbar-nav nav-underline me-auto mb-2 mb-lg-0">
                     <li class="nav-item<?php echo ( PAGE_NAME === 'home' ? ' active">' : '">') ?><a class="nav-link text-uppercase" href="index.php"><i class="fa fa-home"></i> Home</a></li>
+                    <li class="nav-item<?php echo ( PAGE_NAME === 'Dashboard' ? ' active">' : '">') ?><a class="nav-link text-uppercase" href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                     <li class="nav-item<?php echo ( PAGE_NAME === 'enter' ? ' active">' : '">') ?><a class="nav-link text-uppercase" href="enter_menu.php"><i class="fas fa-id-card"></i> Enter</a></li>
                     <li class="nav-item<?php echo ( PAGE_NAME === 'search' ? ' active">' : '">') ?><a class="nav-link text-uppercase" href="search.php"><i class="fas fa-search"></i> Search</a></li>
                     <li class="nav-item dropdown">

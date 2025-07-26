@@ -9,6 +9,7 @@ migrate-recordings-dry-run.php
 migrate-recordings-dry-run.txt
 migrate-recordings.php
 migrate-recordings.txt
+*-backup.php
 musicLibraryDB.sql
 phpinfo.php
 files/

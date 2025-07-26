@@ -1,6 +1,6 @@
 <?php
-define('PAGE_TITLE', 'Enter instrumentation');
-define('PAGE_NAME', 'Enter instrumentation');
+define('PAGE_TITLE', 'Manage instrumentation');
+define('PAGE_NAME', 'Manage instrumentation');
 require_once("includes/header.php");
 $u_admin = FALSE;
 $u_librarian = FALSE;
@@ -16,15 +16,10 @@ require_once("includes/navbar.php");
 require_once('includes/functions.php');
 
 ferror_log("composition_instrumentation.php POST: " . print_r($_POST, TRUE));
-ferror_log("composition_instrumentation.php  GET: " . print_r($_GET, TRUE));
 
 if(!empty($_POST["catalog_number"])) {
     $catalog_number = $_POST['catalog_number'];
-} elseif(!empty($_GET["catalog_number"])) {
-    $catalog_number = $_GET['catalog_number'];
-} else {
-    $catalog_number = '';
-}
+} else $catalog_number = '';
 
 ferror_log("Running composition_instrumentation.php with catalog_number: " . $catalog_number);
 
@@ -96,7 +91,7 @@ ferror_log("Running composition_instrumentation.php with catalog_number: " . $ca
                         ?>
                     </div>
                     <div class="col-sm-6">
-                        <div id="catalog_numberHelp" class="form-text">The catalog number from the composition to set instrumentation.</div>                
+                        <div id="catalog_numberHelp" class="form-text">The catalog number from the composition to set instrumentation.</div>
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -122,7 +117,7 @@ ferror_log("Running composition_instrumentation.php with catalog_number: " . $ca
                     ?>
                     </div>
                     <div class="col-sm-6">
-                        <div id="paper_sizeHelp" class="form-text">On what size paper the original parts are printed.</div>                
+                        <div id="paper_sizeHelp" class="form-text">Default paper size for new parts only. Existing parts retain their current paper size.</div>                
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -130,10 +125,10 @@ ferror_log("Running composition_instrumentation.php with catalog_number: " . $ca
                         <label for="page_count" class="form-label">Page count*</label>
                     </div>
                     <div class="col-sm-4">
-                        <input type="number" class="form-control" id="page_count" name="page_count" aria-describedby="page_countHelp" required>
+                        <input type="number" class="form-control" id="page_count" name="page_count" placeholder="0" aria-describedby="page_countHelp" required>
                     </div>
                     <div class="col-sm-6">
-                        <div id="page_countHelp" class="form-text">How many pages per part (default).</div>                
+                        <div id="page_countHelp" class="form-text">Default page count for new parts only. Existing parts retain their current page count.</div>                
                     </div>
                 </div>
                 <hr />
@@ -141,16 +136,11 @@ ferror_log("Running composition_instrumentation.php with catalog_number: " . $ca
                     <div class="col-form-label col-sm-2 pt-0">Instrument parts*</div>
                     <div class="col-sm-10 offset-sm-2">
                         <p>Select multiple parts by holding the Shift or Ctrl keys while clicking.</p>
-                        <p>Enter parts (Percussion I, for example) that are in this composition. If a type of part does not appear on the list, check the <a href="parttypes.php">Part types</a> page.</p>
+                        <p><strong>Important:</strong> The parts list will be synchronized to match your selection. New parts will be added, unselected parts will be removed, and existing selected parts will be kept with their customizations preserved.</p>
+                        <p>If a type of part does not appear on the list, check the <a href="parttypes.php">Part types</a> page.</p>
                     <!-- Read part types from part_types table -->
                     <?php
                         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-                        // Fetch parts already saved for this composition into an array
-                        //$sql = "SELECT id_part_type FROM parts WHERE catalog_number = '". $catalog_number . "';";
-                        //$res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                        //$parts_included = mysqli_fetch_array($res);
-                        //ferror_log("parts in ".$catalog_number.": ". $parts_included[1]);
-
                         $sql = "SELECT `id_part_type`, `name` FROM part_types WHERE `enabled` = 1 ORDER BY collation;";
                         $rowcount = 0;
                         ferror_log("Running " . $sql);
@@ -171,7 +161,7 @@ ferror_log("Running composition_instrumentation.php with catalog_number: " . $ca
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <button class="btn btn-primary" type="submit" name="submit" value="add">Add parts</button>
+                        <button class="btn btn-primary" type="submit" name="submit" value="add">Synchronize parts</button>
                         <button type="reset" class="btn btn-secondary" id="revertSelect">Cancel</button>
                         <a href="#" class="btn btn-link" role="button" onclick="goBack()">Back</a>
                         <a href="compositions.php" class="btn btn-link" role="button">Compositions</a>

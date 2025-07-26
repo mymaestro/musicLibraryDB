@@ -121,7 +121,7 @@ if(isset($_POST["catalog_number"])) {
                 LEFT OUTER JOIN parts p
                 ON     c.catalog_number = p.catalog_number
                 GROUP  BY c.catalog_number
-                ORDER BY c.catalog_number;";
+                ORDER BY c.last_update DESC;";
     }
     ferror_log("RUNNING SQL = " .$sql);
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));

@@ -27,6 +27,7 @@
                         <li><a class="dropdown-item" href="parttypes.php">Part types</a></li>
                         <li><a class="dropdown-item" href="papersizes.php">Paper sizes</a></li><?php if (isset($_SESSION['username'])) if (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ) echo '
                         <li><a class="dropdown-item" href="users.php">Users</a></li>
+                        <li><a class="dropdown-item" href="admin_verifications.php">Password reset & email verification</a></li>
 '; ?>
                         </ul>
 

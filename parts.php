@@ -285,6 +285,7 @@ mysqli_close($f_link);
                 <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" value="View" id="view" class="btn btn-secondary view_data" disabled>View</button>
             {{#u_librarian}}
                 <a class="btn btn-warning instr_data" role="button" href="composition_instrumentation.php?catalog_number={{catalog_number}}">Instrumentation</a>
+                <button type="button" id="instrumentation" class="btn btn-info instrumentation_btn" disabled>Instrumentation</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add" class="btn btn-warning add_data">Add</button>
@@ -301,7 +302,7 @@ mysqli_close($f_link);
                     <th style="width: 50px;"></th>
                     <th>Part type</th>
                     <th>Name</th>
-                    <th>Description</th>
+                    <th>PDF</th>
                     <th>Paper size</th>
                     <th>Pages</th>
                     <th>Originals</th>
@@ -315,9 +316,9 @@ mysqli_close($f_link);
                     <td>
                         <input type="radio" name="record_select" value="{{catalog_number}}-{{id_part_type}}" class="form-check-input select-radio" />
                     </td>
-                    <td>{{part_type}}</td>
+                    <td><a href="#" class="text-decoration-none view_part_link">{{part_type}}</a></td>
                     <td>{{name}}</td>
-                    <td>{{description}}</td>
+                    <td>{{image_path}}</td>
                     <td>{{paper}}</td>
                     <td>{{page_count}}</td>
                     <td>{{originals_count}}</td>
@@ -413,7 +414,7 @@ function renderTemplate(templateId, data) {
 
 function renderSimpleTemplate(template, data) {
     return template.replace(/\{\{(\w+)\}\}/g, function(match, key) {
-        return data[key] !== undefined ? data[key] : '';
+        return data[key] !== undefined && data[key] !== null ? data[key] : '';
     });
 }
 
@@ -499,6 +500,8 @@ $(document).ready(function() {
                 // Explicitly set as boolean true/false
                 data.u_librarian = data.user_role === 'librarian';
                 
+                console.log("Fetched parts data for catalog number: ", catalog_number);
+                console.log("Data received: ", data);
                 // Add u_librarian to each part object so it's available in the nested context
                 if (data.parts && Array.isArray(data.parts)) {
                     data.parts.forEach(function(part) {
@@ -514,7 +517,7 @@ $(document).ready(function() {
     });
     $(document).on('click', '#partsdatatable tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete, #view').prop('disabled',false);
+        $('#edit, #delete, #view, #instrumentation').prop('disabled',false);
         let selectedRow = $(this).data('id'); // data-id attribute is on the row
         catalog_number = selectedRow.split('-')[0];
         id_part_type = selectedRow.split('-')[1];
@@ -551,6 +554,18 @@ $(document).ready(function() {
         $('#id_instrument').val('');
         selectitems = '';
         console.log("Add a new part to " + catalog_number);
+    });
+    $(document).on('click', '.instrumentation_btn', function(){
+        if(catalog_number != '')
+        {
+            // Create a form and submit it with POST to composition_instrumentation.php
+            var form = $('<form></form>');
+            form.attr('method', 'post');
+            form.attr('action', 'composition_instrumentation.php');
+            form.append('<input type="hidden" name="catalog_number" value="' + catalog_number + '" />');
+            $('body').append(form);
+            form.submit();
+        }
     });
     $(document).on('click', '.edit_data', function() {
         // These are set in the data-id attribute of the row
@@ -619,7 +634,6 @@ $(document).ready(function() {
                     $('#originals_count').val(part.originals_count);
                     $('#copies_count').val(part.copies_count);
                     $('#image_path_display').text(part.image_path);
-                    alert("Current image path: " + part.image_path);
                     $('#insert').val("Update");
                     $('#update').val("update");
                     $('#editModal').modal('show');
@@ -707,6 +721,36 @@ $(document).ready(function() {
             });
         }
     });
+    $(document).on('click', '.view_part_link', function(e) {
+        e.preventDefault(); // Prevent default link behavior
+        // Get the data from the row containing this link
+        var row = $(this).closest('tr');
+        var selectedRow = row.data('id');
+        var temp_catalog_number = selectedRow.split('-')[0];
+        var temp_id_part_type = selectedRow.split('-')[1];
+        
+        // Select the radio button for this row
+        row.find('input[type="radio"]').prop('checked', true);
+        $('#edit, #delete, #view').prop('disabled', false);
+        
+        // Update global variables
+        catalog_number = temp_catalog_number;
+        id_part_type = temp_id_part_type;
+        
+        // Open the modal
+        $.ajax({
+            url: "includes/select_parts.php",
+            method: "POST",
+            data: {
+                id_part_type: temp_id_part_type,
+                catalog_number: temp_catalog_number
+            },
+            success: function(data) {
+                $('#part_detail').html(data);
+                $('#dataModal').modal('show');
+            }
+        });
+    });
     // Insert or update part data
     // This is the form submit handler for the insert_form
     $('#insert_form').on("submit", function(event) {
@@ -726,13 +770,15 @@ $(document).ready(function() {
                 // If no file is selected, we can still submit the form
                 // Use the value of image_path_display as a fallback
                 $image_path_display = $('#image_path_display').text();
-                console.log("No file selected for upload, using image_path_display value.");
-                formData.append('image_path', $('#image_path_display').text());
+                formData.append('image_path_display', $image_path_display);
+                console.log("No file selected for upload, using image_path_display value: " + $image_path_display);
                 // Clear the file input to avoid sending an empty file path
                 $('#image_path').val('');
             } else if ($('#image_path')[0].files.length > 0) {
                 // If a file is selected, it will be handled by FormData
-                console.log("File selected for upload: ", $('#image_path')[0].files[0]);
+
+                $file_name = $('#image_path')[0].files[0].name;
+                console.log("File selected for upload: " + $file_name);
                 formData.append('image_path', $('#image_path')[0].files[0]);
             }
 

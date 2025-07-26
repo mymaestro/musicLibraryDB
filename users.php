@@ -22,23 +22,20 @@
 <?php if($u_admin) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
-                <span id="updatemessage"></span>
-                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-warning">Add</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
             </div>
-        </div><!-- right button -->
+        </div><!-- right buttons -->
         <div id="user_table">
         <?php
         echo '            <div class="panel panel-default">
-               <div class="table-repsonsive">';
-            if($u_admin){ 
-                echo '
-                <form action="includes/insert_users.php" method="post" id="users_form">';
-            }    
-        echo '
-          <table class="table table-hover">
+        <div class="table-responsive">
+          <table class="table table-hover" id="users_table">
                     <caption class="title">Available users</caption>
-                    <thead>
+                    <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">
                     <tr>
+                        <th style="width: 50px;"></th>
                         <th>ID</th>
                         <th>User name</th>
                         <th>Real name</th>
@@ -54,43 +51,28 @@
         $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
         while ($rowList = mysqli_fetch_array($res)) {
             $id_user = $rowList['id_users'];
-            $username = $rowList['username'];
-            $name = $rowList['name'];
-            $address = $rowList['address'];
-            $roles = $rowList['roles'];
-            $isAdmin = (strpos(htmlspecialchars($roles), 'administrator') !== FALSE ? TRUE : FALSE);
-            $isLibrarian = (strpos(htmlspecialchars($roles), 'librarian') !== FALSE ? TRUE : FALSE);
-            $isUser = (strpos(htmlspecialchars($roles), 'user') !== FALSE ? TRUE : FALSE);
-            echo '<tr>
+            $username = htmlspecialchars($rowList['username']);
+            $name = htmlspecialchars($rowList['name']);
+            $address = htmlspecialchars($rowList['address']);
+            $roles = htmlspecialchars($rowList['roles']);
+            $isAdmin = (strpos($roles, 'administrator') !== FALSE ? "Yes" : "No");
+            $isLibrarian = (strpos($roles, 'librarian') !== FALSE ? "Yes" : "No");
+            $isUser = (strpos($roles, 'user') !== FALSE ? "Yes" : "No");
+            echo '<tr data-id="'. $id_user .'">
+                        <td><input type="radio" name="user_select" value="'.$id_user.'" class="form-check-input select-radio"></td>
                         <td>'.$id_user.'<input type="hidden" name="id_user[]" value="'. $id_user .'"></td>
-                        <td>'.$username.'</td>
+                        <td><strong><a href="#" class="view_data" name="view" id="view_'.$id_user.'">'.$username.'</a></strong></td>
                         <td>'.$name.'</td>
                         <td>'.$address.'</td>
-                        <td><div class="form-check form-switch">
-                        <input class="form-check-input" name="u_user[]" type="checkbox" role="switch" id="isUser" '. (($u_admin) ? "" : "disabled ") . (($isUser) ? "checked" : "") .'>
-                        </div></td>
-                        <td><div class="form-check form-switch">
-                        <input class="form-check-input" name="u_librarian[]" type="checkbox" role="switch" id="isLibrarian" '. (($u_librarian) ? "" : "disabled ") . (($isLibrarian) ? "checked" : "") .'>
-                        </div></td>
-                        <td><div class="form-check form-switch">
-                        <input class="form-check-input" name="u_admin[]" type="checkbox" role="switch" id="isAdmin" '. (($u_admin) ? "" : "disabled ") . (($isAdmin) ? "checked" : "") .'>
-                        </div></td>';
-                        if ($u_admin) { echo '
-                        <td><input type="button" name="delete" value="Delete" id="'.$id_user.'" class="btn btn-danger btn-sm delete_data" /></td>
-                        <td><input type="button" name="edit" value="Edit" id="'.$id_user.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
-            echo '
-                        <td><input type="button" name="view" value="View" id="'.$id_user.'" class="btn btn-secondary btn-sm view_data" /></td>
+                        <td>'.$isUser.'</td>
+                        <td>'.$isLibrarian.'</td>
+                        <td>'.$isAdmin.'</td>
                     </tr>
                     ';
         }
         echo '
                     </tbody>
-                    </table>';
-                    if($u_user){ 
-                        echo '
-                        </form>';
-                    }
-        echo '
+                    </table>
                 </div><!-- table-responsive -->
             </div><!-- class panel -->
            ';
@@ -117,8 +99,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content rounded-4 shadow">
                 <div class="modal-body p-4 text-center">
-                    <h5 class="mb-0">Delete this user?</h5>
-                    <p id="user2delete">You can cancel now.</p>
+                    <h5 class="mb-0">Delete user <span id="user2delete">#</span>?</h5>
+                    <p>You can cancel now.</p>
                 </div>
                 <div class="modal-footer flex-nowrap p-0">
                     <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
@@ -172,10 +154,24 @@
                         </div>
                         <div class="row bg-light">
                             <div class="col-md-3">
-                                <label for="roles" class="col-form-label">Roles</label>
+                                <label class="col-form-label">Roles</label>
                             </div>
                             <div class="col-md-7">
-                                <input type="text" class="form-control" id="roles" name="roles" placeholder="user librarian administrator" required/>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="role_user" name="role_user" value="user">
+                                    <label class="form-check-label" for="role_user">User</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="role_librarian" name="role_librarian" value="librarian">
+                                    <label class="form-check-label" for="role_librarian">Librarian</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="role_administrator" name="role_administrator" value="administrator">
+                                    <label class="form-check-label" for="role_administrator">Administrator</label>
+                                </div>
+                                <!-- Hidden field to store the final roles string -->
+                                <input type="hidden" id="roles" name="roles" value="">
+                                <small class="form-text text-muted">Select one or more roles for this user</small>
                             </div>
                         </div>
                   </div><!-- container-fluid -->
@@ -205,10 +201,13 @@
         </div><!-- modal-dialog -->
     </div><!-- messageModal -->
     <?php else: ?>
-        <div class="row mb-3">
-            <p class="text-center">You must be logged in as an administrator to see this page</p>
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info">
+                You do not have permission to view this page.
+            </div>
         </div>
-    </div><!-- container -->
+    </div>
     <?php endif; ?>
 </main>
 <?php require_once("includes/footer.php");?>
@@ -216,17 +215,69 @@
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function(){
+    let id_user = 0; // Initialize user ID variable
+
+    // Function to convert roles string to checkboxes
+    function setRoleCheckboxes(rolesString) {
+        // Clear all checkboxes first
+        $('#role_user, #role_librarian, #role_administrator').prop('checked', false);
+        
+        if (rolesString) {
+            // Check boxes based on roles string
+            if (rolesString.includes('user')) {
+                $('#role_user').prop('checked', true);
+            }
+            if (rolesString.includes('librarian')) {
+                $('#role_librarian').prop('checked', true);
+            }
+            if (rolesString.includes('administrator')) {
+                $('#role_administrator').prop('checked', true);
+            }
+        }
+    }
+
+    // Function to convert checkboxes to roles string
+    function getRolesString() {
+        var roles = [];
+        if ($('#role_user').is(':checked')) {
+            roles.push('user');
+        }
+        if ($('#role_librarian').is(':checked')) {
+            roles.push('librarian');
+        }
+        if ($('#role_administrator').is(':checked')) {
+            roles.push('administrator');
+        }
+        return roles.join(' ');
+    }
+
+    // Update hidden roles field when checkboxes change
+    $(document).on('change', '#role_user, #role_librarian, #role_administrator', function() {
+        $('#roles').val(getRolesString());
+    });
+
+    // Enable the edit and delete buttons, and get the user ID when a table row is clicked
+    $(document).on('click', '#users_table tbody tr', function(){
+        $(this).find('input[type="radio"]').prop('checked',true);
+        $('#edit, #delete, #sort').prop('disabled',false);
+        id_user = $(this).data('id'); // data-id attribute
+    });
+
     $('#add').click(function(){
         $('#insert').val("Insert");
         $('#update').val("add");
         $('#insert_form')[0].reset();
+        // Clear role checkboxes and hidden field
+        setRoleCheckboxes('');
+        $('#roles').val('');
     });
     $(document).on('click', '.edit_data', function(){
-        var id_users = $(this).attr("id");
+        // Not needed, id_user is already set from the row click
+        // var id_users = $(this).attr("id");
         $.ajax({
             url:"includes/fetch_users.php",
             method:"POST",
-            data:{id_users:id_users},
+            data:{id_users:id_user},
             dataType:"json",
             success:function(data){
                 $('#id_users').val(data.id_users);
@@ -234,7 +285,11 @@ $(document).ready(function(){
                 $('#username').val(data.username);
                 $('#name').val(data.name);
                 $('#address').val(data.address);
-                $('#roles').val(data.roles);
+                
+                // Set role checkboxes based on the roles string
+                setRoleCheckboxes(data.roles || '');
+                $('#roles').val(data.roles || '');
+                
                 $('#insert').val("Update");
                 $('#update').val("update");
                 $('#editModal').modal('show');
@@ -243,21 +298,24 @@ $(document).ready(function(){
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
         // input button name="delete" id="id_users" class="delete_data"
-        var id_users = $(this).attr("id");
+        // Not needed, id_user is already set from the row click
+        // var id_users = $(this).attr("id");
+        console.log("Delete user ID: " + id_user);
         $('#deleteModal').modal('show');
-        $('#confirm-delete').data('id', id_users);
-        $('#user2delete').text(id_users);
+        $('#confirm-delete').data('id', id_user);
+        $('#user2delete').text(id_user);
     });
     $('#confirm-delete').click(function(){
         // The confirm delete button
-        var id_users = $(this).data('id');
+        // Not needed, id_user is already set from the row click
+        // var id_users = $(this).data('id');
         $.ajax({
             url:"includes/delete_records.php", 
             method:"POST",
             data:{
                 table_name: "users",
                 table_key_name: "id_users",
-                table_key: id_users
+                table_key: id_user
             },
             success:function(response){
                 $('#insert_form')[0].reset();
@@ -280,6 +338,10 @@ $(document).ready(function(){
     });
     $('#insert_form').on("submit", function(event){
         event.preventDefault();
+        
+        // Update the hidden roles field before submission
+        $('#roles').val(getRolesString());
+        
         if($('#title').val() == "")
         {
             alert("Title is required");
@@ -299,6 +361,7 @@ $(document).ready(function(){
                 },
                 success:function(data){
                     $('#insert_form')[0].reset();
+                    setRoleCheckboxes(''); // Clear checkboxes
                     $('#editModal').modal('hide');
                     $('#user_table').html(data);
                 }
@@ -306,13 +369,13 @@ $(document).ready(function(){
         }
     });
     $(document).on('click', '.view_data', function(){
-        var id_users = $(this).attr("id");
-        if(id_users != '')
+        //var id_users = $(this).attr("id");
+        if(id_user != '')
         {
             $.ajax({
                 url:"includes/select_users.php",
                 method:"POST",
-                data:{id_users:id_users},
+                data:{id_users:id_user},
                 success:function(data){
                     $('#user_detail').html(data);
                     $('#dataModal').modal('show');
@@ -322,6 +385,84 @@ $(document).ready(function(){
     });
 });
 </script>
+
+<!-- Custom CSS for role checkboxes -->
+<style>
+.form-check-inline {
+    margin-right: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.form-check-label {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.form-check-input:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Add some visual hierarchy to role checkboxes */
+#role_administrator:checked + label {
+    color: #dc3545; /* Red for admin */
+}
+
+#role_librarian:checked + label {
+    color: #fd7e14; /* Orange for librarian */
+}
+
+#role_user:checked + label {
+    color: #198754; /* Green for user */
+}
+
+/* Styles for disabled checkboxes in view modal */
+#view_role_administrator:checked + label {
+    color: #dc3545; /* Red for admin */
+    font-weight: 600;
+}
+
+#view_role_librarian:checked + label {
+    color: #fd7e14; /* Orange for librarian */
+    font-weight: 600;
+}
+
+#view_role_user:checked + label {
+    color: #198754; /* Green for user */
+    font-weight: 600;
+}
+
+.form-check-input:disabled {
+    opacity: 0.7;
+}
+
+.form-check-input:disabled:checked {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Keep color coding even when disabled */
+#view_role_administrator:disabled:checked {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+#view_role_librarian:disabled:checked {
+    background-color: #fd7e14;
+    border-color: #fd7e14;
+}
+
+#view_role_user:disabled:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+</style>
 <?php endif; ?>
 </body>
 </html>

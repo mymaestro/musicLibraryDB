@@ -74,7 +74,10 @@ if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) {
                     p.paper_size,
                     z.name paper,
                     p.page_count,
-                    p.image_path,
+                    CASE 
+                        WHEN p.image_path IS NULL OR p.image_path = '' THEN 'No'
+                        ELSE 'Yes'
+                    END AS image_path,
                     p.originals_count,
                     p.copies_count,
                     COUNT(c.id_instrument_key) instruments

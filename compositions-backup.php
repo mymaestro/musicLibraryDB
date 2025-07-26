@@ -25,33 +25,32 @@ ferror_log("RUNNING compositions.php");
             <h1><?php echo ORGNAME ?> Compositions</h1>
         </div>
         <div class="row pt-3">
-            <div class="col">
+            <div class="col-10">
                 <div id="search_form">
                     <form action="" method="POST">
-                        <div class="row align-items-center">
+                        <div class="row g-3 align-items-center">
                             <div class="col-auto"><button type="submit" name="submitButton" class="btn btn-secondary">Search</button></div>
-                            <div class="col-auto"><input type="text" size="40" id="search" name="search" class="form-control" aria-describedby="searchHelp" placeholder="Name, description, composer, or arranger"></div>
-                            <div class="col-auto"><small id="searchHelp" class="form-text text-muted">Search for compositions by name, description, composer, or arranger.</small></div>
+                            <div class="col-auto"><input type="text" id="search" name="search" class="form-control" aria-describedby="searchHelp"></div>
+                            <div class="col-auto">
+                                <span id="searchHelp" class="form-text">
+                                Search the name, description, composer, arranger, and comments
+                                </span>
+                            </div>
                         </div>
                     </form>
                 </div><!-- search_form -->
             </div><!-- col -->
-        
-            <div class="col">
+            <div class="col-2">
                 <?php if($u_librarian) : ?>
                 <div class="float-end">
-                    <button type="button" id="instrumentation" class="btn btn-info instrumentation_btn" disabled>Instrumentation</button>
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#partsData" id="parts" class="btn btn-success parts_data" disabled>Parts</button>
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
+                    <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
                 </div><!-- right justify -->
                 <?php endif; ?>
             </div><!-- col-2 -->
         </div><!-- the heading row with buttons -->
         <div id="composition_table"><!-- filled in by fetch_compositions -->
         </div><!-- composition_table -->
-        <div class="modal" id="viewData"><!-- view data -->
+        <div class="modal" id="view_data_modal"><!-- view data -->
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -67,21 +66,20 @@ ferror_log("RUNNING compositions.php");
                     </div><!-- modal-footer -->
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
-        </div><!-- viewData -->
-        <div class="modal" id="partsData"><!-- view parts instrumentation -->
+        </div><!-- view_data_modal -->
+        <div class="modal" id="parts_data_modal"><!-- view parts instrumentation -->
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content" id="instrumentation_detail">
                     <!-- filled in by select_composition_parts.php -->
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
-        </div><!-- partsData -->
+        </div><!-- parts_data_modal -->
         <div class="modal" id="deleteModal" tabindex="-1" role="dialog"><!-- delete data -->
             <div class="modal-dialog" role="document">
                 <div class="modal-content rounded-4 shadow">
                     <div class="modal-body p-4 text-center">
-                        <h5 class="mb-0">Delete this composition <span class="text-danger" id="composition2delete">#</span>?</h5>
-                        <p><strong>This will delete the composition and all parts associated with it.</strong></p>
-                        <p>You can safely cancel now.</p>
+                        <h5 class="mb-0">Delete this composition?</h5>
+                        <p id="composition2delete">You can cancel now.</p>
                     </div>
                     <div class="modal-footer flex-nowrap p-0">
                         <button type="button" class="btn btn-lg btn-link text-decoration-none rounded-0 border-right" id="confirm-delete" data-bs-dismiss="modal"><strong>Yes, delete</strong></button>
@@ -90,7 +88,7 @@ ferror_log("RUNNING compositions.php");
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
         </div><!-- deleteModal -->
-        <div class="modal" id="editModal"><!-- editModal -->
+        <div class="modal" id="add_data_Modal"><!-- add_data_Modal -->
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -408,7 +406,7 @@ ferror_log("RUNNING compositions.php");
                     </div><!-- modal-footer -->
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
-        </div><!-- editModal -->
+        </div><!-- add_data_modal -->
         <div class="modal" id="messageModal"><!-- message feedback -->
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -461,19 +459,8 @@ $(document).ready(function() {
             $('#composition_table').html(data);
         }
     });
-
-
-    // Enable the edit and delete buttons, and get the composition ID when a table row is clicked
-    $(document).on('click', '#composition_table tbody tr', function(){
-        $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete, #parts, #instrumentation').prop('disabled',false);
-        catalog_number = $(this).data('id'); // data-id attribute
-        console.log("Selected catalog number: " + catalog_number);
-    });
-
-
     $(document).on('click', '.view_data', function(){
-        //var catalog_number = $(this).attr("id");
+        var catalog_number = $(this).attr("id");
         if(catalog_number != '')
         {
             $.ajax({
@@ -482,13 +469,13 @@ $(document).ready(function() {
                 data:{catalog_number:catalog_number},
                 success:function(data){
                     $('#composition_detail').html(data);
-                    $('#viewData').modal('show');
+                    $('#view_data_modal').modal('show');
                 }
             });
         }
     });
     $(document).on('click', '.parts_data', function(){
-        //var catalog_number = $(this).attr("id");
+        var catalog_number = $(this).attr("id");
         if(catalog_number != '')
         {
             $.ajax({
@@ -497,21 +484,9 @@ $(document).ready(function() {
                 data:{catalog_number:catalog_number},
                 success:function(data){
                     $('#instrumentation_detail').html(data);
-                    $('#partsData').modal('show');
+                    $('#parts_data_modal').modal('show');
                 }
             });
-        }
-    });
-    $(document).on('click', '.instrumentation_btn', function(){
-        if(catalog_number != '')
-        {
-            // Create a form and submit it with POST to composition_instrumentation.php
-            var form = $('<form></form>');
-            form.attr('method', 'post');
-            form.attr('action', 'composition_instrumentation.php');
-            form.append('<input type="hidden" name="catalog_number" value="' + catalog_number + '" />');
-            $('body').append(form);
-            form.submit();
         }
     });
 <?php if($u_librarian) : ?>
@@ -527,7 +502,7 @@ $(document).ready(function() {
         $('#insert_form')[0].reset();
     });
     $(document).on('click', '.edit_data', function(){
-        //var catalog_number = $(this).attr("id");
+        var catalog_number = $(this).attr("id");
         $.ajax({
             url:"includes/fetch_compositions.php",
             type:"POST",
@@ -575,29 +550,29 @@ $(document).ready(function() {
                 }
                 $('#insert').val("Update");
                 $('#update').val("update");
-                $('#editModal').modal('show');
+                $('#add_data_Modal').modal('show');
             }
         });
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
         // input button name="delete" id="catalog_number" class="delete_data"
-        //var catalog_number = $(this).attr("id");
+        var catalog_number = $(this).attr("id");
         $('#deleteModal').modal('show');
         $('#confirm-delete').data('id', catalog_number);
-        $('#composition2delete').text(catalog_number);
+        $('#ensemble2delete').text(catalog_number);
     });
     $('#confirm-delete').click(function(){
         // The confirm delete button
         var catalog_number = $(this).data('id');
         $.ajax({
-            url:"includes/delete_compositions.php",
+            url:"includes/delete_records.php",
             type:"POST",
             data:{
-                catalog_number: catalog_number
+                table_name: "compositions",
+                table_key_name: "catalog_number",
+                table_key: catalog_number
             },
             success:function(response){
-                console.log("Response: " + response);
-                response = JSON.parse(response);
                 if (response.success) {
                     $('#message_detail').html('<p class="text-success">Record ' + response.message + ' deleted from compositions</p>');
                     $('#messageModal').modal('show');
@@ -651,7 +626,7 @@ $(document).ready(function() {
                 },
                 success:function(data){
                     $('#insert_form')[0].reset();
-                    $('#editModal').modal('hide');
+                    $('#add_data_Modal').modal('hide');
                     $('#message_detail').html(data);
                     $('#messageModal').modal('show');
                     <?php 

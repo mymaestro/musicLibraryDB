@@ -24,7 +24,7 @@
             <div class="col-auto">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add" class="btn btn-warning">Add</button>
             </div>
         </div><!-- right button -->
 <?php endif; ?>

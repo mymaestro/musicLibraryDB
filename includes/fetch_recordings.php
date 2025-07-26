@@ -97,7 +97,7 @@ if(isset($_POST["id_recording"])) {  // EDIT
 } else {
     // Fetch all recordings for display in the table
     echo '            <div class="panel panel-default">
-        <div class="table-repsonsive" style="max-height: 750px; overflow-y: auto;">
+        <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
                 <table class="table table-hover tablesort tablesearch-table" id="cpdatatable">
                 <caption class="title">Available recordings</caption>';
     echo '<thead class="thead-light" style="position: sticky; top: 0; z-index: 1;"><tr>

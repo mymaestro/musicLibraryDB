@@ -21,15 +21,15 @@ if(isset($id_ensemble)) {
     echo json_encode($rowList);
 } else { // Show ensemble table
     echo '<div class="panel panel-default">
-    <div class="table-repsonsive">
+    <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
         <table class="table table-hover">
                 <caption class="title">Available ensembles</caption>
-                <thead>
+                <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">
                 <tr>
+                    <th style="width: 50px;"></th>
                     <th>ID</th>
                     <th>Title</th>
                     <th>Description</th>
-                    <th>Link</th>
                     <th>Enabled</th>
                 </tr>
                 </thead>
@@ -42,19 +42,12 @@ if(isset($id_ensemble)) {
         $description = $rowList['description'];
         $link = $rowList['link'];
         $enabled = $rowList['enabled'];
-        echo '<tr>
-                    <td>'.$id_ensemble.'<input type="hidden" name="id_ensemble[]" value="'. $id_ensemble .'"></td>
-                    <td>'.$title.'</td>
+        echo '<tr data-id="'.$id_ensemble.'">
+                    <td><input type="radio" name="ensemble_select" value="'.$id_ensemble.'" class="form-check-input select-radio"></td>
+                    <td>'.$id_ensemble.'</td>
+                    <td><strong><a href="#" class="view_data" name="view" id="view_'.$id_ensemble.'">'.$title.'</strong></td>
                     <td>'.$description.'</td>
-                    <td>'.$link.'</td>
-                    <td><div class="form-check form-switch">
-                    <input class="form-check-input" name="enabled[]" type="checkbox" role="switch" id="typeEnabled" '. (($u_librarian) ? "" : "disabled ") . (($enabled == 1) ? "checked" : "") .'>
-                    </div></td>';
-        if ($u_librarian) { echo '
-                    <td><input type="button" name="delete" value="Delete" id="'.$id_ensemble.'" class="btn btn-danger btn-sm delete_data" /></td>
-                    <td><input type="button" name="edit" value="Edit" id="'.$id_ensemble.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
-        echo '
-                    <td><input type="button" name="view" value="View" id="'.$id_ensemble.'" class="btn btn-secondary btn-sm view_data" /></td>
+                    <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>
                 </tr>
                 ';
     }

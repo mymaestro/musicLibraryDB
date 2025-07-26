@@ -36,7 +36,7 @@ if(isset($_POST["id_part_type"])) {
                     <th>Instrument</th>
                     <th>Family</th>
                     <th>Description</th>
-                    <th>Part Collection</th>
+                    <th>Part collection</th>
                     <th>Enabled</th>
                 </tr>
                 </thead>

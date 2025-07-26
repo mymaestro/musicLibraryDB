@@ -12,6 +12,16 @@ $username_err = $password_err = $confirm_password_err = "";
 $address = $address_err = $name = $name_err = "";
 
 $success_msg = "";
+$verification_msg = "";
+
+// Check if we're showing a verification status message
+if(isset($_GET['verification'])) {
+    if($_GET['verification'] == 'sent') {
+        $verification_msg = "Registration submitted! Please check your email for a verification link to complete your account setup.";
+    } elseif($_GET['verification'] == 'email_error') {
+        $verification_msg = "There was an error sending the verification email. Please try again or contact support.";
+    }
+}
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -22,7 +32,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(isset($_POST['username'])) {
         $username = mysqli_real_escape_string($f_link, $_POST['username']);
         // Connect to the database
-        // Prepare a select statement
+        // Prepare a select statement to check existing users
         $sql = "SELECT id_users FROM users WHERE username = ?";
         
         if($stmt = mysqli_prepare($f_link, $sql)){
@@ -35,13 +45,33 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Attempt to execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
                 mysqli_stmt_store_result($stmt);
-                if (mysqli_stmt_num_rows($stmt) == 1) $username_err = "This username is already taken.";
+                if (mysqli_stmt_num_rows($stmt) == 1) {
+                    $username_err = "This username is already taken.";
+                }
             } else {
                 $username_err = "Oops! Problem looking for user names.";
             }
+            mysqli_stmt_close($stmt);
         }
-        // Close statement
-        mysqli_stmt_close($stmt);
+
+        // Also check for pending email verifications with this username
+        if (empty($username_err)) {
+            $sql = "SELECT password_reset_id FROM password_reset WHERE username = ? AND password_reset_expires >= ? AND request_type='email_verification'";
+            $currentTime = date("U");
+            
+            if($stmt = mysqli_prepare($f_link, $sql)){
+                mysqli_stmt_bind_param($stmt, "ss", $param_username, $currentTime);
+                $param_username = $username;
+                
+                if (mysqli_stmt_execute($stmt)) {
+                    mysqli_stmt_store_result($stmt);
+                    if (mysqli_stmt_num_rows($stmt) > 0) {
+                        $username_err = "This username has a pending verification. Please check your email or wait for it to expire.";
+                    }
+                }
+                mysqli_stmt_close($stmt);
+            }
+        }
 
     } else $username_err = "Please enter a username.";
 
@@ -54,7 +84,40 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate address
     if(isset($_POST['address'])) {
         $address = mysqli_real_escape_string($f_link, $_POST['address']);
-        if(!filter_var($address, FILTER_VALIDATE_EMAIL)) $address_err = "Please enter a valid e-mail address.";
+        if(!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+            $address_err = "Please enter a valid e-mail address.";
+        } else {
+            // Check for existing users with this email
+            $sql = "SELECT id_users FROM users WHERE address = ?";
+            if($stmt = mysqli_prepare($f_link, $sql)){
+                mysqli_stmt_bind_param($stmt, "s", $address);
+                if (mysqli_stmt_execute($stmt)) {
+                    mysqli_stmt_store_result($stmt);
+                    if (mysqli_stmt_num_rows($stmt) > 0) {
+                        $address_err = "This email address is already registered.";
+                    }
+                }
+                mysqli_stmt_close($stmt);
+            }
+
+            // Also check for pending email verifications with this address
+            if (empty($address_err)) {
+                $sql = "SELECT password_reset_id FROM password_reset WHERE password_reset_email = ? AND password_reset_expires >= ? AND request_type='email_verification'";
+                $currentTime = date("U");
+                
+                if($stmt = mysqli_prepare($f_link, $sql)){
+                    mysqli_stmt_bind_param($stmt, "ss", $address, $currentTime);
+                    
+                    if (mysqli_stmt_execute($stmt)) {
+                        mysqli_stmt_store_result($stmt);
+                        if (mysqli_stmt_num_rows($stmt) > 0) {
+                            $address_err = "This email address has a pending verification. Please check your email or wait for it to expire.";
+                        }
+                    }
+                    mysqli_stmt_close($stmt);
+                }
+            }
+        }
     } else {
         $address_err = "Please enter a valid e-mail address.";     
     }
@@ -88,35 +151,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     ferror_log("Working with username: " . $username . ", address: " . $address);
 
-    // Check input errors before inserting in database
+    // Check input errors before sending verification email
     if(empty($username_err) && empty($name_err) && empty($password_err) && empty($confirm_password_err) && empty($address_err)) {
-    
-        // Prepare an insert statement
-        $sql = "INSERT INTO users (username, name, password, address) VALUES (?, ?, ?, ?)";
-        ferror_log($sql);
-         
-        if($stmt = mysqli_prepare($f_link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_name, $param_password, $param_address);
-            
-            // Set parameters
-            $param_username = $username;
-            $param_name = $name;
-            $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
-            $param_address  = $address;
-            
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                $success_msg = "Registration successful! You can now <a href='login.php'>log in</a>.";
-                // Reset form fields
-                $username = $name = $address = $password = $confirm_password = "";
-            } else{
-                echo "Something went wrong. Please try again later.";
-            }
-        }
-         
-        // Close statement
-        mysqli_stmt_close($stmt);
+        // All validation passed - send to email verification handler
+        // The email verification handler will store the user data temporarily and send verification email
     }
     
     // Close connection
@@ -134,12 +172,17 @@ require_once('includes/navbar.php');
             <?php echo $success_msg; ?>
         </div>
     <?php endif; ?>
+    <?php if (!empty($verification_msg)): ?>
+        <div class="alert alert-info" role="alert">
+            <?php echo $verification_msg; ?>
+        </div>
+    <?php endif; ?>
     <div class="row g-5">
         <div class="col-md-7">
             <p class="lead">Please submit this form to create an account.</p>
 
             <div class="col-12">
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                <form action="includes/email_verification.php" method="post">
                 <label for="username" class="col-form-label">Username*</label>
                 <input type="text" id="username" name="username" class="form-control<?php echo (!empty($username_err)) ? ' is-invalid' : ''; ?>" placeholder="username" value="<?php echo $username; ?>" required>
                 <span class="help-block"><?php echo $username_err; ?></span>                            
@@ -166,7 +209,7 @@ require_once('includes/navbar.php');
             </div>
             <hr class="my-4">
             <div class="col-12">
-                <input type="submit" class="w-50 align-right btn btn-primary" value="Submit">
+                <input type="submit" name="registration-submit" class="w-50 align-right btn btn-primary" value="Submit">
                 </form>
             </div>
         </div>

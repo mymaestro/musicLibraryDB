@@ -27,7 +27,24 @@ if (isset($_POST["id_users"])) {
             </tr>
             <tr>
                 <td><label>Roles</label></td>
-                <td>'.$rowList["roles"].'</td>
+                <td>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="view_role_user" value="user" '.
+                        (strpos($rowList["roles"], 'user') !== FALSE ? 'checked' : '') .' disabled>
+                        <label class="form-check-label" for="view_role_user">User</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="view_role_librarian" value="librarian" '.
+                        (strpos($rowList["roles"], 'librarian') !== FALSE ? 'checked' : '') .' disabled>
+                        <label class="form-check-label" for="view_role_librarian">Librarian</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="view_role_administrator" value="administrator" '.
+                        (strpos($rowList["roles"], 'administrator') !== FALSE ? 'checked' : '') .' disabled>
+                        <label class="form-check-label" for="view_role_administrator">Administrator</label>
+                    </div>
+                    <br><small class="text-muted">('.$rowList["roles"].')</small>
+                </td>
             </tr>';
     }
     $output .= '

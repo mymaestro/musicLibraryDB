@@ -182,9 +182,12 @@ ferror_log("Running composition_instrumentation.php with catalog_number: " . $ca
         </div><!-- instrumentation -->
     <?php else: ?>
     <div id="instrumentation_view">
-        <div class="row mb-3">
-            <p class="text-center">You must be logged in as a librarian to see this page</p>
-        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    You do not have permission to view this page.
+                </div>
+            </div>
         </div>
     </div>
     <?php endif; ?>

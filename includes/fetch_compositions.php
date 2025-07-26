@@ -29,12 +29,13 @@ if(isset($_POST["catalog_number"])) {
     }
     echo '
         <div class="panel panel-default">
-            <div class="table-repsonsive">
+            <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
                 <table class="table table-hover tablesort" id="cpdatatable">
                 <caption class="title">Available compositions</caption>
-                <thead>
+                <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">
                 <tr>
-                    <th data-tablesort-type="string">Catalog number <i class="fa fa-sort" aria-hidden="true"></i></th>
+                    <th style="width: 50px;"></th>
+                    <th data-tablesort-type="string">Catalog no. <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="string">Name <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="string">Composer <i class="fa fa-sort" aria-hidden="true"></i></th>
                     <th data-tablesort-type="string">Arranger <i class="fa fa-sort" aria-hidden="true"></i></th>
@@ -135,34 +136,28 @@ if(isset($_POST["catalog_number"])) {
         $partscount = $rowList['parts'];
         $ensemble = $rowList['ensemble'];
         $enabled = $rowList['enabled'];
-        echo '<tr>
+        if ($partscount == NULL) {
+            $partscount = 0;
+        } else {
+            $partscount = intval($partscount);
+        }
+        if ($partscount > 0) {
+            $partscountclass = "table-success";
+        } else {
+            $partscountclass = "table-secondary";
+        }
+        echo '<tr data-id="'.$catalog_number.'">
+                    <td><input type="radio" name="composition_select" value="'.$catalog_number.'" class="form-check-input select-radio"></td>
                     <td>'.$catalog_number.'</td>
-                    <td>'.$name.'</td>
+                    <td><strong><a href="#" class="view_data" id="view_'.$catalog_number.'">'.$name.'</a></strong></td>
                     <td>'.$composer.'</td>
                     <td>'.$arranger.'</td>
                     <!-- DESCRIPTION: '.$description.'-->
                     <td>'.$grade.'</td>
                     <td>'.$genre.'</td>
                     <td>'.$ensemble.'</td>
-                    <td><div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
-                    </div></td>';
-            if ( $partscount > 0 ) {
-                echo '
-                            <td><button type="button" name="parts_data" id="'.$catalog_number.'" class="btn btn-info btn-sm parts_data">'. $partscount.' parts</button></td>';
-                } else {
-                echo '
-                            <td class="text-muted">0 parts</td>';
-                }
-                echo '
-                <td><input type="button" name="view" value="Details" id="'.$catalog_number.'" class="btn btn-secondary btn-sm view_data" /></td>';
-            if ($u_librarian) { echo '
-                <td><form method="post" id="instr_data_'.$catalog_number.'" action="composition_instrumentation.php"><input type="hidden" name="catalog_number" value="'.$catalog_number.'" />
-                <input type="submit" name="compositions" value="Instrumentation" id="'.$catalog_number.'" class="btn btn-warning btn-sm instr_data" /></form></td>
-                <td><input type="button" name="delete" value="Delete" id="'.$catalog_number.'" class="btn btn-danger btn-sm delete_data" /></td>
-                <td><input type="button" name="edit" value="Edit" id="'.$catalog_number.'" class="btn btn-primary btn-sm edit_data" /></td>';
-                }
-        echo '
+                    <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>
+                    <td class="'.$partscountclass.'">'.$partscount.'</td>
                 </tr>
                 ';
     }

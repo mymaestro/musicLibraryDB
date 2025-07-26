@@ -51,7 +51,7 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div><!-- modal-footer -->
                 </div><!-- modal-content -->
-            </div><!-- modal-dialog -->
+           </div><!-- modal-dialog -->
         </div><!-- dataModal -->
         <div id="deleteModal" class="modal" tabindex="-1" role="dialog"><!-- delete data -->
             <div class="modal-dialog modal-lg" role="document">

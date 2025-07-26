@@ -8,20 +8,24 @@ $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
 $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
 if (isset($_POST["id_part_type"])) {
     $output = "";
-    $sql = "SELECT p.catalog_number       'Catalog',
-                   p.id_part_type         'Part type ID',
-                   c.name                 'Composition',
-                   c.composer             'Composer',
-                   t.name                 'Type',
-                   p.name                 'Part name',
-                   p.description          'Description',
-                   p.is_part_collection   'Instruments in collection',
-                   z.name                 'Paper size',
-                   p.page_count           'Pages',
-                   p.originals_count      'Originals',
-                   p.copies_count         'Copies',
-                   p.image_path           'Digital image',
-                   p.last_update          'Last updated'
+    $sql = "SELECT t.name  'Part',
+    p.id_part_type         'Part type ID',
+    p.name                 'Part name',
+    p.description          'Part description',
+    p.catalog_number       'Catalog number',
+    c.name                 'Composition name',
+    c.composer             'Composer',
+    c.arranger             'Arranger',
+    p.is_part_collection   'Instruments in collection',
+    z.name                 'Paper size',
+    p.page_count           'Pages',
+    p.originals_count      'Originals',
+    p.copies_count         'Copies',
+    CASE 
+        WHEN p.image_path IS NULL OR p.image_path = '' THEN 'No'
+        ELSE 'Yes'
+    END AS 'PDF available',  -- Indicates if a PDF is available
+    p.last_update          'Last updated'
     FROM   parts p
     LEFT JOIN compositions c ON c.catalog_number = p.catalog_number
     LEFT JOIN part_types t ON t.id_part_type = p.id_part_type

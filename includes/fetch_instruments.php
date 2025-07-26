@@ -36,12 +36,13 @@ if(isset($_POST["id_instrument"])) {
     ferror_log("returned: " . $sql);
 } else { 
     echo '            <div class="panel panel-default">
-               <div class="table-repsonsive">
+               <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
                     <table class="table table-hover">
-                    <caption class="title">Available part types</caption>
-                    <thead>
+                    <caption class="title">Available instruments</caption>
+                    <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">
                     <tr>
-                        <th>Collation</th>
+                        <th style="width: 50px;"></th>
+                        <th>Score order</th>
                         <th>Name</th>
                         <th>Family</th>
                         <th>Description</th>
@@ -58,19 +59,13 @@ if(isset($_POST["id_instrument"])) {
         $family = $rowList['family'];
         $description = $rowList['description'];
         $enabled = $rowList['enabled'];
-        echo '<tr id="'.$id_instrument.'">
-                    <td><a name="'.$id_instrument.'">'.$collation.'</a></td>
-                    <td>'.$name.'</td>
+        echo '<tr data-id="'.$id_instrument.'">
+                    <td><input type="radio" name="instrument_select" value="'.$id_instrument.'" class="form-check-input select-radio"></td>
+                    <td>'.$collation.'</td>
+                    <td><strong><a href="#" class="view_data" id="view_'.$id_instrument.'">'.$name.'</a></strong></td>
                     <td>'.$family.'</td>
                     <td>'.$description.'</td>
-                    <td><div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="typeEnabled" disabled '. (($enabled == 1) ? "checked" : "") .'>
-                    </div></td>';
-        if ($u_librarian) { echo '
-                    <td><input type="button" name="delete" value="Delete" id="'.$id_instrument.'" class="btn btn-danger btn-sm delete_data" /></td>
-                    <td><input type="button" name="edit" value="Edit" id="'.$id_instrument.'" class="btn btn-primary btn-sm edit_data" /></td>'; }
-        echo '
-                    <td><input type="button" name="view" value="View" id="'.$id_instrument.'" class="btn btn-secondary btn-sm view_data" /></td>
+                    <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>
                 </tr>
                 ';
     }

@@ -44,7 +44,9 @@ if(!empty($_POST)) {
     $page_count = is_numeric($_POST['page_count']) ? (int)$_POST['page_count'] : null;
     $originals_count = is_numeric($_POST['originals_count']) ? (int)$_POST['originals_count'] : null;
     $copies_count = is_numeric($_POST['copies_count']) ? (int)$_POST['copies_count'] : null;
-    
+    $image_path_display = !empty($_POST['image_path_display']) ? $_POST['image_path_display'] : null;
+    $image_path = !empty($_POST['image_path']) ? $_POST['image_path'] : null;
+
     // Handle instrument array
     $id_instruments = array();
     if (isset($_POST['id_instrument'])) {
@@ -55,8 +57,6 @@ if(!empty($_POST)) {
         }
     }
 
-    $image_path = null; // Default to NULL, will be set if file is uploaded
-    
     // Handle file upload
     if (isset($_FILES['image_path']) && $_FILES['image_path']['error'] === UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['image_path']['tmp_name'];
@@ -89,12 +89,10 @@ if(!empty($_POST)) {
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->file($fileTmpPath);
         $allowedMimes = [
-            'application/pdf' => 'pdf',
-            'image/jpeg' => 'jpeg',
-            'image/png' => 'png',
+            'application/pdf' => 'pdf'
         ];
         if (!array_key_exists($mime, $allowedMimes)) {
-            die("Only PDF, JPEG, and PNG files are allowed. Detected: $mime");
+            die("Only PDF files are allowed. Detected: $mime");
         }
 
         // Get the part type name from the database using prepared statement
@@ -144,10 +142,6 @@ if(!empty($_POST)) {
         ferror_log("No file uploaded or upload error occurred.");
     }
 
-    ferror_log("The REAL originals_count is ". ($originals_count ?? 'NULL'));
-    ferror_log("The REAL copies_count is ". ($copies_count ?? 'NULL'));
-    ferror_log("POST update=". $_POST["update"]);
-    
     if($_POST["update"] == "update") {
         // Prepare UPDATE statement
         $update_sql = "UPDATE parts SET 
@@ -171,6 +165,11 @@ if(!empty($_POST)) {
             die("Prepare failed: " . mysqli_error($f_link));
         }
         
+        // If image_path is not set, but image_path_display is set, use that
+        if (empty($image_path) && !empty($image_path_display)) {
+            $image_path = $image_path_display;
+        }
+
         mysqli_stmt_bind_param($update_stmt, "isssisisiisi", 
             $id_part_type, $catalog_number, $name, $description, 
             $is_part_collection, $paper_size, $page_count, $image_path, 
@@ -227,7 +226,18 @@ if(!empty($_POST)) {
         
     } elseif($_POST["update"] == "add") {
         // Prepare INSERT statement
-        $insert_sql = "INSERT INTO parts(catalog_number, id_part_type, name, description, is_part_collection, paper_size, page_count, image_path, originals_count, copies_count, last_update) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())";
+        $insert_sql = "INSERT INTO parts (
+        catalog_number, 
+        id_part_type,
+        name, 
+        description, 
+        is_part_collection, 
+        paper_size, 
+        page_count, 
+        image_path, 
+        originals_count, 
+        copies_count, 
+        last_update) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())";
         
         ferror_log("Preparing INSERT SQL: " . $insert_sql);
         
@@ -235,8 +245,13 @@ if(!empty($_POST)) {
         if (!$insert_stmt) {
             die("Prepare failed: " . mysqli_error($f_link));
         }
-        
-        mysqli_stmt_bind_param($insert_stmt, "sisssissii", 
+
+        // If image_path is not set, but image_path_display is set, use that
+        if (empty($image_path) && !empty($image_path_display)) {
+            $image_path = $image_path_display;
+        }
+
+        mysqli_stmt_bind_param($insert_stmt, "sissisisii", 
             $catalog_number, $id_part_type, $name, $description, 
             $is_part_collection, $paper_size, $page_count, $image_path, 
             $originals_count, $copies_count

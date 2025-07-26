@@ -20,7 +20,7 @@ require_once('includes/functions.php');
         <h1><?php echo ORGDESC . ' ' ?>Compositions</h1>
 <?php if($u_librarian) : ?>
         Jump to the <a href="#bottom">bottom</a>
-        <div class="table-repsonsive">
+        <div class="table-responsive">
             <table class="table table-sm" id="<?php echo ORGNAME ?>library.csv">
                 <caption class="title">Available compositions</caption>
                 <thead>
@@ -94,8 +94,11 @@ require_once('includes/functions.php');
                 </tbody>
             </table>
 <?php else: ?>
-        <div class="row">
-            <p class="text-center">You must be logged in as a librarian to see this page</p>
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info">
+                You do not have permission to view this page.
+            </div>
         </div>
     </div>
 <?php endif; ?>

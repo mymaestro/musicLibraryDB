@@ -21,11 +21,22 @@ ferror_log("RUNNING partsections.php");
         <div class="row pb-3 pt-5 border-bottom">
             <h1><?php echo ORGNAME . ' ' . PAGE_TITLE ?></h1>
         </div>
+<?php if($u_librarian) : ?>
         <!-- Button to open the assignment modal -->
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#assignModal">
-            Assign Part Types to Section
+            Assign part types to sections
         </button>
-
+<?php else: ?>
+    <div id="instrumentation_view">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    You do not have permission to view this page.
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
         <!-- Assignment Modal -->
         <div class="modal fade" id="assignModal" tabindex="-1" aria-labelledby="assignModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">

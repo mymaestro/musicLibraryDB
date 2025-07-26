@@ -1,7 +1,7 @@
 <?php
   define('PAGE_TITLE', 'List ensembles');
   define('PAGE_NAME', 'Ensembles');
-  require_once("includes/header.php");
+  require_once("includes/header.php"); 
   $u_admin = FALSE;
   $u_librarian = FALSE;
   $u_user = FALSE;
@@ -24,7 +24,9 @@
 <?php if($u_librarian) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
-                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add" class="btn btn-warning">Add</button>
             </div>
         </div><!-- right button -->
 <?php endif; ?>
@@ -61,7 +63,7 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- deleteModal -->
-    <div id="add_data_Modal" class="modal">
+    <div id="editModal" class="modal">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -112,7 +114,7 @@
                 </div><!-- modal-footer -->
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
-    </div><!-- add_data_modal -->
+    </div><!-- editModal -->
     <div id="messageModal" class="modal"><!-- message feedback -->
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -159,14 +161,24 @@ $(document).ready(function(){
             $('#ensemble_table').html(data);
         }
     });
-<?php if($u_librarian) : ?>
+
+    let id_ensemble = null; // Variable to hold the current ensemble ID for editing
+
     $('#add').click(function(){
         $('#insert').val("Insert");
         $('#update').val("add");
         $('#insert_form')[0].reset();
     });
+
+    // Enable the edit and delete buttons, and get the ensemble ID when a table row is clicked
+    $(document).on('click', '#ensemble_table tbody tr', function(){
+        $(this).find('input[type="radio"]').prop('checked',true);
+        $('#edit, #delete').prop('disabled',false);
+        id_ensemble = $(this).data('id'); // data-id attribute
+    });
+
     $(document).on('click', '.edit_data', function(){
-        var id_ensemble = $(this).attr("id");
+        // var id_ensemble = $(this).attr("id");
         $.ajax({
             url:"includes/fetch_ensembles.php",
             method:"POST",
@@ -183,20 +195,20 @@ $(document).ready(function(){
                 }
                 $('#insert').val("Update");
                 $('#update').val("update");
-                $('#add_data_Modal').modal('show');
+                $('#editModal').modal('show');
 
             }
         });
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
-        var id_ensemble = $(this).attr("id");
+        // var id_ensemble = $(this).attr("id");
         $('#deleteModal').modal('show');
         $('#confirm-delete').data('id', id_ensemble);
         $('#ensemble2delete').text(id_ensemble);
     });
     $('#confirm-delete').click(function(){
         // The confirm delete button
-        var id_ensemble = $(this).data('id');
+        // var id_ensemble = $(this).data('id');
         $.ajax({
             url:"includes/delete_records.php",
             method:"POST",
@@ -250,7 +262,7 @@ $(document).ready(function(){
                 },
                 success:function(data){
                     $('#insert_form')[0].reset();
-                    $('#add_data_Modal').modal('hide');
+                    $('#editModal').modal('hide');
                     $.ajax({
                         url:"includes/fetch_ensembles.php",
                         method:"POST",
@@ -265,11 +277,12 @@ $(document).ready(function(){
             });
         }
     });
-<?php endif; ?>
+
     $(document).on('click', '.view_data', function(){
-        var id_ensemble = $(this).attr("id");
-        if(id_ensemble != '')
+        var view_id_ensemble = $(this).attr("id");
+        if(view_id_ensemble != '')
         {
+            let id_ensemble = view_id_ensemble.split('_')[1]; // Get the ID from the element ID
             $.ajax({
                 url:"includes/select_ensembles.php",
                 method:"POST",

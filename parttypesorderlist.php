@@ -52,10 +52,14 @@
         ?>
     </div><!-- container -->
 <?php else: ?>
-        <div class="row mb-3">
-            <p class="text-center">You must be logged in as a librarian to use this page</p>
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    You do not have permission to view this page.
+                </div>
+            </div>
         </div>
-    </div><!-- container -->
+    </div>
 <?php endif; ?>
 
 </main>

@@ -29,7 +29,9 @@
             </div>
         </div><!-- right button -->
 <?php endif; ?>
-        <div id="section_table">
+<!-- visible if u_user or u_librarian or u_admin -->
+<?php if($u_user || $u_librarian || $u_admin) : ?>
+    <div id="section_table">
         <?php
         echo '
             <div class="panel panel-default">
@@ -208,6 +210,16 @@
             </div>
         </div>
     </div>
+<?php else: ?>
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info">
+                You do not have permission to view this page.
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+    </div><!-- container -->
 </main>
 <?php require_once("includes/footer.php");?>
 

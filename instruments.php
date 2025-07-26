@@ -26,12 +26,13 @@
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
                 <a href="instrumentsorderlist.php" class="btn btn-info" role="button" name="sort" id="sort">Set score order</a>
-                <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-warning">Add</button>
-            </div>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add" class="btn btn-warning">Add</button>            </div>
         </div><!-- right button -->
 <?php endif; ?>
-        <div id="instrument_table" align="center">
-            Loading table...
+        <div id="instrument_table">
+            Loading instruments...
         </div><!-- instrument_table -->
 
         <div id="dataModal" class="modal"><!-- view data -->
@@ -63,7 +64,7 @@
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
         </div><!-- deleteModal -->
-        <div id="add_data_Modal" class="modal">
+        <div id="editModal" class="modal">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -143,7 +144,7 @@
                     </div><!-- modal-footer -->
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
-        </div><!-- add_data_modal -->
+        </div><!-- editModal -->
         <div id="messageModal" class="modal"><!-- message feedback -->
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -191,13 +192,23 @@ $(document).ready(function(){
         }
     });
 
+    let id_instrument = null; // Variable to hold the ID of the instrument being edited or deleted
+
     $('#add').click(function(){
         $('#insert').val("Insert");
         $('#update').val("add");
         $('#insert_form')[0].reset();
     });
+
+    // Enable the edit and delete buttons, and get the instrument ID when a table row is clicked
+    $(document).on('click', '#instrument_table tbody tr', function(){
+        $(this).find('input[type="radio"]').prop('checked',true);
+        $('#edit, #delete').prop('disabled',false);
+        id_instrument = $(this).data('id'); // data-id attribute
+    });
+
     $(document).on('click', '.edit_data', function(){
-        var id_instrument = $(this).attr("id");
+        // var id_instrument = $(this).attr("id");
         // Load instruments table
         $.ajax({
             url:"includes/fetch_instruments.php",
@@ -215,20 +226,20 @@ $(document).ready(function(){
                 }
                 $('#insert').val("Update");
                 $('#update').val("update");
-                $('#add_data_Modal').modal('show');
+                $('#editModal').modal('show');
             }
         });
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
         // input button name="delete" id="id_instrument" class="delete_data"
-        var id_instrument = $(this).attr("id");
+        // var id_instrument = $(this).attr("id");
         $('#deleteModal').modal('show');
         $('#confirm-delete').data('id', id_instrument);
         $('#instrument2delete').text(id_instrument);
     });
     $('#confirm-delete').click(function(){
         // The confirm delete button
-        var id_instrument = $(this).data('id');
+        // var id_instrument = $(this).data('id');
         $.ajax({
             url:"includes/delete_records.php",
             method:"POST",
@@ -282,7 +293,7 @@ $(document).ready(function(){
                 },
                 success:function(data){
                     $('#insert_form')[0].reset();
-                    $('#add_data_Modal').modal('hide');
+                    $('#editModal').modal('hide');
                     $.ajax({
                         url:"includes/fetch_instruments.php",
                         method:"POST",
@@ -298,9 +309,11 @@ $(document).ready(function(){
         }
     });
     $(document).on('click', '.view_data', function(){
-        var id_instrument = $(this).attr("id");
-        if(id_instrument != '')
+        var view_id_instrument = $(this).attr("id");
+        if(view_id_instrument != '')
         {
+            let id_instrument = view_id_instrument.substring(5); // Extract the ID from the element ID
+            console.log("View instrument with ID: " + view_id_instrument);
             $.ajax({
                 url:"includes/select_instruments.php",
                 method:"POST",

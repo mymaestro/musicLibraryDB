@@ -61,7 +61,7 @@ if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) { // User
     echo '</div><!-- row -->
     <div class="row">
     <div class="col-12 bg-white vh-100 overflow-auto h-auto">
-    <div class="table-repsonsive">
+    <div class="table-responsive">
          <table class="table table-hover">
          <caption class="title">Parts for '.$catalog_number.'</caption>
          <thead>
@@ -148,7 +148,7 @@ if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) { // User
     ferror_log("You don't belong here.");
     echo '
     <div class="panel panel-default">
-    <div class="table-repsonsive">
+    <div class="table-responsive">
         <table class="table table-hover tablesort" id="cpdatatable">
         <caption class="title">Available compositions</caption>
         <thead>

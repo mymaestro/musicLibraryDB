@@ -1,6 +1,21 @@
 <?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once('config.php');
 require_once('functions.php');
+
+// Check user roles
+$u_admin = FALSE;
+$u_librarian = FALSE;
+$u_user = FALSE;
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+    $u_admin = (strpos(htmlspecialchars($_SESSION['roles']), 'administrator') !== FALSE ? TRUE : FALSE);
+    $u_librarian = (strpos(htmlspecialchars($_SESSION['roles']), 'librarian') !== FALSE ? TRUE : FALSE);
+    $u_user = (strpos(htmlspecialchars($_SESSION['roles']), 'user') !== FALSE ? TRUE : FALSE);
+}
 
 ferror_log("Running generate_reports.php");
 
@@ -21,7 +36,7 @@ if (isset($_POST["report_type"])) {
                     ORDER BY c.name ASC, pt.collation ASC';
             
             $output .= '<div class="table-responsive">
-                <h4><i class="fas fa-file-times text-danger"></i> Parts with Zero Originals</h4>
+                <h4><i class="fas fa-file-times text-danger"></i> Parts with zero originals</h4>
                 <p class="text-muted">These parts exist in the database but have no original copies available.</p>
                 <table class="table table-striped table-hover">
                 <thead class="table-dark">
@@ -64,7 +79,7 @@ if (isset($_POST["report_type"])) {
                     ORDER BY pt.family, pt.name';
             
             $output .= '<div class="table-responsive">
-                <h4><i class="fas fa-puzzle-piece text-warning"></i> Part Types Not Assigned to Sections</h4>
+                <h4><i class="fas fa-puzzle-piece text-warning"></i> Part types not assigned to sections</h4>
                 <p class="text-muted">These part types are enabled but not assigned to any section.</p>
                 <table class="table table-striped table-hover">
                 <thead class="table-dark">
@@ -90,10 +105,11 @@ if (isset($_POST["report_type"])) {
             } else {
                 $output .= '<tr><td colspan="4" class="text-center text-success">All part types are properly assigned to sections!</td></tr>';
             }
-            $output .= '</tbody></table>
-                <div class="alert alert-info mt-3">
+            $output .= '</tbody></table>';
+            $output .= $u_librarian ?
+                '<div class="alert alert-info mt-3">
                     <strong>Action Required:</strong> Consider assigning these part types to appropriate sections in the <a href="partsections.php">Part Sections</a> management page.
-                </div></div>';
+                </div>' : '';
             break;
             
         case 'playgram_missing_parts':
@@ -108,7 +124,7 @@ if (isset($_POST["report_type"])) {
                     ORDER BY pg.name, c.name, pt.collation';
             
             $output .= '<div class="table-responsive">
-                <h4><i class="fas fa-calendar-times text-info"></i> Programmed Works with Missing Parts</h4>
+                <h4><i class="fas fa-calendar-times text-info"></i> Programmed works with missing parts</h4>
                 <p class="text-muted">These compositions are scheduled in playgrams but have parts with zero originals.</p>
                 <table class="table table-striped table-hover">
                 <thead class="table-dark">
@@ -138,7 +154,7 @@ if (isset($_POST["report_type"])) {
             }
             $output .= '</tbody></table>
                 <div class="alert alert-warning mt-3">
-                    <strong><i class="fas fa-exclamation-triangle"></i> Performance Risk:</strong> These works are scheduled but missing essential parts.
+                    <strong><i class="fas fa-exclamation-triangle"></i> Performance risk:</strong> These works are scheduled but missing essential parts.
                 </div></div>';
             break;
             
@@ -150,7 +166,7 @@ if (isset($_POST["report_type"])) {
                     ORDER BY c.name';
             
             $output .= '<div class="table-responsive">
-                <h4><i class="fas fa-music text-secondary"></i> Compositions Without Any Parts</h4>
+                <h4><i class="fas fa-music text-secondary"></i> Compositions without any parts</h4>
                 <p class="text-muted">These compositions exist but have no parts defined in the system.</p>
                 <table class="table table-striped table-hover">
                 <thead class="table-dark">
@@ -168,12 +184,13 @@ if (isset($_POST["report_type"])) {
             if (mysqli_num_rows($res) > 0) {
                 while($row = mysqli_fetch_assoc($res)) {
                     $grade_badge = $row['grade'] ? '<span class="badge bg-info">' . $row['grade'] . '</span>' : '<span class="text-muted">N/A</span>';
+                    $action_cell = $u_librarian ? '<a href="composition_instrumentation.php?catalog_number=' . urlencode($row['catalog_number']) . '" class="btn btn-sm btn-outline-primary">Add Parts</a>' : '<span class="text-muted">-</span>';
                     $output .= '<tr>
                         <td><strong>' . htmlspecialchars($row['catalog_number']) . '</strong></td>
                         <td>' . htmlspecialchars($row['name']) . '</td>
                         <td>' . htmlspecialchars($row['composer']) . '</td>
                         <td>' . $grade_badge . '</td>
-                        <td><a href="composition_instrumentation.php?catalog_number=' . urlencode($row['catalog_number']) . '" class="btn btn-sm btn-outline-primary">Add Parts</a></td>
+                        <td>' . $action_cell . '</td>
                     </tr>';
                 }
             } else {
@@ -190,7 +207,7 @@ if (isset($_POST["report_type"])) {
                     ORDER BY i.family, i.name';
             
             $output .= '<div class="table-responsive">
-                <h4><i class="fas fa-guitar text-dark"></i> Instruments Not Used in Part Types</h4>
+                <h4><i class="fas fa-drum text-dark"></i> Instruments not used in part types</h4>
                 <p class="text-muted">These instruments are enabled but not assigned as default instruments for any part type.</p>
                 <table class="table table-striped table-hover">
                 <thead class="table-dark">
@@ -234,7 +251,7 @@ if (isset($_POST["report_type"])) {
                     ORDER BY name';
             
             $output .= '<div class="table-responsive">
-                <h4><i class="fas fa-tags text-primary"></i> Compositions with Incomplete Metadata</h4>
+                <h4><i class="fas fa-tags text-primary"></i> Compositions with incomplete metadata</h4>
                 <p class="text-muted">These compositions are missing essential metadata (genre, ensemble, grade, or duration).</p>
                 <table class="table table-striped table-hover">
                 <thead class="table-dark">
@@ -258,13 +275,14 @@ if (isset($_POST["report_type"])) {
                     if ($row['missing_duration']) $missing_items[] = 'Duration';
                     
                     $missing_text = implode(', ', $missing_items);
+                    $action_cell = $u_librarian ? '<a href="compositions.php?edit=' . urlencode($row['catalog_number']) . '" class="btn btn-sm btn-outline-primary">Edit</a>' : '<span class="text-muted">-</span>';
                     
                     $output .= '<tr>
                         <td><strong>' . htmlspecialchars($row['catalog_number']) . '</strong></td>
                         <td>' . htmlspecialchars($row['name']) . '</td>
                         <td>' . htmlspecialchars($row['composer']) . '</td>
                         <td><span class="text-warning">' . $missing_text . '</span></td>
-                        <td><a href="compositions.php?edit=' . urlencode($row['catalog_number']) . '" class="btn btn-sm btn-outline-primary">Edit</a></td>
+                        <td>' . $action_cell . '</td>
                     </tr>';
                 }
             } else {

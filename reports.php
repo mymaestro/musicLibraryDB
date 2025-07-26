@@ -70,7 +70,7 @@ mysqli_close($f_link);
     <div class="container">
         <div class="row pb-3 pt-5 border-bottom">
             <div class="col">
-                <h1><i class="fas fa-exclamation-triangle text-warning"></i> Administrative Reports</h1>
+                <h1><i class="fas fa-exclamation-triangle text-warning"></i> <?php echo ORGNAME; ?> Library reports</h1>
                 <p class="lead">Data integrity and missing pieces analysis</p>
             </div>
         </div>
@@ -83,7 +83,7 @@ mysqli_close($f_link);
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="card-title text-danger">
-                                    <i class="fas fa-file-times"></i> Missing Originals
+                                    <i class="fas fa-file-times"></i> Missing originals
                                 </h6>
                                 <h3 class="text-danger"><?php echo number_format($report_counts['missing_originals']); ?></h3>
                                 <small class="text-muted">Parts with zero originals</small>
@@ -104,7 +104,7 @@ mysqli_close($f_link);
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="card-title text-warning">
-                                    <i class="fas fa-puzzle-piece"></i> Orphaned Part Types
+                                    <i class="fas fa-puzzle-piece"></i> Orphaned part types
                                 </h6>
                                 <h3 class="text-warning"><?php echo number_format($report_counts['orphaned_part_types']); ?></h3>
                                 <small class="text-muted">Part types not in sections</small>
@@ -125,7 +125,7 @@ mysqli_close($f_link);
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="card-title text-info">
-                                    <i class="fas fa-calendar-times"></i> Playgram Issues
+                                    <i class="fas fa-calendar-times"></i> Playgram issues
                                 </h6>
                                 <h3 class="text-info"><?php echo number_format($report_counts['playgram_missing_parts']); ?></h3>
                                 <small class="text-muted">Programmed works missing parts</small>
@@ -146,7 +146,7 @@ mysqli_close($f_link);
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="card-title text-secondary">
-                                    <i class="fas fa-music"></i> No Parts
+                                    <i class="fas fa-music"></i> No parts
                                 </h6>
                                 <h3 class="text-secondary"><?php echo number_format($report_counts['compositions_no_parts']); ?></h3>
                                 <small class="text-muted">Compositions without parts</small>
@@ -167,7 +167,7 @@ mysqli_close($f_link);
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="card-title text-dark">
-                                    <i class="fas fa-guitar"></i> Unused Instruments
+                                    <i class="fas fa-drum"></i> Unused instruments
                                 </h6>
                                 <h3 class="text-dark"><?php echo number_format($report_counts['unused_instruments']); ?></h3>
                                 <small class="text-muted">Instruments not in part types</small>
@@ -188,7 +188,7 @@ mysqli_close($f_link);
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="card-title text-primary">
-                                    <i class="fas fa-tags"></i> Incomplete Metadata
+                                    <i class="fas fa-tags"></i> Incomplete metadata
                                 </h6>
                                 <h3 class="text-primary"><?php echo number_format($report_counts['incomplete_metadata']); ?></h3>
                                 <small class="text-muted">Missing genre/ensemble/grade/duration</small>
@@ -204,6 +204,7 @@ mysqli_close($f_link);
             </div>
         </div>
 
+        <?php if ($u_librarian): ?>
         <!-- Additional Tools -->
         <div class="row mt-4">
             <div class="col-12">
@@ -214,8 +215,8 @@ mysqli_close($f_link);
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3 mb-2">
-                                <a href="recordings.php" class="btn btn-outline-secondary w-100">
-                                    <i class="fas fa-microphone"></i> View Recordings
+                                <a href="part_distribution.php" class="btn btn-outline-secondary w-100">
+                                    <i class="fas fa-file-archive"></i> Part distribution
                                 </a>
                             </div>
                             <div class="col-md-3 mb-2">
@@ -225,7 +226,7 @@ mysqli_close($f_link);
                             </div>
                             <div class="col-md-3 mb-2">
                                 <a href="composition_instrumentation.php" class="btn btn-outline-secondary w-100">
-                                    <i class="fas fa-list-ul"></i> Manage Instrumentations
+                                    <i class="fas fa-list-ul"></i> Manage instrumentations
                                 </a>
                             </div>
                             <div class="col-md-3 mb-2">
@@ -238,13 +239,14 @@ mysqli_close($f_link);
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
         <!-- Modal for Report Details -->
         <div class="modal fade" id="view_data_modal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="reportModalLabel">Report Details</h5>
+                        <h5 class="modal-title" id="reportModalLabel">Report details</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="report_detail">

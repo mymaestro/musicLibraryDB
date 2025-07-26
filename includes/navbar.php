@@ -15,14 +15,16 @@
                         <a class="nav-link dropdown-toggle" href="#" id="nav_menu_dropdown" data-bs-toggle="dropdown" aria-expanded="false">MATERIALS</a>
                         <ul class="dropdown-menu" aria-labelledby="nav_menu_dropdown">
                         <li><a class="dropdown-item" href="compositions.php">Compositions</a></li>
-                        <li><a class="dropdown-item" href="parts.php">Parts</a></li>
+                        <li><a class="dropdown-item" href="parts.php">Parts</a></li><?php if (isset($_SESSION['username'])) if (strpos(htmlspecialchars($_SESSION['roles']), 'librarian') !== FALSE ) echo '
                         <li><a class="dropdown-item" href="playgrams.php">Playgrams</a></li>
+'; ?>
                         <li><a class="dropdown-item" href="concerts.php">Concerts</a></li>
                         <li><a class="dropdown-item" href="recordings.php">Recordings</a></li>
                         <li><a class="dropdown-item" href="reports.php">Reports</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="ensembles.php">Ensembles</a></li>
+                        <li><a class="dropdown-item" href="ensembles.php">Ensembles</a></li><?php if (isset($_SESSION['username'])) if (strpos(htmlspecialchars($_SESSION['roles']), 'librarian') !== FALSE ) echo '
                         <li><a class="dropdown-item" href="sections.php">Sections</a></li>
+'; ?>
                         <li><a class="dropdown-item" href="instruments.php">Instruments</a></li>
                         <li><a class="dropdown-item" href="genres.php">Genres</a></li>
                         <li><a class="dropdown-item" href="parttypes.php">Part types</a></li>

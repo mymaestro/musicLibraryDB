@@ -15,6 +15,7 @@ define('ORGRECORDINGS', 'http://library.local/files/recordings/');
  * Make sure this path is correct and accessible by the web server. */
 define('ORGPUBLIC', 'files/recordings/'); // Where to put recordings
 define('ORGPRIVATE', 'files/parts/'); // Where to put parts
+define('ORGDIST', 'files/distributions/'); // Where to put parts
 define('ORGUPLOADS', 'files/uploads/'); // not sure if this is used
 
 define('ORGLOGO', 'images/logo.png');

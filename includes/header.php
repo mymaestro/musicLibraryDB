@@ -80,7 +80,7 @@
 
     .left-menu-scroll,
     .table-wrapper {
-      height: calc(100vh - 56px - 48px - 40px ); /* header height + title + footer height */
+      height: calc(100vh - 324px ); /* 196px - 88px - 40px header height (32) + title + footer height, each row is 33px */
       overflow-y: auto;
       flex-grow: 1;
     }
@@ -115,12 +115,6 @@
 
     footer {
       flex-shrink: 0;
-    }
-
-    /* Fix heights */
-    .left-menu-scroll,
-    .table-wrapper {
-      height: calc(100vh - 56px - 40px); /* header height + footer height */
     }
   </style>    
 <?php elseif (PAGE_NAME == 'Recordings') : ?>

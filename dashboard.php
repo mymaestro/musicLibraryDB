@@ -134,6 +134,29 @@ while ($row = mysqli_fetch_assoc($res)) {
     $ensemble_stats[] = $row;
 }
 
+// Get performance statistics by genre
+$sql = "SELECT 
+    g.name as genre_name,
+    COUNT(DISTINCT r.id_recording) as recordings_count,
+    COUNT(DISTINCT CONCAT(ci.id_concert, '-', pi.catalog_number)) as concert_performances,
+    (COUNT(DISTINCT r.id_recording) + COUNT(DISTINCT CONCAT(ci.id_concert, '-', pi.catalog_number))) as total_performances
+FROM genres g
+LEFT JOIN compositions c ON g.id_genre = c.genre AND c.enabled = 1
+LEFT JOIN recordings r ON c.catalog_number = r.catalog_number
+LEFT JOIN playgram_items pi ON c.catalog_number = pi.catalog_number
+LEFT JOIN playgrams p ON pi.id_playgram = p.id_playgram
+LEFT JOIN concerts ci ON p.id_playgram = ci.id_playgram
+WHERE g.enabled = 1
+GROUP BY g.id_genre, g.name
+HAVING total_performances > 0
+ORDER BY total_performances DESC
+LIMIT 10";
+$performance_stats = array();
+$res = mysqli_query($f_link, $sql);
+while ($row = mysqli_fetch_assoc($res)) {
+    $performance_stats[] = $row;
+}
+
 mysqli_close($f_link);
 ?>
 
@@ -358,12 +381,78 @@ mysqli_close($f_link);
             </div>
         </div>
 
+        <!-- Performance Analysis -->
+        <div class="row mt-4">
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-line"></i> Performance activity by genre</h5>
+                    </div>
+                    <div class="card-body">
+                        <?php if (!empty($performance_stats)): ?>
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <!-- Bar Chart -->
+                                    <div class="chart-container" style="position: relative; height: 400px;">
+                                        <canvas id="performanceChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <!-- Performance Statistics Table -->
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Genre</th>
+                                                    <th class="text-center">Recordings</th>
+                                                    <th class="text-center">Concerts</th>
+                                                    <th class="text-center">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($performance_stats as $stat): ?>
+                                                <tr>
+                                                    <td><small><?php echo htmlspecialchars($stat['genre_name']); ?></small></td>
+                                                    <td class="text-center">
+                                                        <span class="badge bg-info"><?php echo $stat['recordings_count']; ?></span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="badge bg-warning"><?php echo $stat['concert_performances']; ?></span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="badge bg-success"><?php echo $stat['total_performances']; ?></span>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mt-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle"></i> Shows recordings and concert performances by genre. 
+                                            This helps identify which genres are most actively performed.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <div class="text-center py-4">
+                                <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">No performance data available yet.</p>
+                                <small>Performance data will appear when recordings or concerts are added to the system.</small>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Recent Activity -->
         <div class="row">
             <div class="col-lg-6 mb-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5><i class="fas fa-clock"></i> Recent Activity</h5>
+                        <h5><i class="fas fa-clock"></i> Recent activity</h5>
                     </div>
                     <div class="card-body">
                         <?php if (!empty($recent_activity)): ?>
@@ -507,10 +596,91 @@ mysqli_close($f_link);
 
 <?php require_once("includes/footer.php");?>
 
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
 $(document).ready(function(){
-    // Add any dashboard-specific JavaScript here
+    // Dashboard loaded
     console.log("Dashboard loaded");
+    
+    <?php if (!empty($performance_stats)): ?>
+    // Performance Chart by Genre
+    const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+    const performanceChart = new Chart(performanceCtx, {
+        type: 'bar',
+        data: {
+            labels: [
+                <?php foreach ($performance_stats as $stat): ?>
+                '<?php echo addslashes($stat['genre_name']); ?>',
+                <?php endforeach; ?>
+            ],
+            datasets: [{
+                label: 'Recordings',
+                data: [
+                    <?php foreach ($performance_stats as $stat): ?>
+                    <?php echo $stat['recordings_count']; ?>,
+                    <?php endforeach; ?>
+                ],
+                backgroundColor: 'rgba(13, 202, 240, 0.7)',
+                borderColor: 'rgba(13, 202, 240, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Concert Performances',
+                data: [
+                    <?php foreach ($performance_stats as $stat): ?>
+                    <?php echo $stat['concert_performances']; ?>,
+                    <?php endforeach; ?>
+                ],
+                backgroundColor: 'rgba(255, 193, 7, 0.7)',
+                borderColor: 'rgba(255, 193, 7, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Performance activity by genre',
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    },
+                    title: {
+                        display: true,
+                        text: 'Number of performances'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Genre'
+                    },
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        }
+    });
+    <?php endif; ?>
 });
 </script>
 

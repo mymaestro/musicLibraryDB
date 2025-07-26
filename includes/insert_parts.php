@@ -5,6 +5,55 @@ define('PAGE_NAME', 'Insert parts');
 require_once('config.php');
 require_once('functions.php');
 
+// Include PHPdfer for PDF metadata handling
+if (!file_exists('../PHPdfer/PHPdfer.php') || !file_exists('../PHPdfer/MetadataDirector.php') || !file_exists('../PHPdfer/MetadataBuilder.php')) {
+    ferror_log("PHPdfer library not found at: " . __DIR__ . "/PHPdfer/");
+    die("PHPdfer library not found. Please ensure it is installed in the correct path.");
+} else {
+    ferror_log("PHPdfer library found at: " . __DIR__ . "/PHPdfer/");
+    require_once('../PHPdfer/PHPdfer.php');
+    require_once('../PHPdfer/MetadataDirector.php');
+    require_once('../PHPdfer/MetadataBuilder.php');
+}
+
+function updatePartPDFMetadata($partFilePath, $partData) {
+    // Check if Ghostscript is available
+//    if (!shell_exec('which gs')) {
+//        throw new Exception('Ghostscript is not installed or not in PATH');
+//    }
+    
+    $phpdfer = new PHPdfer\PHPdfer();
+    
+    $metadata = [
+        'TITLE' => $partData['name'],
+        'AUTHOR' => $partData['composer'],
+        'SUBJECT' => $partData['subject'] ?? '',
+        'KEYWORDS' => implode(', ', [
+            $partData['catalog_number'],
+            $partData['part_type'] ?? ''
+        ]),
+        'CREATOR' => ORGNAME,
+        'MOD_DATE' => date('Y-m-d H:i:s'),
+        'CREATION_DATE' => date('Y-m-d H:i:s')
+    ];
+
+    try {
+        $phpdfer->changeMetadata($partFilePath, $metadata, true);
+        
+        // The new file will be named phpdfer_[original_name].pdf
+        // $newFileName = 'phpdfer_' . pathinfo($partFilePath, PATHINFO_FILENAME) . '.pdf';
+        
+        $newFileName = $phpdfer->getOutputFilePath();
+        if (!$newFileName) {
+            throw new Exception("Failed to retrieve the output file path from PHPdfer.");
+        }
+        return $newFileName;
+    } catch (Exception $e) {
+        error_log("Failed to update PDF metadata: " . $e->getMessage());
+        throw $e;
+    }
+}
+
 // Settings
 $maxFileSize = 20 * 1024 * 1024; // 20 MB
 // You might need to adjust these settings in your php.ini file as well
@@ -107,9 +156,27 @@ if(!empty($_POST)) {
             ferror_log("Part type name found: " . $part_type_name);
         } else {
             ferror_log("Part type name not found for ID: " . $id_part_type);
-            $part_type_name = "unknown_part_type";
+            $part_type_name = "Unknown part type";
         }
         mysqli_stmt_close($part_type_stmt);
+
+
+        $composition_stmt = mysqli_prepare($f_link, "SELECT name, composer FROM compositions WHERE catalog_number = ?");
+        mysqli_stmt_bind_param($composition_stmt, "s", $catalog_number);
+        mysqli_stmt_execute($composition_stmt);
+        $composition_result = mysqli_stmt_get_result($composition_stmt);
+
+        if ($composition_result && mysqli_num_rows($composition_result) > 0) {
+            $composition_row = mysqli_fetch_assoc($composition_result);
+            $composition_name = $composition_row['name'];
+            $composition_composer = $composition_row['composer'];
+            ferror_log("Composition found: " . $composition_name . " by " . $composition_composer);
+        } else {
+            ferror_log("Composition not found for catalog number: " . $catalog_number);
+            $composition_name = "unknown_composition";
+            $composition_composer = "unknown_composer";
+        }
+        mysqli_stmt_close($composition_stmt);
 
         // Generate a semi-unique file name based on catalog_number and part_type_name
         $extension = $allowedMimes[$mime];
@@ -129,15 +196,54 @@ if(!empty($_POST)) {
             unlink($destination);
         }
 
-        // Move the uploaded file
-        ferror_log("Attempting to move uploaded file from: " . $fileTmpPath . " to: " . $destination);
-        if (!move_uploaded_file($fileTmpPath, $destination)) {
-            die("Failed to save the uploaded file.");
+        // Use PHPdfer to change metadata if needed
+        if ($extension === 'pdf') {
+            try {
+                ferror_log("Updating PDF metadata for file: " . $fileTmpPath);
+                $newFileName = updatePartPDFMetadata($fileTmpPath, [
+                    'name' => $composition_name . ' - ' . $part_type_name,
+                    'composer' => $composition_composer,
+                    'subject' => $part_type_name . ' part for ' . $composition_name,
+                    'catalog_number' => $catalog_number,
+                    'part_type' => $part_type_name
+                ]);
+                
+                // PHPdfer creates a new file, so we need to copy it to the destination
+                ferror_log("PHPdfer created file: " . $newFileName);
+                ferror_log("Copying PHPdfer output to destination: " . $destination);
+                
+                if (!copy($newFileName, $destination)) {
+                    ferror_log("Failed to copy PHPdfer output to destination: " . $destination);
+                    die("Failed to save the processed PDF file.");
+                }
+                
+                // Clean up the PHPdfer temporary file
+                if (file_exists($newFileName)) {
+                    unlink($newFileName);
+                    ferror_log("Cleaned up PHPdfer temporary file: " . $newFileName);
+                }
+                
+                ferror_log("PDF file processed and saved successfully: " . $destination);
+                
+                // Update the image_path variable to store the file name
+                $image_path = $safeName;
+                
+            } catch (Exception $e) {
+                ferror_log("Failed to update PDF metadata: " . $e->getMessage());
+                die("Failed to update PDF metadata: " . $e->getMessage());
+            }
+        } else {
+            // For non-PDF files, use the original upload process
+            ferror_log("Attempting to move uploaded file from: " . $fileTmpPath . " to: " . $destination);
+            if (!move_uploaded_file($fileTmpPath, $destination)) {
+                ferror_log("Failed to move uploaded file to destination: " . $destination);
+                die("Failed to save the uploaded file.");
+            }
+            ferror_log("File uploaded successfully: " . $destination);
+            
+            // Update the image_path variable to store the file name
+            $image_path = $safeName;
         }
-        ferror_log("File uploaded successfully: " . $destination);
-        
-        // Update the image_path variable to store the file name
-        $image_path = $safeName;
     } else {
         ferror_log("No file uploaded or upload error occurred.");
     }

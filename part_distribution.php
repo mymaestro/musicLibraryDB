@@ -50,7 +50,7 @@ mysqli_close($f_link);
     <div class="container">
         <div class="row pb-3 pt-5 border-bottom">
             <div class="col">
-                <h1><i class="fas fa-file-archive"></i> Part distribution for Concert Series</h1>
+                <h1><i class="fas fa-file-archive"></i> <?php echo ORGNAME; ?> part distribution for Concert Series</h1>
                 <p class="lead">Generate ZIP files containing PDF parts organized by section for concert distribution</p>
             </div>
         </div>

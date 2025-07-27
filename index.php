@@ -85,7 +85,7 @@
 							$playlink = !empty($link) ? ORGRECORDINGS . $performance_date . '/' . $link : '';
 							
 							$display_title = !empty($recording_name) ? $recording_name : $composition_name;
-							echo "<p class='card-text'><strong><em><a href='".$playlink."'>".$display_title.'</a></em></strong><br>by '.$composer;
+							echo "<p class='card-text'><strong><em><a href='".$playlink."' target='_blank'>".$display_title.'</a></em></strong><br>by '.$composer;
 							if (!empty($venue) && !empty($date)) {
 								echo '<br><small class="text-muted">Recorded at '.$venue.' on '.$date.'</small>';
 							}

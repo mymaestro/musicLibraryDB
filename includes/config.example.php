@@ -10,6 +10,7 @@ define('ORGDESC', 'Fourth Wind Wind Ensemble');
 // with trailing slash
 define('ORGHOME', 'http://library.local/');
 define('ORGRECORDINGS', 'http://library.local/files/recordings/'); 
+define('ORGPARTDISTRO', 'http://library.local/files/distributions/'); // Where browser can access distributions
 /* Define the path to the recordings directory.
  * This is used for file uploads and downloads.
  * Make sure this path is correct and accessible by the web server. */

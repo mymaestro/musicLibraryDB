@@ -34,11 +34,10 @@
           <div class="col-md-6">
             <h4>Primary navigation</h4>
             <ul class="list-group">
-              <li class="list-group-item"><strong><i class="fa fa-home"></i> Home</strong> - System overview and getting started</li>
-              <li class="list-group-item"><strong><i class="fas fa-tachometer-alt"></i> Dashboard</strong> - Statistics and quick access to key functions</li>
-              <li class="list-group-item"><strong><i class="fas fa-id-card"></i> Enter</strong> - Data entry menu</li>
+              <li class="list-group-item"><strong><i class="fa fa-home"></i> Home</strong> - Statistics and quick access to key functions</li>
+              <li class="list-group-item"><strong><i class="fas fa-id-card"></i> About</strong> - Information about the music library (the page you are viewing)</li>
               <li class="list-group-item"><strong><i class="fas fa-search"></i> Search</strong> - Browse and search the music library</li>
-              <li class="list-group-item"><strong>Materials</strong> - Dropdown menu with data management pages</li>
+              <li class="list-group-item"><strong><i class="fas fa-folder"></i> Materials</strong> - Dropdown menu with data management pages</li>
               <li class="list-group-item"><strong><i class="fas fa-lock"></i> Login</strong> - User authentication (shows your username when logged in)</li>
             </ul>
           </div>
@@ -72,7 +71,7 @@
               </div>
               <div class="card-body">
                 <ol>
-                  <li>Start with the <strong>Dashboard</strong> to get an overview</li>
+                  <li>Start with the <strong>Home page</strong> to get an overview</li>
                   <li>Use <strong>Search</strong> to explore existing content</li>
                   <li>Browse <strong>Compositions</strong> to see the main catalog</li>
                   <li>Check <strong>Recordings</strong> for audio examples</li>
@@ -88,12 +87,15 @@
               </div>
               <div class="card-body">
                 <ol>
-                  <li>Set up <strong>Instruments</strong> and <strong>Part Types</strong> first</li>
-                  <li>Add <strong>Genres</strong> and <strong>Ensembles</strong> as needed</li>
-                  <li>Enter <strong>Compositions</strong> with complete metadata</li>
-                  <li>Add <strong>Parts</strong> for each composition</li>
-                  <li>Create <strong>Playgrams</strong> and schedule <strong>Concerts</strong></li>
-                  <li>Upload <strong>Recordings</strong> after performances</li>
+                  <li>Set up <strong>Paper sizes</strong> and <strong>Genres</strong> first.</li>
+                  <li>Add <strong>Ensembles</strong> as needed.</li>
+                  <li>Create <strong>Instruments</strong> and set the score order.</li>
+                  <li>Set up <strong>Part Types</strong> as needed. They typically appear on the first page of the score.</li>
+                  <li>Define <strong>Sections</strong> for organizing parts.</li>
+                  <li>Enter <strong>Compositions</strong> with complete metadata.</li>
+                  <li>Add <strong>Parts</strong> for each composition.</li>
+                  <li>Create <strong>Playgrams</strong> and schedule <strong>Concerts</strong>.</li>
+                  <li>Upload <strong>Recordings</strong> after performances.</li>
                 </ol>
               </div>
             </div>
@@ -118,17 +120,48 @@
             <div id="collapseCore" class="accordion-collapse collapse show" aria-labelledby="headingCore" data-bs-parent="#pageGuideAccordion">
               <div class="accordion-body">
                 <dl>
-                  <dt><a href="index.php"><i class="fa fa-home"></i> Home</a></dt>
-                  <dd>Start here to get an overview of the music library system. You see the organization's branding and can access quick navigation cards to jump to different sections. The page also displays a randomly selected composition from the library to showcase the collection. You can access this page without logging in.</dd>
-                  
-                  <dt><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></dt>
+                  <dt><a href="index.php"><i class="fa fa-hands"></i> Welcome</a></dt>
+                  <dd>You see the Welcome page first. You'll find an introduction to the library's features and a random selection of featured compositions and recordings.</dd>
+
+                  <dt><a href="home.php"><i class="fa fa-home"></i> Home</a></dt>
                   <dd>Use this page to get quick insights and statistics about your music library. You see composition counts, grade distribution breakdowns, ensemble summaries, and recent activity. Everyone can access the basic dashboard, but you see additional features when you're logged in.</dd>
                   
                   <dt><a href="search.php"><i class="fas fa-search"></i> Search</a></dt>
                   <dd>Browse and search through all library materials here. You can perform full-text searches, use filtering options to narrow results, and click on links to view detailed information about compositions, parts, and recordings. You don't need to log in to use this feature.</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          <!-- Support Tables -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSupport">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSupport" aria-expanded="false" aria-controls="collapseSupport">
+                <i class="fas fa-cogs"></i> &nbsp; Foundational data & configuration
+              </button>
+            </h2>
+            <div id="collapseSupport" class="accordion-collapse collapse" aria-labelledby="headingSupport" data-bs-parent="#pageGuideAccordion">
+              <div class="accordion-body">
+                <p class="mb-3"><strong>These are the settings that support all your other data entry.</strong> You typically set up these configurations once when first organizing your library, and they rarely need regular updates afterward. However, it's important to configure these properly before adding compositions and parts, as they provide the structure and organization for everything else in your system.</p>
+                
+                <dl>
+                  <dt><a href="parttypes.php"><i class="fas fa-tags"></i> Part types</a></dt>
+                  <dd>Define the types of instrument parts used in your compositions through this page. You create entries like "Flute 1", "Trumpet 2", and "Percussion" while setting their orchestral order, assigning default instruments, and organizing them by family. This setup is crucial because you must have part types defined before you can add individual parts to any compositions in your library.</dd>
                   
-                  <dt><a href="enter_menu.php"><i class="fas fa-id-card"></i> Enter menu</a></dt>
-                  <dd>Access the central hub for data entry and library management from this page. You find quick access to all management functions, organized by category to help you efficiently add and edit library content. Only librarians and administrators can access this area.</dd>
+                  <dt><a href="instruments.php"><i class="fas fa-drum"></i> Instruments</a></dt>
+                  <dd>Maintain the master list of all instruments available in your organization using this page. You can organize instruments by family groups and set their orchestral collation order to ensure consistent presentation throughout the system. This helps standardize how instruments appear in reports and part assignments.</dd>
+                  
+                  <dt><a href="ensembles.php"><i class="fas fa-users"></i> Ensembles</a></dt>
+                  <dd>Define the different performing groups in your organization such as Concert Band, Wind Ensemble, Brass Quintet, or String Orchestra through this page. You use these ensemble categories to tag compositions, indicating which groups can perform specific pieces. This helps users find repertoire appropriate for their particular ensemble configuration.</dd>
+                  
+                  <dt><a href="genres.php"><i class="fas fa-th-list"></i> Genres</a></dt>
+                  <dd>Set up your music classification system using categories like March, Jazz, Classical, Holiday, or Contemporary from this page. You assign genres to compositions to help organize and filter your collection by musical style, making it easier for users to find pieces that fit their programming needs.</dd>
+                  
+                  <dt><a href="papersizes.php"><i class="fas fa-file"></i> Paper sizes</a></dt>
+                  <dd>Track the physical dimensions of your sheet music using standard and custom paper size definitions from this page. You record measurements for proper inventory management and storage organization, ensuring you know exactly what size folders or storage systems you need for each piece, and potentially how much storage space your library requires.</dd>
+                  
+                  <dt><a href="sections.php"><i class="fas fa-layer-group"></i> Sections</a></dt>
+                  <dd>Group your part types into logical sections such as Brass, Woodwinds, Percussion, and Strings through this page. You can assign section leaders and organize large ensembles more effectively by creating these groupings, which helps with rehearsal planning and music distribution.</dd>
                 </dl>
               </div>
             </div>
@@ -180,40 +213,6 @@
             </div>
           </div>
 
-          <!-- Support Tables -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingSupport">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSupport" aria-expanded="false" aria-controls="collapseSupport">
-                <i class="fas fa-cogs"></i> &nbsp; Supporting data & configuration
-              </button>
-            </h2>
-            <div id="collapseSupport" class="accordion-collapse collapse" aria-labelledby="headingSupport" data-bs-parent="#pageGuideAccordion">
-              <div class="accordion-body">
-                <p class="mb-3"><strong>These are the foundation settings that support all your other data entry.</strong> You typically set up these configurations once when first organizing your library, and they rarely need regular updates afterward. However, it's important to configure these properly before adding compositions and parts, as they provide the structure and organization for everything else in your system.</p>
-                
-                <dl>
-                  <dt><a href="parttypes.php"><i class="fas fa-tags"></i> Part types</a></dt>
-                  <dd>Define the types of instrument parts used in your compositions through this page. You create entries like "Flute 1", "Trumpet 2", and "Percussion" while setting their orchestral order, assigning default instruments, and organizing them by family. This setup is crucial because you must have part types defined before you can add individual parts to any compositions in your library.</dd>
-                  
-                  <dt><a href="instruments.php"><i class="fas fa-drum"></i> Instruments</a></dt>
-                  <dd>Maintain the master list of all instruments available in your organization using this page. You can organize instruments by family groups and set their orchestral collation order to ensure consistent presentation throughout the system. This helps standardize how instruments appear in reports and part assignments.</dd>
-                  
-                  <dt><a href="ensembles.php"><i class="fas fa-users"></i> Ensembles</a></dt>
-                  <dd>Define the different performing groups in your organization such as Wind Ensemble, Brass Quintet, or String Orchestra through this page. You use these ensemble categories to tag compositions, indicating which groups can perform specific pieces. This helps users find repertoire appropriate for their particular ensemble configuration.</dd>
-                  
-                  <dt><a href="genres.php"><i class="fas fa-th-list"></i> Genres</a></dt>
-                  <dd>Set up your music classification system using categories like March, Jazz, Classical, Holiday, or Contemporary from this page. You assign genres to compositions to help organize and filter your collection by musical style, making it easier for users to find pieces that fit their programming needs.</dd>
-                  
-                  <dt><a href="papersizes.php"><i class="fas fa-file"></i> Paper sizes</a></dt>
-                  <dd>Track the physical dimensions of your sheet music using standard and custom paper size definitions from this page. You record measurements for proper inventory management and storage organization, ensuring you know exactly what size folders or storage systems you need for each piece.</dd>
-                  
-                  <dt><a href="sections.php"><i class="fas fa-layer-group"></i> Sections</a></dt>
-                  <dd>Group your part types into logical sections such as Brass, Woodwinds, Percussion, and Strings through this page. You can assign section leaders and organize large ensembles more effectively by creating these groupings, which helps with rehearsal planning and music distribution.</dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-
           <!-- Reports & Analysis -->
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingReports">
@@ -235,20 +234,24 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingAdmin">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdmin" aria-expanded="false" aria-controls="collapseAdmin">
-                <i class="fas fa-shield-alt"></i> &nbsp; Administrator functions
+                <i class="fas fa-shield-alt"></i> &nbsp; Administrative functions
               </button>
             </h2>
             <div id="collapseAdmin" class="accordion-collapse collapse" aria-labelledby="headingAdmin" data-bs-parent="#pageGuideAccordion">
               <div class="accordion-body">
-                <dl>
+                <dl>                  
+                  <dt><a href="enable_disable_manager.php"><i class="fas fa-toggle-on"></i> Enable/Disable Manager</a> <span class="badge bg-warning">Librarian+</span></dt>
+                  <dd>Perform bulk enable and disable operations across all database tables using this management tool. You can quickly hide outdated or inactive entries without permanently deleting them, which is helpful when you want to clean up your interface while preserving historical data for future reference.</dd>
+
+                  <dt><a href="partcollections.php"><i class="fas fa-layer-group"></i> Part Collections</a> <span class="badge bg-warning">Librarian+</span></dt>
+                  <dd>Manage collections of parts that are shared among multiple instruments, such as "Percussion 1" or "Brass Ensemble". This page allows you to create and edit collections that can be assigned to multiple compositions, making it easier to manage parts that are used across different ensembles or performances. You can define which instruments share a collection and track their usage in various compositions.</dd>
+
                   <dt><a href="users.php"><i class="fas fa-users-cog"></i> User Management</a> <span class="badge bg-danger">Admin Only</span></dt>
                   <dd>Manage all user accounts and permissions through this administrative interface. You can add new users, edit existing accounts, and assign roles such as Administrator, Librarian, or User to control access levels throughout the system. The page also provides security functions where you can change passwords and manage access levels to ensure proper system security.</dd>
                   
                   <dt><a href="admin_verifications.php"><i class="fas fa-key"></i> Password Reset & Email Verification</a> <span class="badge bg-danger">Admin Only</span></dt>
                   <dd>Handle password reset requests and email verification processes from this administrative page. You can view all pending requests and manually verify user accounts when automatic email verification isn't working or when users need immediate access to the system.</dd>
-                  
-                  <dt><a href="enable_disable_manager.php"><i class="fas fa-toggle-on"></i> Enable/Disable Manager</a> <span class="badge bg-warning">Librarian+</span></dt>
-                  <dd>Perform bulk enable and disable operations across all database tables using this management tool. You can quickly hide outdated or inactive entries without permanently deleting them, which is helpful when you want to clean up your interface while preserving historical data for future reference.</dd>
+
                 </dl>
               </div>
             </div>

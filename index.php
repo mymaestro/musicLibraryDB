@@ -34,51 +34,69 @@
 					href="about.php" class="btn btn-outline-secondary btn-lg px-4">About</a> </div>
 		</div>
 	</div>
-	<div>
-		<div class="card-group">
-			<div class="card">
-				<div class="card-body">
-					<h5 class="card-title">Search</h5>
-					<p class="card-text">Find a piece of music.</br>See what's in the library.</p>
-					<p class="card-text"><small class="text-muted">No logon required</small></p>
-					<form action="compositions.php" method="POST">
-						<div class="input-group">
-								<button type="submit" name="submitButton" class="btn btn-sm btn-primary"><i class="fas fa-search"></i></button>
-								<input type="search" id="search" name="search" placeholder="Search compositions">
-						</div>
-					</form>
-					<!--<a href="search.php" class="btn btn-sm btn-primary">Search page</a>-->
+	
+	<div class="row g-4 py-4">
+		<div class="col-md-6">
+			<div class="card h-100">
+				<div class="card-body text-center">
+					<h5 class="card-title">Today's composition</h5>
+					<?php
+					require_once('includes/functions.php');
+					$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+					$sql = "SELECT name, composer FROM compositions ORDER BY RAND() LIMIT 1;";
+					$res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
+					while ($rowList = mysqli_fetch_array($res)) {
+						$name = $rowList['name'];
+						$composer = $rowList['composer'];
+						echo "<p class='card-text'><strong><em>".$name.'</em></strong><br>by '.$composer.'</p>';
+					}?>
 				</div>
 			</div>
-			<div class="card">
-				<div class="card-body">
-					<h5 class="card-title">Enter</h5>
-					<p class="card-text">Provide information about the music in the library.</p>
-					<p class="card-text"><small class="text-muted">Requires user logon.</small></p>
-					<a href="enter_menu.php" class="btn btn-sm btn-primary">New</a>
-				</div>
-			</div>
-			<div class="card">
-				<div class="card-body">
-					<h5 class="card-title">Reports</h5>
-					<p class="card-text">Generate some reports about what's in the library.</p>
-					<p class="card-text"><small class="text-muted">Answer common questions</small></p>
-					<a href="reports.php" class="btn btn-sm btn-primary">Reports</a>
-				</div>
-			</div>
-
 		</div>
-		<br />
-		<?php
-		require_once('includes/functions.php');
-		$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-		$sql = "SELECT name, composer FROM compositions ORDER BY RAND() LIMIT 1;";
-		$res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-		while ($rowList = mysqli_fetch_array($res)) {
-			$name = $rowList['name'];
-			$composer = $rowList['composer'];
-			echo "<p>Today's pick: <strong><em>".$name.'</em></strong> by '.$composer.'</p>';
-		}?>
+		
+		<div class="col-md-6">
+			<div class="card h-100">
+				<div class="card-body text-center">
+					<h5 class="card-title">Today's recording</h5>
+					<?php
+					$sql_recording = "SELECT 
+						r.name AS recording_name,
+						r.composer,
+						c.name AS composition_name,
+						con.venue,
+						con.performance_date,
+						r.link AS link,
+						DATE_FORMAT(con.performance_date, '%M %d, %Y') AS formatted_date
+					FROM recordings r
+					LEFT JOIN compositions c ON r.catalog_number = c.catalog_number  
+					LEFT JOIN concerts con ON r.id_concert = con.id_concert
+					WHERE r.enabled = 1
+					ORDER BY RAND() LIMIT 1;";
+					$res_recording = mysqli_query($f_link, $sql_recording);
+					if ($res_recording && mysqli_num_rows($res_recording) > 0) {
+						while ($rowList = mysqli_fetch_array($res_recording)) {
+							$recording_name = $rowList['recording_name'];
+							$composition_name = $rowList['composition_name'];
+							$composer = $rowList['composer'];
+							$venue = $rowList['venue'];
+							$date = $rowList['formatted_date'];
+							$performance_date = $rowList['performance_date'];
+							$link = $rowList['link'] ?? '';
+							$playlink = !empty($link) ? ORGRECORDINGS . $performance_date . '/' . $link : '';
+							
+							$display_title = !empty($recording_name) ? $recording_name : $composition_name;
+							echo "<p class='card-text'><strong><em><a href='".$playlink."'>".$display_title.'</a></em></strong><br>by '.$composer;
+							if (!empty($venue) && !empty($date)) {
+								echo '<br><small class="text-muted">Recorded at '.$venue.' on '.$date.'</small>';
+							}
+							echo '</p>';
+						}
+					} else {
+						echo "<p class='card-text text-muted'>No recordings available</p>";
+					}?>
+				</div>
+			</div>
+		</div>
 	</div>
 </main>
 <?php require_once("includes/footer.php");?>

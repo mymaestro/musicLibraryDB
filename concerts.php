@@ -190,18 +190,19 @@ $sql = "SELECT `id_playgram`, `name`, `description` FROM playgrams WHERE `enable
 ferror_log("Running " . $sql);
 echo "// -----" . PHP_EOL;
 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-$jsondata = "var playgramData = [";
+$playgramArray = array();
 while($rowList = mysqli_fetch_array($res)) {
     $id_playgram = $rowList['id_playgram'];
     $playgram_name = $rowList['name'];
     $playgram_description = $rowList['description'];
     $playgram_display = $playgram_name . " - " . $playgram_description;
-    $jsondata .= '{"id_playgram":"'.$id_playgram.'","name":"'.$playgram_display.'"},';
+    $playgramArray[] = array(
+        'id_playgram' => $id_playgram,
+        'name' => $playgram_display
+    );
 }
-$jsondata = rtrim($jsondata, ',');
-$jsondata .= ']'.PHP_EOL;
 mysqli_close($f_link);
-echo $jsondata;
+echo "var playgramData = " . json_encode($playgramArray) . ";" . PHP_EOL;
 ?>
 // jQuery functions
 $(document).ready(function(){

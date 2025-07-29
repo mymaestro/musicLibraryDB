@@ -79,13 +79,12 @@ FLUSH PRIVILEGES;
 
 Choose and import one of the SQL setup files from the `setup/` directory:
 
-- **musicLibraryDB-core.sql** - Minimal setup with empty tables and default admin user
-- **musicLibraryDB-basic.sql** - Includes basic data (instruments, genres, paper sizes)
+- **musicLibraryDB-core.sql** - Minimal setup with empty tables
 - **musicLibraryDB-demo.sql** - Full demo with sample compositions and recordings
 
 ```sql
 USE musicLibraryDB;
-SOURCE setup/musicLibraryDB-basic.sql;
+SOURCE setup/musicLibraryDB-demo.sql;
 ```
 
 ### Step 3: Configuration
@@ -137,10 +136,17 @@ chown -R www-data:www-data files/  # Use your web server user
 
 1. Navigate to your installation URL: `https://yourdomain.com/musicLibraryDB/`
 2. Click the login icon (🔒) in the navigation bar
-3. Use the default credentials:
-   - **Username**: `librarian`
-   - **Password**: `superS3cretPa$$wo4d`
-4. **Important**: Change the default password immediately!
+3. Use one of the demo user accounts (available if you imported `musicLibraryDB-demo.sql`):
+
+| Username | Password | Role | Description |
+|----------|----------|------|-------------|
+| `admin` | `admin123` | Administrator | Full system access, user management |
+| `librarian` | `librarian123` | Librarian | Can manage music library content |
+| `conductor` | `conductor123` | User | Read-only access for conductors |
+| `user` | `user123` | User | Basic read-only access |
+
+4. **Important**: Change the default passwords immediately in a production environment!
+
 
 ## 📊 Database Schema
 

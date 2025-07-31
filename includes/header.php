@@ -116,7 +116,35 @@
     footer {
       flex-shrink: 0;
     }
-  </style>    
+  </style>
+<?php elseif (PAGE_NAME == 'Part types') : ?>
+    <!-- this is the PART TYPES page 
+        upload PDF parts here -->
+    <style>
+    header .navbar {
+      height: 56px;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      margin-top: 18px; /* same height as navbar */
+    }
+
+    .part_type_table {
+      height: calc(100vh - 124px ); /* 196px - 88px - 40px header height (32) + title + footer height, each row is 33px */
+      overflow-y: auto;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    footer {
+      flex-shrink: 0;
+    }
+    </style>
+
 <?php elseif (PAGE_NAME == 'Recordings') : ?>
     <!-- this is the RECORDINGS page
         eventually you will be able to upload MP3 recordings here -->

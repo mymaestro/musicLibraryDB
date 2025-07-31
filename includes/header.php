@@ -117,9 +117,35 @@
       flex-shrink: 0;
     }
   </style>
+<?php elseif (PAGE_NAME == 'concerts') : ?>
+    <!-- this is the CONCERTS page -->
+    <style>
+    header .navbar {
+      height: 56px;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      margin-top: 18px; /* same height as navbar */
+    }
+
+    .concerts_table {
+      height: calc(100vh - 124px ); /* 196px - 88px - 40px header height (32) + title + footer height, each row is 33px */
+      overflow-y: auto;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    footer {
+      flex-shrink: 0;
+    }
+    </style>
+
 <?php elseif (PAGE_NAME == 'Part types') : ?>
-    <!-- this is the PART TYPES page 
-        upload PDF parts here -->
+    <!-- this is the PART TYPES page  -->
     <style>
     header .navbar {
       height: 56px;

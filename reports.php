@@ -230,8 +230,8 @@ mysqli_close($f_link);
                                 </a>
                             </div>
                             <div class="col-md-3 mb-2">
-                                <a href="dashboard.php" class="btn btn-outline-primary w-100">
-                                    <i class="fas fa-tachometer-alt"></i> Back to Dashboard
+                                <a href="home.php" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-tachometer-alt"></i> Back to Home
                                 </a>
                             </div>
                         </div>

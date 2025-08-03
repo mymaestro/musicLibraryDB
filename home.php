@@ -15,7 +15,7 @@ require_once('includes/config.php');
 require_once("includes/navbar.php");
 require_once('includes/functions.php');
 
-ferror_log("RUNNING dashboard.php");
+ferror_log("RUNNING home.php");
 
 // Get database connection
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -663,9 +663,9 @@ mysqli_close($f_link);
 
 <script>
 $(document).ready(function(){
-    // Dashboard loaded
-    console.log("Dashboard loaded");
-    
+    // Home page loaded
+    console.log("Home page loaded");
+
     <?php if (!empty($performance_stats)): ?>
     // Performance Chart by Genre
     const performanceCtx = document.getElementById('performanceChart').getContext('2d');

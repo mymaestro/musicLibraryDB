@@ -258,7 +258,7 @@ If you're not familiar with large group music organization, here are key concept
 ### Navigation
 
 **Main Pages:**
-- **Dashboard** - Overview statistics and quick access
+- **Home page** - Overview statistics and quick access
 - **Search** - Browse and search your library
 - **Enter** - Data entry and management (librarians only)
 - **Reports** - Generated lists and statistics

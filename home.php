@@ -86,6 +86,15 @@ $sql = "SELECT COUNT(*) as total FROM instruments WHERE enabled = 1";
 $res = mysqli_query($f_link, $sql);
 $stats['instruments'] = mysqli_fetch_assoc($res)['total'];
 
+// Playgrams statistics
+$sql = "SELECT COUNT(*) as total_playgrams FROM playgrams WHERE enabled = 1";
+$res = mysqli_query($f_link, $sql);
+if ($res) {
+    $stats['playgrams'] = mysqli_fetch_assoc($res);
+} else {
+    $stats['playgrams'] = array('total_playgrams' => 0);
+}
+
 // Get recent activity
 $sql = "SELECT 
     c.catalog_number,

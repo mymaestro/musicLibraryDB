@@ -21,19 +21,20 @@
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
-            <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
-<?php if($u_librarian) : ?>
+            <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
+<?php if($u_librarian) : ?>
                         <!-- Button to open the assignment modal -->
                 <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#assignModal">Assign part types to sections</button>
                 <a href="parttypesorderlist.php" class="btn btn-info" role="button" name="sort" id="sort">Set score order</a>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
+<?php endif; ?>
             </div>
         </div><!-- right button -->
-<?php endif; ?>
         <div id="part_type_table">
             <p class="text-center">Loading part types...</p>
         </div><!-- part_type_table -->
@@ -269,7 +270,7 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the playgram ID when a table row is clicked
     $(document).on('click', '#part_type_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete, #sort').prop('disabled',false);
+        $('#edit, #delete, #sort, #view').prop('disabled',false);
         id_part_type = $(this).data('id'); // data-id attribute
     });
     $(document).on('click', '.edit_data', function(){
@@ -366,22 +367,22 @@ $(document).ready(function(){
         }
     });
     $(document).on('click', '.view_data', function(){
-        var view_id_part_type = $(this).attr("id");
-        if(view_id_part_type != '')
-        {
-            let id_part_type = view_id_part_type.substr(5); // remove 'view_' prefix
-            // Fetch part type details and show in modal
-            $.ajax({
-                url:"includes/select_parttypes.php",
-                method:"POST",
-                data:{id_part_type:id_part_type},
-                success:function(data){
-                    $('#part_type_detail').html(data);
-                    $('#dataModal').modal('show');
-                }
-            });
+        // Get the part type ID from the clicked row if the user clicked on a link
+        if (!id_part_type) {
+            id_part_type = $(this).closest('tr').data('id'); // data-id attribute
         }
-    });
+        // Fetch part type details and show in modal
+        $.ajax({
+            url:"includes/select_parttypes.php",
+            method:"POST",
+            data:{id_part_type:id_part_type},
+            success:function(data){
+                $('#part_type_detail').html(data);
+                $('#dataModal').modal('show');
+            }
+        });
+        }
+    );
 
     let allPartTypes = [];
 

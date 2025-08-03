@@ -21,7 +21,7 @@ ferror_log("RUNNING compositions.php");
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
-        <div class="row pb-3 pt-5 border-bottom">
+        <div class="row pb-1 pt-5 border-bottom">
             <h1><?php echo ORGNAME ?> Compositions</h1>
         </div>
         <div class="row pt-3">

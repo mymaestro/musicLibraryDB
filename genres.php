@@ -18,16 +18,17 @@
 ?>
 <main role="main" class="container">
     <div class="container">
-        <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1></div>
-<?php if($u_librarian) : ?>
+        <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1></div>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
+<?php if($u_librarian) : ?>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add" class="btn btn-warning">Add</button>
+<?php endif; ?>
             </div>
         </div><!-- right button -->
-<?php endif; ?>
         <div id="genre_table">
         <?php
         echo '

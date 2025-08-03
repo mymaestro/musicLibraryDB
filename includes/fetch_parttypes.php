@@ -55,7 +55,7 @@ if(isset($_POST["id_part_type"])) {
         echo '<tr data-id="'.$id_part_type.'" >
                     <td><input type="radio" name="part_type_select" value="'.$id_part_type.'" class="form-check-input select-radio"></td>
                     <td>'.$collation.'</td>
-                    <td><strong><a href="#" class="view_data" name="view" id="view_'.$id_part_type.'">'.$name.'</a></strong></td>
+                    <td><strong><a href="#" class="view_data" name="view">'.$name.'</a></strong></td>
                     <td class="instrument_'.$default_instrument.' text-muted">'.$default_instrument.'</td>
                     <td class="text-muted">'.$family.'</td>
                     <td>'.$description.'</td>

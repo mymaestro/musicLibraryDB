@@ -16,12 +16,7 @@ if (!file_exists('../PHPdfer/PHPdfer.php') || !file_exists('../PHPdfer/MetadataD
     require_once('../PHPdfer/MetadataBuilder.php');
 }
 
-function updatePartPDFMetadata($partFilePath, $partData) {
-    // Check if Ghostscript is available
-//    if (!shell_exec('which gs')) {
-//        throw new Exception('Ghostscript is not installed or not in PATH');
-//    }
-    
+function updatePartPDFMetadata($partFilePath, $partData) {    
     $phpdfer = new PHPdfer\PHPdfer();
     
     $metadata = [
@@ -41,8 +36,6 @@ function updatePartPDFMetadata($partFilePath, $partData) {
         $phpdfer->changeMetadata($partFilePath, $metadata, true);
         
         // The new file will be named phpdfer_[original_name].pdf
-        // $newFileName = 'phpdfer_' . pathinfo($partFilePath, PATHINFO_FILENAME) . '.pdf';
-        
         $newFileName = $phpdfer->getOutputFilePath();
         if (!$newFileName) {
             throw new Exception("Failed to retrieve the output file path from PHPdfer.");
@@ -159,7 +152,6 @@ if(!empty($_POST)) {
             $part_type_name = "Unknown part type";
         }
         mysqli_stmt_close($part_type_stmt);
-
 
         $composition_stmt = mysqli_prepare($f_link, "SELECT name, composer FROM compositions WHERE catalog_number = ?");
         mysqli_stmt_bind_param($composition_stmt, "s", $catalog_number);

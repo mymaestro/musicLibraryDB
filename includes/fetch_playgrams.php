@@ -36,7 +36,7 @@ if(isset($_POST["id_playgram"])) {
     echo $return;
 } else {
     echo '            <div class="panel panel-default">
-           <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
+           <div class="table-responsive scrolling-data">
                 <table class="table table-hover">
                 <caption class="title">Available program play lists (playgrams)</caption>
                 <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">

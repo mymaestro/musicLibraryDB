@@ -1,5 +1,5 @@
 <?php
-  define('PAGE_TITLE', 'List ensembles');
+  define('PAGE_TITLE', 'Music ensembles');
   define('PAGE_NAME', 'Ensembles');
   require_once("includes/header.php"); 
   $u_admin = FALSE;
@@ -20,7 +20,7 @@
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
-        <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
+        <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_TITLE ?></h1></div>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>

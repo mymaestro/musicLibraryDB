@@ -1,5 +1,5 @@
 <?php
-  define('PAGE_TITLE', 'List genres');
+  define('PAGE_TITLE', 'Musical genres');
   define('PAGE_NAME', 'Genres');
   require_once("includes/header.php");
   $u_admin = FALSE;
@@ -18,7 +18,7 @@
 ?>
 <main role="main" class="container">
     <div class="container">
-        <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1></div>
+        <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' ' . PAGE_TITLE ?></h1></div>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
@@ -33,7 +33,7 @@
         <?php
         echo '
             <div class="panel panel-default">
-               <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
+               <div class="table-responsive scrolling-data">
                     <table class="table table-hover">
                     <caption class="title">Available genres</caption>
                     <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">

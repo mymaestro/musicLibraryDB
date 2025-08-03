@@ -1,6 +1,6 @@
 <?php
 define('PAGE_TITLE', 'Concerts');
-define('PAGE_NAME', 'concerts');
+define('PAGE_NAME', 'Concerts');
 require_once("includes/header.php");
 $u_admin = FALSE;
 $u_librarian = FALSE;
@@ -21,7 +21,7 @@ if (isset($_SESSION['username'])) {
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
-        <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
+        <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_TITLE ?></h1></div>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
@@ -36,7 +36,7 @@ if (isset($_SESSION['username'])) {
         <?php
         echo '
             <div class="panel panel-default">
-               <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
+               <div class="table-responsive scrolling-data">
                     <table class="table table-hover">
                     <caption class="title">Concerts</caption>
                     <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">

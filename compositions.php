@@ -31,7 +31,6 @@ ferror_log("RUNNING compositions.php");
                         <div class="row align-items-center">
                             <div class="col-auto"><button type="submit" name="submitButton" class="btn btn-secondary">Search</button></div>
                             <div class="col-auto"><input type="text" size="40" id="search" name="search" class="form-control" aria-describedby="searchHelp" placeholder="Name, description, composer, or arranger"></div>
-                            <div class="col-auto"><small id="searchHelp" class="form-text text-muted">Search for compositions by name, description, composer, or arranger.</small></div>
                         </div>
                     </form>
                 </div><!-- search_form -->

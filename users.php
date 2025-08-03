@@ -1,5 +1,5 @@
 <?php
-  define('PAGE_TITLE', 'List users');
+  define('PAGE_TITLE', 'Library Users');
   define('PAGE_NAME', 'Users');
   require_once("includes/header.php");
   $u_admin = FALSE;
@@ -18,7 +18,7 @@
 ?>
 <main role="main">
    <div class="container">
-        <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_NAME ?></h1></div>
+        <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_TITLE ?></h1></div>
 <?php if($u_admin) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
@@ -30,7 +30,7 @@
         <div id="user_table">
         <?php
         echo '            <div class="panel panel-default">
-        <div class="table-responsive">
+        <div class="table-responsive scrolling-data">
           <table class="table table-hover" id="users_table">
                     <caption class="title">Available users</caption>
                     <thead class="thead-light" style="position: sticky; top: 0; z-index: 1;">

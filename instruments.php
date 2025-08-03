@@ -1,5 +1,5 @@
 <?php
-  define('PAGE_TITLE', 'List instruments');
+  define('PAGE_TITLE', 'Instruments');
   define('PAGE_NAME', 'Instruments');
   require_once("includes/header.php");
   $u_admin = FALSE;
@@ -21,7 +21,7 @@
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
-        <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1></div>
+        <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' ' . PAGE_TITLE ?></h1></div>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
@@ -31,11 +31,11 @@
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add" class="btn btn-warning">Add</button>            </div>
 <?php endif; ?>
+            </div>
         </div><!-- right button -->
         <div id="instrument_table">
             Loading instruments...
         </div><!-- instrument_table -->
-
         <div id="dataModal" class="modal"><!-- view data -->
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">

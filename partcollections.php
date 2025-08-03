@@ -1,5 +1,5 @@
 <?php
-  define('PAGE_TITLE', 'List part collections');
+  define('PAGE_TITLE', 'Part collections');
   define('PAGE_NAME', 'Part collections');
   require_once("includes/header.php");
   $u_admin = FALSE;
@@ -18,7 +18,7 @@
 ?>
 <main role="main">
     <div class="container">
-    <h1><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
+    <h1><?php echo ORGNAME . ' ' . PAGE_TITLE ?></h1>
     
     <!-- Search/Filter Controls -->
     <div class="row mb-4">

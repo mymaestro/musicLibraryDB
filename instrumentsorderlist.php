@@ -1,6 +1,6 @@
 <?php
-  define('PAGE_TITLE', 'Score order');
-  define('PAGE_NAME', 'Instruments order');
+  define('PAGE_TITLE', 'Instruments score order');
+  define('PAGE_NAME', 'InstrumentsOrder');
   require_once("includes/header.php");
   $u_admin = FALSE;
   $u_librarian = FALSE;
@@ -18,7 +18,7 @@
 ?>
 <main role="main">
     <div class="container">
-        <h1><?php echo ORGNAME . ' ' . PAGE_NAME ?></h1>
+        <h1><?php echo ORGNAME . ' ' . PAGE_TITLE ?></h1>
 <?php if($u_librarian) : ?>
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>

@@ -1,6 +1,6 @@
 <?php
 // Include config file
-define('PAGE_TITLE', 'Reset password');
+define('PAGE_TITLE', 'Reset your password');
 define('PAGE_NAME', 'reset your password');
 
 require_once('includes/header.php');
@@ -26,7 +26,7 @@ if(isset($_GET["reset"])) {
 <div class="container">
 <main>
     <div class="py-5 text-center">
-        <h1><?php echo ORGNAME ?> library <?php echo PAGE_NAME ?></h1>
+        <h1><?php echo ORGNAME ?> library <?php echo PAGE_TITLE ?></h1>
     </div>
     <div class="row g-5">
         <div class="col-md-7">

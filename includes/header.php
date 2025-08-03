@@ -53,21 +53,25 @@
       display: flex;
       flex-direction: column;
     }
+
+    header .navbar {
+      height: 56px;
+    }
+
+
+    footer {
+      flex-shrink: 0;
+    }
     </style>
 
 <?php if (PAGE_NAME == 'Parts') : ?>
    <!-- this is the PARTS page 
         eventually you will be able to upload PDF parts here -->
     <style>
-    header .navbar {
-      height: 56px;
-    }
-
     main {
       flex: 1;
       display: flex;
       overflow: hidden;
-      margin-top: 18px; /* same height as navbar */
     }
 
     aside.left-panel {
@@ -112,68 +116,30 @@
       background-color: #f8f9fa;
       z-index: 1;
     }
-
-    footer {
-      flex-shrink: 0;
-    }
   </style>
-<?php elseif (PAGE_NAME == 'concerts') : ?>
-    <!-- this is the CONCERTS page -->
+<?php elseif (PAGE_NAME == 'Compositions' || PAGE_NAME == 'Concerts' || PAGE_NAME == 'Genres' || PAGE_NAME == 'Instruments' || PAGE_NAME == 'PaperSizes' || PAGE_NAME == 'PartTypes' || PAGE_NAME == 'Playgrams' || PAGE_NAME == 'Recordings' || PAGE_NAME == 'Sections' || PAGE_NAME == 'Users') : ?>
     <style>
-    header .navbar {
-      height: 56px;
-    }
-
     main {
       flex: 1;
       display: flex;
       overflow: hidden;
-      margin-top: 18px; /* same height as navbar */
     }
-
-    .concerts_table {
-      height: calc(100vh - 124px ); /* 196px - 88px - 40px header height (32) + title + footer height, each row is 33px */
+    .scrolling-data {
+      height: calc(100vh - 296px); /* each row is 33px */
+      /* Adjust this value based on your layout
+        navbar = 56px
+        title = 49px
+        table toolbar = 47.33px
+        footer = 64px
+        body padding-top = 30px
+        Total = 56 + 30 + 49 + 47.33 + 64 = 246.33px
+       */
       overflow-y: auto;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
     }
-
-    footer {
-      flex-shrink: 0;
-    }
     </style>
-
-<?php elseif (PAGE_NAME == 'Part types') : ?>
-    <!-- this is the PART TYPES page  -->
-    <style>
-    header .navbar {
-      height: 56px;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      overflow: hidden;
-      margin-top: 18px; /* same height as navbar */
-    }
-
-    .part_type_table {
-      height: calc(100vh - 124px ); /* 196px - 88px - 40px header height (32) + title + footer height, each row is 33px */
-      overflow-y: auto;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    footer {
-      flex-shrink: 0;
-    }
-    </style>
-
-<?php elseif (PAGE_NAME == 'Recordings') : ?>
-    <!-- this is the RECORDINGS page
-        eventually you will be able to upload MP3 recordings here -->
 <?php endif; ?>
 
 </head>

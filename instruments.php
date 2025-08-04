@@ -309,23 +309,44 @@ $(document).ready(function(){
             });
         }
     });
-    $(document).on('click', '.view_data', function(){
-        if(!id_instrument){
-            let id_instrument = $(this).closest('tr').data('id'); // Get the ID from the closest row
-        }
-        console.log("Viewing instrument with ID: " + id_instrument);
-        if (id_instrument !== null) {
-        $.ajax({
-            url:"includes/select_instruments.php",
-            method:"POST",
-            data:{id_instrument:id_instrument},
-            success:function(data){
-                $('#instrument_detail').html(data);
-                $('#dataModal').modal('show');
-                id_instrument = null; // Reset the ID after viewing
+    $(document).on('click', '.view_data', function(e){
+        e.preventDefault(); // Prevent default link behavior
+        
+        // Get ID from the clicked element's data attribute first
+        let clicked_id = $(this).data('id');
+        
+        // If no data-id on the clicked element, try to get from the closest row
+        if (!clicked_id) {
+            let $row = $(this).closest('tr');
+            clicked_id = $row.data('id');
+            
+            // Also select the radio button in that row if found
+            if (clicked_id) {
+                $row.find('input[type="radio"]').prop('checked', true);
+                $('#view, #edit, #delete, #sort').prop('disabled', false);
+                id_instrument = clicked_id; // Update the global variable
             }
-        });
-    }
+        }
+        
+        // If still no ID and we have a globally selected row, use that
+        if (!clicked_id && id_instrument) {
+            clicked_id = id_instrument;
+        }
+        
+        if (clicked_id) {
+            $.ajax({
+                url:"includes/select_instruments.php",
+                method:"POST",
+                data:{id_instrument:clicked_id},
+                success:function(data){
+                    $('#instrument_detail').html(data);
+                    $('#dataModal').modal('show');
+                    id_instrument = null; // Reset the ID after viewing
+                }
+            });
+        } else {
+            alert("No instrument selected. Please select an instrument first.");
+        }   
     });
 });
 </script>

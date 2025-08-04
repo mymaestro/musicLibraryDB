@@ -149,7 +149,7 @@ if(isset($_POST["catalog_number"])) {
         echo '<tr data-id="'.$catalog_number.'">
                     <td><input type="radio" name="composition_select" value="'.$catalog_number.'" class="form-check-input select-radio"></td>
                     <td>'.$catalog_number.'</td>
-                    <td><strong><a href="#" class="view_data" id="view_'.$catalog_number.'">'.$name.'</a></strong></td>
+                    <td><strong><a href="#" class="view_data" data-id="'.$catalog_number.'">'.$name.'</a></strong></td>
                     <td>'.$composer.'</td>
                     <td>'.$arranger.'</td>
                     <!-- DESCRIPTION: '.$description.'-->

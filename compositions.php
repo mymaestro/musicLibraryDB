@@ -38,7 +38,7 @@ ferror_log("RUNNING compositions.php");
         
             <div class="col">
                 <div class="float-end">
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#viewData" id="view" class="btn btn-secondary view_data" disabled>Details</button>
                 <?php if($u_librarian) : ?>
                     <button type="button" id="instrumentation" class="btn btn-info instrumentation_btn" disabled>Instrumentation</button>
                     <button type="button" data-bs-toggle="modal" data-bs-target="#partsData" id="parts" class="btn btn-success parts_data" disabled>Parts</button>
@@ -431,6 +431,9 @@ ferror_log("RUNNING compositions.php");
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function() {
+    // Declare global variable for selected catalog number
+    let catalog_number = null;
+    
     // Scroll-to-top button
     let $upButton = $("#btn-back-to-top");
     // When the user scrolls down 20px from the top of the document, show the button
@@ -472,20 +475,43 @@ $(document).ready(function() {
     });
 
 
-    $(document).on('click', '.view_data', function(){
+    $(document).on('click', '.view_data', function(e){
+        e.preventDefault();
+        // Get the clicked element's data attribute
+
+        let clicked_id = $(this).data('id');
+
+        // Try closest row if no data-id
+        if (!clicked_id) {
+            let $row = $(this).closest('tr');
+            clicked_id = $row.data('id');
+
+            // Also select the radio button
+            if (clicked_id) {
+                $row.find('input[type="radio"]').prop('checked', true);
+                $('#view, #edit, #delete, #parts, #instrumentation').prop('disabled', false);
+                catalog_number = clicked_id; // Update the global variable
+            }
+        }
+
+        // Still no id but a selected row?
+        if (!clicked_id && catalog_number) {
+            clicked_id = catalog_number; // Use the global variable
+        }
+
         //var catalog_number = $(this).attr("id");
-        if(catalog_number != '')
+        if(clicked_id)
         {
             $.ajax({
                 url:"includes/select_compositions.php",
                 type:"POST",
-                data:{catalog_number:catalog_number},
+                data:{catalog_number: clicked_id}, // Use clicked_id instead of catalog_number
                 success:function(data){
                     $('#composition_detail').html(data);
                     $('#viewData').modal('show');
                 }
             });
-        }
+        } else { alert("No composition selected. Please select a composition first."); }
     });
     $(document).on('click', '.parts_data', function(){
         //var catalog_number = $(this).attr("id");

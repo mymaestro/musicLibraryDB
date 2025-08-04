@@ -349,19 +349,43 @@ $(document).ready(function(){
             });
         }
     });
-    $(document).on('click', '.view_data', function(){
-        if (!id_playgram) {
-            let id_playgram = $(this).closest('tr').data('id'); // Get the ID from the closest row
-        }
-        $.ajax({
-            url:"includes/select_playgrams.php",
-            method:"POST",
-            data:{id_playgram:id_playgram},
-            success:function(data){
-                $('#playgram_detail').html(data);
-                $('#dataModal').modal('show');
+    $(document).on('click', '.view_data', function(e){
+        e.preventDefault(); // Prevent default link behavior
+        
+        // Get ID from the clicked element's data attribute first
+        let clicked_id = $(this).data('id');
+        
+        // If no data-id on the clicked element, try to get from the closest row
+        if (!clicked_id) {
+            let $row = $(this).closest('tr');
+            clicked_id = $row.data('id');
+            
+            // Also select the radio button in that row if found
+            if (clicked_id) {
+                $row.find('input[type="radio"]').prop('checked', true);
+                $('#view, #edit, #delete, #sort').prop('disabled', false);
+                id_playgram = clicked_id; // Update the global variable
             }
-        });
+        }
+        
+        // If still no ID and we have a globally selected row, use that
+        if (!clicked_id && id_playgram) {
+            clicked_id = id_playgram;
+        }
+        
+        if (clicked_id) {
+            $.ajax({
+                url:"includes/select_playgrams.php",
+                method:"POST",
+                data:{id_playgram: clicked_id},
+                success:function(data){
+                    $('#playgram_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+            });
+        } else {
+            alert('Please select a row first or try clicking again.');
+        }
     });
 });
 </script>

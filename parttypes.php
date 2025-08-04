@@ -366,22 +366,45 @@ $(document).ready(function(){
             });
         }
     });
-    $(document).on('click', '.view_data', function(){
-        // Get the part type ID from the clicked row if the user clicked on a link
-        if (!id_part_type) {
-            id_part_type = $(this).closest('tr').data('id'); // data-id attribute
-        }
-        // Fetch part type details and show in modal
-        $.ajax({
-            url:"includes/select_parttypes.php",
-            method:"POST",
-            data:{id_part_type:id_part_type},
-            success:function(data){
-                $('#part_type_detail').html(data);
-                $('#dataModal').modal('show');
-                id_part_type = null; // Reset after viewing
+    $(document).on('click', '.view_data', function(e){
+        e.preventDefault(); // Prevent default link behavior
+        
+        // Get ID from the clicked element's data attribute first
+        let clicked_id = $(this).data('id');
+        
+        // If no data-id on the clicked element, try to get from the closest row
+        if (!clicked_id) {
+            let $row = $(this).closest('tr');
+            clicked_id = $row.data('id');
+            
+            // Also select the radio button in that row if found
+            if (clicked_id) {
+                $row.find('input[type="radio"]').prop('checked', true);
+                $('#view, #edit, #delete, #sort').prop('disabled', false);
+                id_part_type = clicked_id; // Update the global variable
             }
-        });
+        }
+        
+        // If still no ID and we have a globally selected row, use that
+        if (!clicked_id && id_part_type) {
+            clicked_id = id_part_type;
+        }
+        
+        if (clicked_id) {
+        // Fetch part type details and show in modal
+            $.ajax({
+                url:"includes/select_parttypes.php",
+                method:"POST",
+                data:{id_part_type:clicked_id},
+                success:function(data){
+                    $('#part_type_detail').html(data);
+                    $('#dataModal').modal('show');
+                    id_part_type = null; // Reset after viewing
+                }
+            });
+        } else {
+            alert("No part type selected. Please select a part type first.");
+        }
     });
 
     let allPartTypes = [];

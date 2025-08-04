@@ -62,7 +62,7 @@ if(isset($_POST["id_instrument"])) {
         echo '<tr data-id="'.$id_instrument.'">
                     <td><input type="radio" name="instrument_select" value="'.$id_instrument.'" class="form-check-input select-radio"></td>
                     <td>'.$collation.'</td>
-                    <td><strong><a href="#" class="view_data">'.$name.'</a></strong></td>
+                    <td><strong><a href="#" class="view_data" data-id="'.$id_instrument.'">'.$name.'</a></strong></td>
                     <td>'.$family.'</td>
                     <td>'.$description.'</td>
                     <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>

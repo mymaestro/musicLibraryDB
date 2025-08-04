@@ -76,7 +76,7 @@ if(isset($_POST["id_playgram"])) {
         $enabled = $rowList['enabled'];
         echo '<tr data-id="'.$id_playgram.'" >
                     <td><input type="radio" name="record_select" value="'.$id_playgram.'" class="form-check-input select-radio"></td>
-                    <td><a href="#" class="view_data" name="view" id="'.$id_playgram.'" >'.$name.'</a></td>
+                    <td><a href="#" class="view_data" name="view">'.$name.'</a></td>
                     <td>'.$description.'</td>
                     <td>'.$pieces.'</td>
                     <td>'.$duration.'</td>

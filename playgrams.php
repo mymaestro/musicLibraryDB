@@ -207,10 +207,10 @@ $(document).ready(function(){
         });
         $('#id_composition_list').html(selectitems);
     });
-    // Enable the edit and delete buttons, and get the playgram ID when a table row is clicked
+    // Enable the view, edit and delete buttons, and get the playgram ID when a table row is clicked
     $(document).on('click', '#playgram_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete, #sort').prop('disabled',false);
+        $('#view, #edit, #delete, #sort').prop('disabled',false);
         id_playgram = $(this).data('id'); // data-id attribute
     });
     $('#editModal').modal({
@@ -350,18 +350,18 @@ $(document).ready(function(){
         }
     });
     $(document).on('click', '.view_data', function(){
-        var id_playgram = $(this).attr("id");
-        if(id_playgram !== null) {
-            $.ajax({
-                url:"includes/select_playgrams.php",
-                method:"POST",
-                data:{id_playgram:id_playgram},
-                success:function(data){
-                    $('#playgram_detail').html(data);
-                    $('#dataModal').modal('show');
-                }
-            });
+        if (!id_playgram) {
+            let id_playgram = $(this).closest('tr').data('id'); // Get the ID from the closest row
         }
+        $.ajax({
+            url:"includes/select_playgrams.php",
+            method:"POST",
+            data:{id_playgram:id_playgram},
+            success:function(data){
+                $('#playgram_detail').html(data);
+                $('#dataModal').modal('show');
+            }
+        });
     });
 });
 </script>

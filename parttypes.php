@@ -379,10 +379,10 @@ $(document).ready(function(){
             success:function(data){
                 $('#part_type_detail').html(data);
                 $('#dataModal').modal('show');
+                id_part_type = null; // Reset after viewing
             }
         });
-        }
-    );
+    });
 
     let allPartTypes = [];
 

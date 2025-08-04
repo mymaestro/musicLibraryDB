@@ -61,7 +61,7 @@
             echo '<tr data-id="'.$id_paper_size.'">
                         <td><input type="radio" name="record_select" value="'.$id_paper_size.'" class="form-check-input select-radio"></td>
                         <td>'.$id_paper_size.'</td>
-                        <td><strong><a href="#" class="view_data" id="'.$id_paper_size.'">'.$name.'</a></strong></td>
+                        <td><strong><a href="#" class="view_data">'.$name.'</a></strong></td>
                         <td>'.$description.'</td>
                         <td>'.$vertical.'</td>
                         <td>'.$horizontal.'</td>
@@ -192,7 +192,7 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the paper size ID when a table row is clicked
     $(document).on('click', '#paper_size_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete').prop('disabled',false);
+        $('#view, #edit, #delete').prop('disabled',false);
         id_paper_size = $(this).data('id'); // data-id attribute
     });
 
@@ -272,19 +272,18 @@ $(document).ready(function(){
         }
     });
     $(document).on('click', '.view_data', function(){
-        var id_paper_size = $(this).attr("id");
-        if(id_paper_size != '')
-        {
-            $.ajax({
-                url:"includes/select_papersizes.php",
-                method:"POST",
-                data:{id_paper_size:id_paper_size},
-                success:function(data){
-                    $('#paper_size_detail').html(data);
-                    $('#dataModal').modal('show');
-                }
-            });
+        if (!id_paper_size) {
+            id_paper_size = $(this).closest('tr').data('id'); // Get the ID from the closest row
         }
+        $.ajax({
+            url:"includes/select_papersizes.php",
+            method:"POST",
+            data:{id_paper_size:id_paper_size},
+            success:function(data){
+                $('#paper_size_detail').html(data);
+                $('#dataModal').modal('show');
+            }
+      });
     });
 });
 </script>

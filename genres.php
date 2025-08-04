@@ -168,7 +168,7 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the genre ID when a table row is clicked
     $(document).on('click', '#genre_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete').prop('disabled',false);
+        $('#view, #edit, #delete').prop('disabled',false);
         id_genre = $(this).data('id'); // data-id attribute
     });
 
@@ -253,19 +253,21 @@ $(document).ready(function(){
     });
 <?php endif; ?>
     $(document).on('click', '.view_data', function(){
-        var id_genre = $(this).attr("id");
-        if(id_genre != '')
-        {
-            $.ajax({
-                url:"includes/select_genres.php",
-                method:"POST",
-                data:{id_genre:id_genre},
-                success:function(data){
-                    $('#genre_detail').html(data);
-                    $('#dataModal').modal('show');
-                }
-            });
+        //var id_genre = $(this).attr("id");
+        if(id_genre != '') {
+            let id_genre = $(this).attr("id");
         }
+        
+        $.ajax({
+            url:"includes/select_genres.php",
+            method:"POST",
+            data:{id_genre:id_genre},
+            success:function(data){
+                $('#genre_detail').html(data);
+                $('#dataModal').modal('show');
+            }
+        });
+    
     });
 });
 </script>

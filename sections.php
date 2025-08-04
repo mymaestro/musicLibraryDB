@@ -19,16 +19,17 @@
 <main role="main">
     <div class="container">
         <div class="row pb-3 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_TITLE ?></h1></div>
-<?php if($u_librarian) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
+<?php if($u_librarian) : ?>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#assignModal" id="assign" class="btn btn-info assign_sections">Assign part types to section</button>    
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
+<?php endif; ?>
             </div>
         </div><!-- right button -->
-<?php endif; ?>
 <!-- visible if u_user or u_librarian or u_admin -->
 <?php if($u_user || $u_librarian || $u_admin) : ?>
     <div id="section_table">
@@ -50,13 +51,6 @@
                     </thead>
                     <tbody>';
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        //$sql = "SELECT * FROM sections ORDER BY name;";
-        
-        //$sql = "SELECT s.*, u.name AS leader_name
-        //FROM sections s
-        //LEFT JOIN users u ON s.section_leader = u.id_users
-        //ORDER BY s.name;";
-
         $sql = "SELECT s.*, u.name AS leader_name, COUNT(spt.id_part_type) AS parttype_count
         FROM sections s
         LEFT JOIN users u ON s.section_leader = u.id_users
@@ -73,7 +67,7 @@
             $enabled = $rowList['enabled'];
             echo '<tr data-id="'.$id_section.'">
                         <td><input type="radio" name="record_select" value="'.$id_section.'" class="form-check-input select-radio"></td>
-                        <td><strong><a href="#" class="view_data" id="'.$id_section.'">'.$name.'</a></strong></td>
+                        <td><strong><a href="#" class="view_data">'.$name.'</a></strong></td>
                         <td>'.htmlspecialchars($description ?? '').'</td>
                         <td>'.htmlspecialchars($section_leader ?? '').'</td>
                         <td>'.intval($rowList['parttype_count']).'</td>
@@ -270,7 +264,7 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the paper size ID when a table row is clicked
     $(document).on('click', '#section_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete').prop('disabled',false);
+        $('#view, #edit, #delete').prop('disabled',false);
         id_section = $(this).data('id'); // data-id attribute
     });
 
@@ -348,9 +342,10 @@ $(document).ready(function(){
         }
     });
     $(document).on('click', '.view_data', function(){
-        var id_section = $(this).attr("id");
-        if(id_section != '')
-        {
+        if(!id_section) {
+            let id_section = $(this).closest('tr').data('id'); // Get the ID from the closest row
+        }
+        if (id_section !== null) {
             $.ajax({
                 url:"includes/select_sections.php",
                 method:"POST",

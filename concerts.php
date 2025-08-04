@@ -72,7 +72,7 @@ if (isset($_SESSION['username'])) {
                         <td><input type="radio" name="record_select" value="'.$id_concert.'" class="form-check-input select-radio"></td>
                         <td>'.$performance_date.'</td>
                         <td>'.$venue.'</td>
-                        <td><a href="#" class="view_data" name="view" id="'.$id_playgram.'">'.$playgram_count.' items</a></td>
+                        <td><a href="#" class="view_playgram_data" name="view" id="'.$id_playgram.'">'.$playgram_count.' items</a></td>
                         <td>'.$conductor.'</td>
                         <td>'.$notes.'</td>
                   </tr>';
@@ -240,7 +240,7 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the playgram ID when a table row is clicked
     $(document).on('click', '#concert_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete').prop('disabled',false);
+        $('#view, #edit, #delete').prop('disabled',false);
         id_concert = $(this).data('id'); // data-id attribute
     });
 
@@ -329,13 +329,27 @@ $(document).ready(function(){
             }
         });
     });
-    $(document).on('click', '.view_data', function(){
+    $(document).on('click', '.view_playgram_data', function(){
         var id_playgram = $(this).attr("id");
         if(id_playgram !== null) {
             $.ajax({
                 url:"includes/select_playgrams.php",
                 method:"POST",
                 data:{id_playgram:id_playgram},
+                success:function(data){
+                    $('#playgram_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+            });
+        }
+    });
+    $(document).on('click', '.view_data', function(){
+        
+        if(id_concert !== null) {
+            $.ajax({
+                url:"includes/select_concerts.php",
+                method:"POST",
+                data:{id_concert:id_concert},
                 success:function(data){
                     $('#playgram_detail').html(data);
                     $('#dataModal').modal('show');

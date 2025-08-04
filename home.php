@@ -111,6 +111,27 @@ while ($row = mysqli_fetch_assoc($res)) {
     $recent_activity[] = $row;
 }
 
+// Get recent parts activity
+$sql = "SELECT 
+    p.catalog_number,
+    c.name as composition_name,
+    c.composer,
+    DATE(MAX(p.last_update)) as last_update_date,
+    COUNT(p.id_part_type) as parts_updated,
+    GROUP_CONCAT(DISTINCT pt.name ORDER BY pt.name SEPARATOR ', ') as part_types_updated,
+    'part' as type
+FROM parts p
+LEFT JOIN compositions c ON p.catalog_number = c.catalog_number
+LEFT JOIN part_types pt ON p.id_part_type = pt.id_part_type
+GROUP BY p.catalog_number, c.name, c.composer, DATE(p.last_update)
+ORDER BY last_update_date DESC, MAX(p.last_update) DESC
+LIMIT 5";
+$recent_parts_activity = array();
+$res = mysqli_query($f_link, $sql);
+while ($row = mysqli_fetch_assoc($res)) {
+    $recent_parts_activity[] = $row;
+}
+
 // Get compositions by genre
 $sql = "SELECT 
     g.name as genre_name,
@@ -164,6 +185,21 @@ $performance_stats = array();
 $res = mysqli_query($f_link, $sql);
 while ($row = mysqli_fetch_assoc($res)) {
     $performance_stats[] = $row;
+}
+
+// Get concerts by venue
+$sql = "SELECT 
+    venue,
+    COUNT(*) as concert_count
+FROM concerts 
+WHERE venue IS NOT NULL AND venue != ''
+GROUP BY venue
+ORDER BY concert_count DESC
+LIMIT 15";
+$venue_stats = array();
+$res = mysqli_query($f_link, $sql);
+while ($row = mysqli_fetch_assoc($res)) {
+    $venue_stats[] = $row;
 }
 
 mysqli_close($f_link);
@@ -452,12 +488,97 @@ mysqli_close($f_link);
         </div>
 
         <!-- Charts and Analysis -->
-        <div class="row mt-5 border-bottom">
+        <div class="row mt-5 mb-4 border-bottom">
             <div class="col-12">
                 <h2>Charts and analysis</h2>
             </div>
         </div>
-        
+        <!-- Recent Activity -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-clock"></i> Recent composition activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <?php if (!empty($recent_activity)): ?>
+                            <div class="list-group list-group-flush">
+                                <?php foreach ($recent_activity as $activity): ?>
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1"><?php echo htmlspecialchars($activity['name']); ?></h6>
+                                        <small><?php echo date('M j, Y', strtotime($activity['last_update'])); ?></small>
+                                    </div>
+                                    <p class="mb-1">
+                                        <strong><?php echo htmlspecialchars($activity['catalog_number']); ?></strong>
+                                        <?php if ($activity['composer']): ?>
+                                        - <?php echo htmlspecialchars($activity['composer']); ?>
+                                        <?php endif; ?>
+                                    </p>
+                                    <small class="text-muted">Updated <?php echo ucfirst($activity['type']); ?></small>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted">No recent activity</p>
+                        <?php endif; ?>
+                        <div class="mt-3">
+                            <a href="compositions.php" class="btn btn-outline-primary btn-sm">View All Compositions</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-puzzle-piece"></i> Recent parts activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <?php if (!empty($recent_parts_activity)): ?>
+                            <div class="list-group list-group-flush">
+                                <?php foreach ($recent_parts_activity as $activity): ?>
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1"><?php echo htmlspecialchars($activity['composition_name']); ?></h6>
+                                        <small><?php echo date('M j, Y', strtotime($activity['last_update_date'])); ?></small>
+                                    </div>
+                                    <p class="mb-1">
+                                        <strong><?php echo htmlspecialchars($activity['catalog_number']); ?></strong>
+                                        <?php if ($activity['composer']): ?>
+                                        - <?php echo htmlspecialchars($activity['composer']); ?>
+                                        <?php endif; ?>
+                                    </p>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <small class="text-muted"><?php echo $activity['parts_updated']; ?> part<?php echo $activity['parts_updated'] > 1 ? 's' : ''; ?> updated</small>
+                                        <?php if ($activity['part_types_updated']): ?>
+                                        <div class="flex-shrink-0">
+                                            <?php 
+                                            $part_types = explode(', ', $activity['part_types_updated']);
+                                            $display_types = array_slice($part_types, 0, 3); // Show max 3 types
+                                            foreach ($display_types as $type): ?>
+                                                <span class="badge bg-info me-1"><?php echo htmlspecialchars($type); ?></span>
+                                            <?php endforeach; ?>
+                                            <?php if (count($part_types) > 3): ?>
+                                                <span class="badge bg-secondary">+<?php echo count($part_types) - 3; ?> more</span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted">No recent parts activity</p>
+                        <?php endif; ?>
+                        <div class="mt-3">
+                            <a href="parts.php" class="btn btn-outline-primary btn-sm">View All Parts</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row mt-4">
             <div class="col-lg-6 mb-4">
                 <div class="card">
@@ -616,42 +737,64 @@ mysqli_close($f_link);
             </div>
         </div>
 
-        <!-- Recent Activity -->
-        <div class="row">
-            <div class="col-lg-6 mb-4">
+        <!-- Venue Analysis -->
+        <div class="row mt-4">
+            <div class="col-lg-12 mb-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5><i class="fas fa-clock"></i> Recent activity</h5>
+                        <h5><i class="fas fa-chart-pie"></i> Concerts by venue</h5>
                     </div>
                     <div class="card-body">
-                        <?php if (!empty($recent_activity)): ?>
-                            <div class="list-group list-group-flush">
-                                <?php foreach ($recent_activity as $activity): ?>
-                                <div class="list-group-item">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1"><?php echo htmlspecialchars($activity['name']); ?></h6>
-                                        <small><?php echo date('M j, Y', strtotime($activity['last_update'])); ?></small>
+                        <?php if (!empty($venue_stats)): ?>
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <!-- Pie Chart -->
+                                    <div class="chart-container" style="position: relative; height: 300px;">
+                                        <canvas id="venueChart"></canvas>
                                     </div>
-                                    <p class="mb-1">
-                                        <strong><?php echo htmlspecialchars($activity['catalog_number']); ?></strong>
-                                        <?php if ($activity['composer']): ?>
-                                        - <?php echo htmlspecialchars($activity['composer']); ?>
-                                        <?php endif; ?>
-                                    </p>
-                                    <small class="text-muted">Updated <?php echo ucfirst($activity['type']); ?></small>
                                 </div>
-                                <?php endforeach; ?>
+                                <div class="col-lg-4">
+                                    <!-- Venue Statistics Table -->
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Venue</th>
+                                                    <th class="text-center">Concerts</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($venue_stats as $venue): ?>
+                                                <tr>
+                                                    <td><small><?php echo htmlspecialchars($venue['venue']); ?></small></td>
+                                                    <td class="text-center">
+                                                        <span class="badge bg-primary"><?php echo $venue['concert_count']; ?></span>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mt-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle"></i> Shows the distribution of concerts across different venues. 
+                                            This helps identify the most frequently used performance locations.
+                                        </small>
+                                    </div>
+                                </div>
                             </div>
                         <?php else: ?>
-                            <p class="text-muted">No recent activity</p>
+                            <div class="text-center py-4">
+                                <i class="fas fa-chart-pie fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">No venue data available yet.</p>
+                                <small>Venue data will appear when concerts are added to the system.</small>
+                            </div>
                         <?php endif; ?>
-                        <div class="mt-3">
-                            <a href="compositions.php" class="btn btn-outline-primary btn-sm">View All Compositions</a>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
 
     </div>
 </main>
@@ -739,6 +882,85 @@ $(document).ready(function(){
             interaction: {
                 intersect: false,
                 mode: 'index'
+            }
+        }
+    });
+    <?php endif; ?>
+    
+    <?php if (!empty($venue_stats)): ?>
+    // Venue Pie Chart
+    const venueCtx = document.getElementById('venueChart').getContext('2d');
+    const venueChart = new Chart(venueCtx, {
+        type: 'pie',
+        data: {
+            labels: [
+                <?php foreach ($venue_stats as $venue): ?>
+                '<?php echo addslashes($venue['venue']); ?>',
+                <?php endforeach; ?>
+            ],
+            datasets: [{
+                data: [
+                    <?php foreach ($venue_stats as $venue): ?>
+                    <?php echo $venue['concert_count']; ?>,
+                    <?php endforeach; ?>
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.8)',   // Red
+                    'rgba(54, 162, 235, 0.8)',   // Blue
+                    'rgba(255, 205, 86, 0.8)',   // Yellow
+                    'rgba(75, 192, 192, 0.8)',   // Green
+                    'rgba(153, 102, 255, 0.8)',  // Purple
+                    'rgba(255, 159, 64, 0.8)',   // Orange
+                    'rgba(199, 199, 199, 0.8)',  // Grey
+                    'rgba(83, 102, 255, 0.8)',   // Indigo
+                    'rgba(255, 99, 255, 0.8)',   // Pink
+                    'rgba(99, 255, 132, 0.8)'    // Light Green
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 205, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(199, 199, 199, 1)',
+                    'rgba(83, 102, 255, 1)',
+                    'rgba(255, 99, 255, 1)',
+                    'rgba(99, 255, 132, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Concert distribution by venue',
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    position: 'right',
+                    labels: {
+                        boxWidth: 15,
+                        padding: 10,
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed * 100) / total).toFixed(1);
+                            return context.label + ': ' + context.parsed + ' concerts (' + percentage + '%)';
+                        }
+                    }
+                }
             }
         }
     });

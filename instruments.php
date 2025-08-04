@@ -29,7 +29,7 @@
                 <a href="instrumentsorderlist.php" class="btn btn-info" role="button" name="sort" id="sort">Set score order</a>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add" class="btn btn-warning">Add</button>            </div>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add" class="btn btn-warning">Add</button>
 <?php endif; ?>
             </div>
         </div><!-- right button -->
@@ -204,7 +204,7 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the instrument ID when a table row is clicked
     $(document).on('click', '#instrument_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete').prop('disabled',false);
+        $('#view, #edit, #delete').prop('disabled',false);
         id_instrument = $(this).data('id'); // data-id attribute
     });
 
@@ -310,21 +310,22 @@ $(document).ready(function(){
         }
     });
     $(document).on('click', '.view_data', function(){
-        var view_id_instrument = $(this).attr("id");
-        if(view_id_instrument != '')
-        {
-            let id_instrument = view_id_instrument.substring(5); // Extract the ID from the element ID
-            console.log("View instrument with ID: " + view_id_instrument);
-            $.ajax({
-                url:"includes/select_instruments.php",
-                method:"POST",
-                data:{id_instrument:id_instrument},
-                success:function(data){
-                    $('#instrument_detail').html(data);
-                    $('#dataModal').modal('show');
-                }
-            });
+        if(!id_instrument){
+            let id_instrument = $(this).closest('tr').data('id'); // Get the ID from the closest row
         }
+        console.log("Viewing instrument with ID: " + id_instrument);
+        if (id_instrument !== null) {
+        $.ajax({
+            url:"includes/select_instruments.php",
+            method:"POST",
+            data:{id_instrument:id_instrument},
+            success:function(data){
+                $('#instrument_detail').html(data);
+                $('#dataModal').modal('show');
+                id_instrument = null; // Reset the ID after viewing
+            }
+        });
+    }
     });
 });
 </script>

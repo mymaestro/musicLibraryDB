@@ -174,7 +174,7 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the ensemble ID when a table row is clicked
     $(document).on('click', '#ensemble_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete').prop('disabled',false);
+        $('#view, #edit, #delete').prop('disabled',false);
         id_ensemble = $(this).data('id'); // data-id attribute
     });
 
@@ -280,20 +280,19 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '.view_data', function(){
-        var view_id_ensemble = $(this).attr("id");
-        if(view_id_ensemble != '')
-        {
-            let id_ensemble = view_id_ensemble.split('_')[1]; // Get the ID from the element ID
-            $.ajax({
-                url:"includes/select_ensembles.php",
-                method:"POST",
-                data:{id_ensemble:id_ensemble},
-                success:function(data){
-                    $('#ensemble_detail').html(data);
-                    $('#dataModal').modal('show');
-                }
-            });
+        if(!id_ensemble) {
+            let id_ensemble = $(this).closest('tr').data('id'); // Get the ID from the closest row
         }
+        $.ajax({
+            url:"includes/select_ensembles.php",
+            method:"POST",
+            data:{id_ensemble:id_ensemble},
+            success:function(data){
+                $('#ensemble_detail').html(data);
+                $('#dataModal').modal('show');
+                id_ensemble = null; // Reset the ID after viewing
+            }
+        });
     });
 });
 </script>

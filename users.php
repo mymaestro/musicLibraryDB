@@ -22,6 +22,7 @@
 <?php if($u_admin) : ?>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
@@ -61,7 +62,7 @@
             echo '<tr data-id="'. $id_user .'">
                         <td><input type="radio" name="user_select" value="'.$id_user.'" class="form-check-input select-radio"></td>
                         <td>'.$id_user.'<input type="hidden" name="id_user[]" value="'. $id_user .'"></td>
-                        <td><strong><a href="#" class="view_data" name="view" id="view_'.$id_user.'">'.$username.'</a></strong></td>
+                        <td><strong><a href="#" class="view_data" name="view">'.$username.'</a></strong></td>
                         <td>'.$name.'</td>
                         <td>'.$address.'</td>
                         <td>'.$isUser.'</td>
@@ -259,7 +260,7 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the user ID when a table row is clicked
     $(document).on('click', '#users_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete, #sort').prop('disabled',false);
+        $('#view, #edit, #delete, #sort').prop('disabled',false);
         id_user = $(this).data('id'); // data-id attribute
     });
 

@@ -45,7 +45,7 @@ if(isset($id_ensemble)) {
         echo '<tr data-id="'.$id_ensemble.'">
                     <td><input type="radio" name="ensemble_select" value="'.$id_ensemble.'" class="form-check-input select-radio"></td>
                     <td>'.$id_ensemble.'</td>
-                    <td><strong><a href="#" class="view_data" name="view" id="view_'.$id_ensemble.'">'.$title.'</strong></td>
+                    <td><strong><a href="#" class="view_data" name="view">'.$title.'</strong></td>
                     <td>'.$description.'</td>
                     <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>
                 </tr>

@@ -333,7 +333,7 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the playgram ID when a table row is clicked
     $(document).on('click', '#recordings_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete, #sort').prop('disabled',false);
+        $('#view, #edit, #delete, #sort').prop('disabled',false);
         id_recording = $(this).data('id'); // data-id attribute
     });
 
@@ -479,22 +479,19 @@ $(document).ready(function(){
         }
     });
     $(document).on('click', '.view_data', function(){
-        var view_id_recording = $(this).attr("id");
-        // id_recording will look like "view_123"
-        if(view_id_recording != '')
-        {
-            let id_recording = view_id_recording.substr(5);
-            console.log("View recording " + id_recording);
-            $.ajax({
-                url:"includes/select_recordings.php",
-                method:"POST",
-                data:{id_recording:id_recording},
-                success:function(data){
-                    $('#recording_detail').html(data);
-                    $('#dataModal').modal('show');
-                }
-            });
+        if(!id_recording) {
+            id_recording = $(this).closest('tr').data('id'); // Get the ID from the closest row
         }
+        $.ajax({
+            url:"includes/select_recordings.php",
+            method:"POST",
+            data:{id_recording:id_recording},
+            success:function(data){
+                $('#recording_detail').html(data);
+                $('#dataModal').modal('show');
+                id_recording = null; // Reset ID after viewing
+            }
+        });
     });
 });
 </script>

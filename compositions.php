@@ -37,15 +37,16 @@ ferror_log("RUNNING compositions.php");
             </div><!-- col -->
         
             <div class="col">
-                <?php if($u_librarian) : ?>
                 <div class="float-end">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
+                <?php if($u_librarian) : ?>
                     <button type="button" id="instrumentation" class="btn btn-info instrumentation_btn" disabled>Instrumentation</button>
                     <button type="button" data-bs-toggle="modal" data-bs-target="#partsData" id="parts" class="btn btn-success parts_data" disabled>Parts</button>
                     <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                     <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                     <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
-                </div><!-- right justify -->
                 <?php endif; ?>
+                </div><!-- right justify -->
             </div><!-- col-2 -->
         </div><!-- the heading row with buttons -->
         <div id="composition_table"><!-- filled in by fetch_compositions -->
@@ -465,7 +466,7 @@ $(document).ready(function() {
     // Enable the edit and delete buttons, and get the composition ID when a table row is clicked
     $(document).on('click', '#composition_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#edit, #delete, #parts, #instrumentation').prop('disabled',false);
+        $('#view, #edit, #delete, #parts, #instrumentation').prop('disabled',false);
         catalog_number = $(this).data('id'); // data-id attribute
         console.log("Selected catalog number: " + catalog_number);
     });

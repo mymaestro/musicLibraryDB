@@ -67,7 +67,7 @@
             $enabled = $rowList['enabled'];
             echo '<tr data-id="'.$id_section.'">
                         <td><input type="radio" name="record_select" value="'.$id_section.'" class="form-check-input select-radio"></td>
-                        <td><strong><a href="#" class="view_data">'.$name.'</a></strong></td>
+                        <td><strong><a href="#" class="view_data" data-id="'.$id_section.'">'.$name.'</a></strong></td>
                         <td>'.htmlspecialchars($description ?? '').'</td>
                         <td>'.htmlspecialchars($section_leader ?? '').'</td>
                         <td>'.intval($rowList['parttype_count']).'</td>
@@ -341,15 +341,35 @@ $(document).ready(function(){
             });
         }
     });
-    $(document).on('click', '.view_data', function(){
-        if(!id_section) {
-            let id_section = $(this).closest('tr').data('id'); // Get the ID from the closest row
+    $(document).on('click', '.view_data', function(e){
+        e.preventDefault(); // Prevent default link behavior
+        
+        // Get ID from the clicked element's data attribute first
+        let clicked_id = $(this).data('id');
+        
+        // If no data-id on the clicked element, try to get from the closest row
+        if (!clicked_id) {
+            let $row = $(this).closest('tr');
+            clicked_id = $row.data('id');
+            
+            // Also select the radio button in that row if found
+            if (clicked_id) {
+                $row.find('input[type="radio"]').prop('checked', true);
+                $('#view, #edit, #delete, #sort').prop('disabled', false);
+                id_section = clicked_id; // Update the global variable
+            }
         }
-        if (id_section !== null) {
+        
+        // If still no ID and we have a globally selected row, use that
+        if (!clicked_id && id_section) {
+            clicked_id = id_section;
+        }
+        
+        if (clicked_id) {
             $.ajax({
                 url:"includes/select_sections.php",
                 method:"POST",
-                data:{id_section:id_section},
+                data:{id_section:clicked_id},
                 success:function(data){
                     $('#section_detail').html(data);
                     $('#dataModal').modal('show');

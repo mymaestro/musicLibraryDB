@@ -723,6 +723,7 @@ $(document).ready(function() {
     $(document).on('click', '.view_part_link', function(e) {
         e.preventDefault(); // Prevent default link behavior
         // Get the data from the row containing this link
+        // Don't need clicked_id, we can get the id from the row
         var row = $(this).closest('tr');
         var selectedRow = row.data('id');
         var temp_catalog_number = selectedRow.split('-')[0];

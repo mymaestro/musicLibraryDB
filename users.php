@@ -62,7 +62,7 @@
             echo '<tr data-id="'. $id_user .'">
                         <td><input type="radio" name="user_select" value="'.$id_user.'" class="form-check-input select-radio"></td>
                         <td>'.$id_user.'<input type="hidden" name="id_user[]" value="'. $id_user .'"></td>
-                        <td><strong><a href="#" class="view_data" name="view">'.$username.'</a></strong></td>
+                        <td><strong><a href="#" class="view_data" name="view" data-id="'.$id_user.'">'.$username.'</a></strong></td>
                         <td>'.$name.'</td>
                         <td>'.$address.'</td>
                         <td>'.$isUser.'</td>
@@ -260,8 +260,9 @@ $(document).ready(function(){
     // Enable the edit and delete buttons, and get the user ID when a table row is clicked
     $(document).on('click', '#users_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#view, #edit, #delete, #sort').prop('disabled',false);
+        $('#view, #edit, #delete').prop('disabled',false);
         id_user = $(this).data('id'); // data-id attribute
+        console.log("Selected user ID: " + id_user); // Debugging log
     });
 
     $('#add').click(function(){
@@ -309,7 +310,7 @@ $(document).ready(function(){
     $('#confirm-delete').click(function(){
         // The confirm delete button
         // Not needed, id_user is already set from the row click
-        // var id_users = $(this).data('id');
+        // var id_user = $(this).data('id');
         $.ajax({
             url:"includes/delete_records.php", 
             method:"POST",
@@ -369,14 +370,35 @@ $(document).ready(function(){
             });
         }
     });
-    $(document).on('click', '.view_data', function(){
-        //var id_users = $(this).attr("id");
-        if(id_user != '')
-        {
+    $(document).on('click', '.view_data', function(e){
+        e.preventDefault(); // Prevent default link behavior
+        
+        // Get ID from the clicked element's data attribute first
+        let clicked_id = $(this).data('id');
+        
+        // If no data-id on the clicked element, try to get from the closest row
+        if (!clicked_id) {
+            let $row = $(this).closest('tr');
+            clicked_id = $row.data('id');
+            
+            // Also select the radio button in that row if found
+            if (clicked_id) {
+                $row.find('input[type="radio"]').prop('checked', true);
+                $('#view, #edit, #delete').prop('disabled', false);
+                id_user = clicked_id; // Update the global variable
+            }
+        }
+        
+        // If still no ID and we have a globally selected row, use that
+        if (!clicked_id && id_user) {
+            clicked_id = id_user;
+        }
+        
+        if (clicked_id) {
             $.ajax({
                 url:"includes/select_users.php",
                 method:"POST",
-                data:{id_users:id_user},
+                data:{id_users:clicked_id},
                 success:function(data){
                     $('#user_detail').html(data);
                     $('#dataModal').modal('show');

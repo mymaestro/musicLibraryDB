@@ -57,7 +57,7 @@
             echo '<tr data-id="'.$id_genre.'">
                         <td><input type="radio" name="record_select" value="'.$id_genre.'" class="form-check-input select-radio"></td>
                         <td>'.$id_genre.'</td>
-                        <td><strong><a href="#" class="view_data" id="'.$id_genre.'">'.$name.'</a></strong></td>
+                        <td><strong><a href="#" class="view_data" data-id="'.$id_genre.'">'.$name.'</a></strong></td>
                         <td>'.$description.'</td>
                         <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>
                     </tr>
@@ -252,22 +252,43 @@ $(document).ready(function(){
         }
     });
 <?php endif; ?>
-    $(document).on('click', '.view_data', function(){
-        //var id_genre = $(this).attr("id");
-        if(id_genre != '') {
-            let id_genre = $(this).attr("id");
+    $(document).on('click', '.view_data', function(e){
+        e.preventDefault(); // Prevent default link behavior
+        
+        // Get ID from the clicked element's data attribute first
+        let clicked_id = $(this).data('id');
+        
+        // If no data-id on the clicked element, try to get from the closest row
+        if (!clicked_id) {
+            let $row = $(this).closest('tr');
+            clicked_id = $row.data('id');
+            
+            // Also select the radio button in that row if found
+            if (clicked_id) {
+                $row.find('input[type="radio"]').prop('checked', true);
+                $('#view, #edit, #delete, #sort').prop('disabled', false);
+                id_genre = clicked_id; // Update the global variable
+            }
         }
         
-        $.ajax({
-            url:"includes/select_genres.php",
-            method:"POST",
-            data:{id_genre:id_genre},
-            success:function(data){
-                $('#genre_detail').html(data);
-                $('#dataModal').modal('show');
-            }
-        });
-    
+        // If still no ID and we have a globally selected row, use that
+        if (!clicked_id && id_genre) {
+            clicked_id = id_genre;
+        }
+        
+        if (clicked_id) {
+            $.ajax({
+                url:"includes/select_genres.php",
+                method:"POST",
+                data:{id_genre:clicked_id},
+                success:function(data){
+                    $('#genre_detail').html(data);
+                    $('#dataModal').modal('show');
+                }
+            });
+        } else {
+            alert("No genre selected. Please select a genre first.");
+        }
     });
 });
 </script>

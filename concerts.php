@@ -344,7 +344,8 @@ $(document).ready(function(){
         }
     });
     $(document).on('click', '.view_data', function(){
-        
+        // clicked_id not needed here, we already have id_concert
+        // and the playgram ID from the table row
         if(id_concert !== null) {
             $.ajax({
                 url:"includes/select_concerts.php",

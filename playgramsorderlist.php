@@ -17,14 +17,14 @@
   ferror_log("RUNNING playgramsorderlist.php");
 
   ferror_log(print_r($_GET, true));
+  $id = $_GET['id'] ?? null;
 ?>
 <main role="main">
     <div class="container">
         <h1><?php echo ORGNAME . ' ' . PAGE_TITLE ?></h1>
-<?php if($u_librarian) : ?>
+<?php if($u_librarian && $id): ?>
         <?php
         $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $id = $_GET['id'] ?? null;
         if ( $id ) {
             $sql = "SELECT id_playgram, name FROM playgrams WHERE id_playgram = $id;";
             $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
@@ -38,7 +38,7 @@
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
-        <div align="center">
+        <div class="text-center">
             <span id="playgramlistordermessage">Choose and drag each item in the list to sort. </span><button type="button" name="update" id="update" class="btn btn-success">Update</button>
             <button onclick="history.back()" class="btn btn-secondary">Back</button>
             <br />
@@ -90,7 +90,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="alert alert-info">
-                    You do not have permission to view this page.
+                    You do not have permission to view this page, or no ID found.
                 </div>
             </div>
         </div>

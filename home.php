@@ -324,9 +324,11 @@ mysqli_close($f_link);
                             </div>
                         </div>
                         <p>Work with "playgrams". Playgrams are program playlists, or lists of compositions to be performed, in order, at a concert.</p>
-                        <a href="playgrams.php" class="btn btn-secondary">
-                            <i class="fas fa-list-ol"></i> Manage playgrams
-                        </a>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="playgrams.php" class="btn btn-secondary">
+                                <i class="fas fa-list-ol"></i> Manage playgrams
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

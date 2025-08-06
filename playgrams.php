@@ -21,15 +21,20 @@
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
-        <div class="row pb-1 pt-5 border-bottom"><h1><?php echo ORGNAME . ' '. PAGE_TITLE ?></h1></div>
+        <div class="row pb-1 pt-5 border-bottom">
+            <div class="col">
+                <h1><?php echo ORGNAME . ' '. PAGE_TITLE ?></h1>
+            </div>
+        </div>
         <div class="row pt-3 justify-content-end">
             <div class="col-auto">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
 <?php if($u_librarian) : ?>
                 <button type="button" name="sort" id="sort" class="btn btn-info" disabled>Set program order</button>
+                <button type="button" id="edit_creator" class="btn btn-success" disabled>Edit in creator</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="add"  class="btn btn-warning">Add</button>
+                <a href="playgram_builder.php" class="btn btn-warning">Add</a>
 <?php endif; ?>
             </div>
         </div><!-- right button -->
@@ -197,20 +202,10 @@ $(document).ready(function(){
         }
     });
 
-    $('#add').click(function(){
-        $('#insert').val("Insert");
-        $('#update').val("add");
-        $('#insert_form')[0].reset();
-        var selectitems = '';
-        $.each(compositionData, function(key, value) {
-            selectitems += '<option value=' + value.catalog_number +'>'+ value.name+'</option>';
-        });
-        $('#id_composition_list').html(selectitems);
-    });
     // Enable the view, edit and delete buttons, and get the playgram ID when a table row is clicked
     $(document).on('click', '#playgram_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#view, #edit, #delete, #sort').prop('disabled',false);
+        $('#view, #edit, #delete, #sort, #edit_creator').prop('disabled',false);
         id_playgram = $(this).data('id'); // data-id attribute
     });
     $('#editModal').modal({
@@ -278,6 +273,11 @@ $(document).ready(function(){
     $('#sort').click(function() {
         if (id_playgram !== null) {
             window.location.href = 'playgramsorderlist.php?id=' + encodeURIComponent(id_playgram);
+        }
+    });
+    $('#edit_creator').click(function() {
+        if (id_playgram !== null) {
+            window.location.href = 'playgram_builder.php?id=' + encodeURIComponent(id_playgram);
         }
     });
     $(document).on('click', '.delete_data', function() { // button that brings up delete modal
@@ -363,7 +363,7 @@ $(document).ready(function(){
             // Also select the radio button in that row if found
             if (clicked_id) {
                 $row.find('input[type="radio"]').prop('checked', true);
-                $('#view, #edit, #delete, #sort').prop('disabled', false);
+                $('#view, #edit, #delete, #sort, #edit_creator').prop('disabled', false);
                 id_playgram = clicked_id; // Update the global variable
             }
         }

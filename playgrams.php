@@ -31,7 +31,7 @@
                 <button type="button" data-bs-toggle="modal" data-bs-target="#dataModal" id="view" class="btn btn-secondary view_data" disabled>Details</button>
 <?php if($u_librarian) : ?>
                 <button type="button" name="sort" id="sort" class="btn btn-info" disabled>Set program order</button>
-                <button type="button" id="edit_creator" class="btn btn-success" disabled>Edit in creator</button>
+                <button type="button" id="edit_builder" class="btn btn-success" disabled>Edit in builder</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="edit" class="btn btn-primary edit_data" disabled>Edit</button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delete" class="btn btn-danger delete_data" disabled>Delete</button>
                 <a href="playgram_builder.php" class="btn btn-warning">Add</a>
@@ -205,7 +205,7 @@ $(document).ready(function(){
     // Enable the view, edit and delete buttons, and get the playgram ID when a table row is clicked
     $(document).on('click', '#playgram_table tbody tr', function(){
         $(this).find('input[type="radio"]').prop('checked',true);
-        $('#view, #edit, #delete, #sort, #edit_creator').prop('disabled',false);
+        $('#view, #edit, #delete, #sort, #edit_builder').prop('disabled',false);
         id_playgram = $(this).data('id'); // data-id attribute
     });
     $('#editModal').modal({
@@ -275,7 +275,7 @@ $(document).ready(function(){
             window.location.href = 'playgramsorderlist.php?id=' + encodeURIComponent(id_playgram);
         }
     });
-    $('#edit_creator').click(function() {
+    $('#edit_builder').click(function() {
         if (id_playgram !== null) {
             window.location.href = 'playgram_builder.php?id=' + encodeURIComponent(id_playgram);
         }
@@ -363,7 +363,7 @@ $(document).ready(function(){
             // Also select the radio button in that row if found
             if (clicked_id) {
                 $row.find('input[type="radio"]').prop('checked', true);
-                $('#view, #edit, #delete, #sort, #edit_creator').prop('disabled', false);
+                $('#view, #edit, #delete, #sort, #edit_builder').prop('disabled', false);
                 id_playgram = clicked_id; // Update the global variable
             }
         }

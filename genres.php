@@ -157,7 +157,6 @@
 <!-- jquery function to add/update database records -->
 <script>
 $(document).ready(function(){
-<?php if($u_librarian) : ?>
     $('#add').click(function(){
         $('#insert').val("Insert");
         $('#update').val("add");
@@ -173,7 +172,6 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '.edit_data', function(){
-        // var id_genre = $(this).attr("id");
         $.ajax({
             url:"includes/fetch_genres.php",
             method:"POST",
@@ -194,15 +192,13 @@ $(document).ready(function(){
         });
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
-        // input button name="delete" id="id_genre" class="delete_data"
-        // var id_genre = $(this).attr("id");
-        $('#deleteModal').modal('show');
-        $('#confirm-delete').data('id', id_genre);
-        $('#genre2delete').text(id_genre);
+        if (id_genre !== null && id_genre !== undefined) {
+            $('#confirm-delete').data('id', id_genre);
+            $('#genre2delete').text(id_genre);
+        }
     });
     $('#confirm-delete').click(function(){
         // The confirm delete button
-        // var id_genre = $(this).data('id');
         $.ajax({
             url:"includes/delete_records.php",
             method:"POST",
@@ -251,7 +247,6 @@ $(document).ready(function(){
             });
         }
     });
-<?php endif; ?>
     $(document).on('click', '.view_data', function(e){
         e.preventDefault(); // Prevent default link behavior
         

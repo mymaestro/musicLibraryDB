@@ -4,7 +4,7 @@ require_once('functions.php');
 
 // Get search parameters
 $search = isset($_POST['search']) ? trim($_POST['search']) : '';
-$genre = isset($_POST['genre']) ? intval($_POST['genre']) : 0;
+$genre = isset($_POST['genre']) ? $_POST['genre'] : 0;
 $ensemble = isset($_POST['ensemble']) ? $_POST['ensemble'] : '';
 $grade = isset($_POST['grade']) ? floatval($_POST['grade']) : 0;
 $duration = isset($_POST['duration']) ? $_POST['duration'] : '';
@@ -30,7 +30,7 @@ if (!empty($search)) {
 
 // Add genre filter
 if ($genre > 0) {
-    $sql .= " AND c.genre = " . intval($genre);
+    $sql .= " AND c.genre = '" . mysqli_real_escape_string($f_link, $genre) . "'";
 }
 
 // Add ensemble filter  

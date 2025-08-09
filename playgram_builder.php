@@ -828,25 +828,21 @@ $(document).ready(function() {
         if (isUpdating) {
             formData.update = 'update';
             formData.id_playgram = playgramId;
+        } else {
+            formData.id_playgram = null;
+            formData.update = 'add';
         }
-        
         $.ajax({
             url: 'includes/insert_playgrams.php',
             method: 'POST',
             data: formData,
             success: function(response) {
                 const successMessage = isUpdating ? 'Program updated successfully!' : 'Program saved successfully!';
-                alert(successMessage);
+                // alert(successMessage);
                 
-                if (isUpdating) {
-                    // For updates, just show success and stay on page
-                    // Optionally reload the page to reflect changes
-                    if (confirm('Would you like to reload the page to see the updated program?')) {
-                        window.location.reload();
-                    }
-                } else {
+                if (!isUpdating) {
                     // For new programs, offer to create another or go to list
-                    if (confirm('Would you like to create another program?')) {
+                    if (confirm('Create another playgram?')) {
                         // Reset for new program
                         selectedCompositions = [];
                         $('#program_name').val('');
@@ -858,6 +854,8 @@ $(document).ready(function() {
                     } else {
                         window.location.href = 'playgrams.php';
                     }
+                } else {
+                    window.location.href = 'playgrams.php';
                 }
             },
             error: function() {

@@ -240,7 +240,6 @@ $(document).ready(function(){
                         text: name
                     }))
                 });
-                //$('#id_composition').html(selectitems);
                 // Remove already selected items from available options
                 $('#id_composition option').each(function () {
                     let val = $(this).val();

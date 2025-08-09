@@ -181,7 +181,8 @@ ferror_log("RUNNING compositions.php");
                                 $sql = "SELECT `id_genre`, `name` FROM genres WHERE `enabled` = 1 ORDER BY name;";
                                 //error_log("Running " . $sql);
                                 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                                $opt = "<select class='form-select form-control' aria-label='Select paper size' id='genre' name='genre'>";
+                                $opt = "<select class='form-select form-control' aria-label='Select paper size' id='genre' name='genre'>
+                                <option value=''>Select a genre</option>";
                                 while($rowList = mysqli_fetch_array($res)) {
                                     $id_genre = $rowList['id_genre'];
                                     $genre_name = $rowList['name'];
@@ -204,7 +205,8 @@ ferror_log("RUNNING compositions.php");
                                 $sql = "SELECT `id_ensemble`, `name` FROM ensembles WHERE `enabled` = 1 ORDER BY name;";
                                 //error_log("Running " . $sql);
                                 $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
-                                $opt = "<select class='form-select form-control' aria-label='Select ensemble' id='ensemble' name='ensemble'>";
+                                $opt = "<select class='form-select form-control' aria-label='Select ensemble' id='ensemble' name='ensemble'>
+                                <option value=''>Select an ensemble</option>";
                                 while($rowList = mysqli_fetch_array($res)) {
                                     $id_ensemble = $rowList['id_ensemble'];
                                     $ensemble_name = $rowList['name'];

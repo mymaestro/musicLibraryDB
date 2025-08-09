@@ -16,150 +16,150 @@ if (isset($_SESSION['username'])) {
 require_once("includes/config.php");
 require_once("includes/navbar.php");
 require_once("includes/functions.php");
-ferror_log("RUNNING lookformusic.php");
+ferror_log("RUNNING search.php");
 ?>
 
 <style>
-.sidebar {
-    background-color: #f8f9fa;
-    border-right: 1px solid #dee2e6;
-    border-radius: 0.375rem 0 0 0.375rem;
-    padding: 0;
-    max-height: calc(100vh - 2rem);
-    overflow-y: auto;
-}
-
-.sidebar-header {
-    background-color: #e9ecef;
-    padding: 1rem;
-    border-bottom: 1px solid #dee2e6;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.sidebar-content {
-    padding: 1rem;
-}
-
-.filter-section {
-    margin-bottom: 2rem;
-}
-
-.filter-section h6 {
-    font-weight: 600;
-    color: #495057;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
-}
-
-.filter-group {
-    max-height: 300px;
-    overflow-y: auto;
-    padding-right: 0.5rem;
-}
-
-.filter-group::-webkit-scrollbar {
-    width: 6px;
-}
-
-.filter-group::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.filter-group::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-.filter-group::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-.main-content {
-    padding: 1rem;
-    background-color: #ffffff;
-    border-radius: 0 0.375rem 0.375rem 0;
-    border: 1px solid #dee2e6;
-    border-left: none;
-    max-height: calc(100vh - 2rem);
-    overflow-y: auto;
-}
-
-.composition-card {
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    cursor: pointer;
-    border: 1px solid #dee2e6;
-    margin-bottom: 1rem;
-}
-
-.composition-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.card-catalog {
-    font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
-    color: #6c757d;
-}
-
-.card-duration {
-    background-color: #e9ecef;
-    color: #495057;
-    border-radius: 0.25rem;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.results-header {
-    border-bottom: 2px solid #dee2e6;
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
-}
-
-.no-results {
-    text-align: center;
-    color: #6c757d;
-    padding: 4rem 2rem;
-}
-
-.filter-group .form-check {
-    margin-bottom: 0.5rem;
-}
-
-.filter-group .form-check-input:checked {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
-
-.collapse-header {
-    cursor: pointer;
-    transition: all 0.2s ease;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #dee2e6;
-    margin-bottom: 0.75rem;
-}
-
-.collapse-header:hover {
-    color: #0d6efd !important;
-}
-
-.collapse-header .fa-chevron-down {
-    transition: transform 0.2s ease;
-}
-
-.collapse-header[aria-expanded="true"] .fa-chevron-down {
-    transform: rotate(180deg);
-}
-
-@media (max-width: 768px) {
     .sidebar {
-        min-height: auto;
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+        border-radius: 0.375rem 0 0 0.375rem;
+        padding: 0;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
     }
-}
+
+    .sidebar-header {
+        background-color: #e9ecef;
+        padding: 1rem;
+        border-bottom: 1px solid #dee2e6;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .sidebar-content {
+        padding: 1rem;
+    }
+
+    .filter-section {
+        margin-bottom: 2rem;
+    }
+
+    .filter-section h6 {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .filter-group {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+    }
+
+    .filter-group::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .filter-group::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .filter-group::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+    }
+
+    .filter-group::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    .main-content {
+        padding: 1rem;
+        background-color: #ffffff;
+        border-radius: 0 0.375rem 0.375rem 0;
+        border: 1px solid #dee2e6;
+        border-left: none;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+    }
+
+    .composition-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        cursor: pointer;
+        border: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+    }
+
+    .composition-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-catalog {
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .card-duration {
+        background-color: #e9ecef;
+        color: #495057;
+        border-radius: 0.25rem;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .results-header {
+        border-bottom: 2px solid #dee2e6;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .no-results {
+        text-align: center;
+        color: #6c757d;
+        padding: 4rem 2rem;
+    }
+
+    .filter-group .form-check {
+        margin-bottom: 0.5rem;
+    }
+
+    .filter-group .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .collapse-header {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #dee2e6;
+        margin-bottom: 0.75rem;
+    }
+
+    .collapse-header:hover {
+        color: #0d6efd !important;
+    }
+
+    .collapse-header .fa-chevron-down {
+        transition: transform 0.2s ease;
+    }
+
+    .collapse-header[aria-expanded="true"] .fa-chevron-down {
+        transform: rotate(180deg);
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            min-height: auto;
+        }
+    }
 </style>
 
 <main role="main" class="container my-4">
@@ -170,14 +170,14 @@ ferror_log("RUNNING lookformusic.php");
                 <h5 class="mb-0"><i class="fas fa-search"></i> Find Music</h5>
                 <p class="text-muted mb-0 small">Discover compositions for your ensemble</p>
             </div>
-            
+
             <div class="sidebar-content">
                 <!-- Search Field (Always visible) -->
                 <div class="filter-section">
                     <h6><i class="fas fa-keyboard"></i> Search</h6>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="search_text" 
-                               placeholder="Title, composer, catalog...">
+                        <input type="text" class="form-control" id="search_text"
+                            placeholder="Title, composer, catalog...">
                         <button class="btn btn-outline-secondary" type="button" id="clear_search">
                             <i class="fas fa-times"></i>
                         </button>
@@ -187,9 +187,9 @@ ferror_log("RUNNING lookformusic.php");
                 <!-- Composer Filter -->
                 <div class="filter-section">
                     <h6>
-                        <a class="text-decoration-none text-dark d-flex justify-content-between align-items-center collapse-header" 
-                           data-bs-toggle="collapse" href="#composerCollapse" role="button" 
-                           aria-expanded="false" aria-controls="composerCollapse">
+                        <a class="text-decoration-none text-dark d-flex justify-content-between align-items-center collapse-header"
+                            data-bs-toggle="collapse" href="#composerCollapse" role="button"
+                            aria-expanded="false" aria-controls="composerCollapse">
                             <span><i class="fas fa-user-tie me-2"></i> Composer</span>
                             <i class="fas fa-chevron-down"></i>
                         </a>
@@ -220,9 +220,9 @@ ferror_log("RUNNING lookformusic.php");
                 <!-- Genre Filter -->
                 <div class="filter-section">
                     <h6>
-                        <a class="text-decoration-none text-dark d-flex justify-content-between align-items-center collapse-header" 
-                           data-bs-toggle="collapse" href="#genreCollapse" role="button" 
-                           aria-expanded="false" aria-controls="genreCollapse">
+                        <a class="text-decoration-none text-dark d-flex justify-content-between align-items-center collapse-header"
+                            data-bs-toggle="collapse" href="#genreCollapse" role="button"
+                            aria-expanded="false" aria-controls="genreCollapse">
                             <span><i class="fas fa-tags me-2"></i> Genre</span>
                             <i class="fas fa-chevron-down"></i>
                         </a>
@@ -253,9 +253,9 @@ ferror_log("RUNNING lookformusic.php");
                 <!-- Ensemble Filter -->
                 <div class="filter-section">
                     <h6>
-                        <a class="text-decoration-none text-dark d-flex justify-content-between align-items-center collapse-header" 
-                           data-bs-toggle="collapse" href="#ensembleCollapse" role="button" 
-                           aria-expanded="false" aria-controls="ensembleCollapse">
+                        <a class="text-decoration-none text-dark d-flex justify-content-between align-items-center collapse-header"
+                            data-bs-toggle="collapse" href="#ensembleCollapse" role="button"
+                            aria-expanded="false" aria-controls="ensembleCollapse">
                             <span><i class="fas fa-users me-2"></i> Ensemble</span>
                             <i class="fas fa-chevron-down"></i>
                         </a>
@@ -285,9 +285,9 @@ ferror_log("RUNNING lookformusic.php");
                 <!-- Grade Filter -->
                 <div class="filter-section">
                     <h6>
-                        <a class="text-decoration-none text-dark d-flex justify-content-between align-items-center collapse-header" 
-                           data-bs-toggle="collapse" href="#gradeCollapse" role="button" 
-                           aria-expanded="false" aria-controls="gradeCollapse">
+                        <a class="text-decoration-none text-dark d-flex justify-content-between align-items-center collapse-header"
+                            data-bs-toggle="collapse" href="#gradeCollapse" role="button"
+                            aria-expanded="false" aria-controls="gradeCollapse">
                             <span><i class="fas fa-graduation-cap me-2"></i> Grade Level</span>
                             <i class="fas fa-chevron-down"></i>
                         </a>
@@ -329,9 +329,9 @@ ferror_log("RUNNING lookformusic.php");
                 <!-- Duration Filter -->
                 <div class="filter-section">
                     <h6>
-                        <a class="text-decoration-none text-dark d-flex justify-content-between align-items-center collapse-header" 
-                           data-bs-toggle="collapse" href="#durationCollapse" role="button" 
-                           aria-expanded="false" aria-controls="durationCollapse">
+                        <a class="text-decoration-none text-dark d-flex justify-content-between align-items-center collapse-header"
+                            data-bs-toggle="collapse" href="#durationCollapse" role="button"
+                            aria-expanded="false" aria-controls="durationCollapse">
                             <span><i class="fas fa-clock me-2"></i> Duration</span>
                             <i class="fas fa-chevron-down"></i>
                         </a>
@@ -399,7 +399,7 @@ ferror_log("RUNNING lookformusic.php");
             </div>
         </div>
     </div>
-    
+
     <!-- Composition Details Modal -->
     <div class="modal" id="viewData">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -417,7 +417,7 @@ ferror_log("RUNNING lookformusic.php");
             </div>
         </div>
     </div>
-    
+
     <!-- Parts Modal -->
     <div class="modal" id="partsData">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -428,224 +428,147 @@ ferror_log("RUNNING lookformusic.php");
     </div>
 </main>
 
-<?php 
+<?php
 mysqli_close($f_link);
-require_once("includes/footer.php"); 
+require_once("includes/footer.php");
 ?>
 
 <script>
-$(document).ready(function() {
-    // Auto-search on page load with all compositions
-    performSearch();
-    
-    // Search input with debounce
-    let searchTimeout;
-    $('#search_text').on('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(function() {
-            performSearch();
-        }, 300);
-    });
-    
-    // Filter change handlers
-    $('input[type="radio"]').on('change', function() {
+    $(document).ready(function() {
+        // Auto-search on page load with all compositions
         performSearch();
-    });
-    
-    // Clear search button
-    $('#clear_search').click(function() {
-        $('#search_text').val('');
-        performSearch();
-    });
-    
-    // Clear all filters
-    $('#clear_all_filters').click(function() {
-        $('#search_text').val('');
-        $('input[type="radio"][value=""]').prop('checked', true);
-        performSearch();
-    });
-    
-    // Enter key in search box
-    $('#search_text').keypress(function(e) {
-        if (e.which == 13) {
+
+        // Search input with debounce
+        let searchTimeout;
+        $('#search_text').on('input', function() {
             clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                performSearch();
+            }, 300);
+        });
+
+        // Filter change handlers
+        $('input[type="radio"]').on('change', function() {
             performSearch();
-        }
-    });
-    
-    function performSearch() {
-        const searchData = {
-            search: $('#search_text').val(),
-            genre: $('input[name="genre_filter"]:checked').val(),
-            ensemble: $('input[name="ensemble_filter"]:checked').val(),
-            grade: $('input[name="grade_filter"]:checked').val(),
-            duration: $('input[name="duration_filter"]:checked').val(),
-            composer: $('input[name="composer_filter"]:checked').val()
-        };
-        
-        // Check if no filters are applied
-        const hasFilters = searchData.search || 
-                          searchData.genre ||
-                          searchData.ensemble ||
-                          searchData.grade ||
-                          searchData.duration ||
-                          searchData.composer;
-        
-        // Show loading
-        $('#loading_indicator').show();
-        $('#results_container').hide();
-        
-        // If no filters, show random composition
-        if (!hasFilters) {
-            showRandomComposition();
-            return;
-        }
-        
-        // Perform AJAX search
-        $.ajax({
-            url: 'includes/search_compositions.php',
-            method: 'POST',
-            data: searchData,
-            dataType: 'json',
-            success: function(response) {
-                displayResults(response);
-            },
-            error: function() {
-                $('#results_container').html(`
+        });
+
+        // Clear search button
+        $('#clear_search').click(function() {
+            $('#search_text').val('');
+            performSearch();
+        });
+
+        // Clear all filters
+        $('#clear_all_filters').click(function() {
+            $('#search_text').val('');
+            $('input[type="radio"][value=""]').prop('checked', true);
+            performSearch();
+        });
+
+        // Enter key in search box
+        $('#search_text').keypress(function(e) {
+            if (e.which == 13) {
+                clearTimeout(searchTimeout);
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            const searchData = {
+                search: $('#search_text').val(),
+                genre: $('input[name="genre_filter"]:checked').val(),
+                ensemble: $('input[name="ensemble_filter"]:checked').val(),
+                grade: $('input[name="grade_filter"]:checked').val(),
+                duration: $('input[name="duration_filter"]:checked').val(),
+                composer: $('input[name="composer_filter"]:checked').val()
+            };
+
+            // Check if no filters are applied
+            const hasFilters = searchData.search ||
+                searchData.genre ||
+                searchData.ensemble ||
+                searchData.grade ||
+                searchData.duration ||
+                searchData.composer;
+
+            // Show loading
+            $('#loading_indicator').show();
+            $('#results_container').hide();
+
+            // If no filters, show random composition
+            if (!hasFilters) {
+                showRandomComposition();
+                return;
+            }
+
+            // Perform AJAX search
+            $.ajax({
+                url: 'includes/search_compositions.php',
+                method: 'POST',
+                data: searchData,
+                dataType: 'json',
+                success: function(response) {
+                    displayResults(response);
+                },
+                error: function() {
+                    $('#results_container').html(`
                     <div class="text-center text-danger py-5">
                         <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
                         <h5>Error Loading Compositions</h5>
                         <p>Please try again or contact support if the problem persists.</p>
                     </div>
                 `);
-            },
-            complete: function() {
-                $('#loading_indicator').hide();
-                $('#results_container').show();
-            }
-        });
-    }
-    
-    function showRandomComposition() {
-        // Load a random composition
-        $.ajax({
-            url: 'includes/search_compositions.php',
-            method: 'POST',
-            data: { random: 1 }, // Special parameter for random selection
-            dataType: 'json',
-            success: function(response) {
-                displayRandomComposition(response);
-            },
-            error: function() {
-                $('#results_container').html(`
+                },
+                complete: function() {
+                    $('#loading_indicator').hide();
+                    $('#results_container').show();
+                }
+            });
+        }
+
+        function showRandomComposition() {
+            // Load a random composition
+            $.ajax({
+                url: 'includes/search_compositions.php',
+                method: 'POST',
+                data: {
+                    random: 1
+                }, // Special parameter for random selection
+                dataType: 'json',
+                success: function(response) {
+                    displayRandomComposition(response);
+                },
+                error: function() {
+                    $('#results_container').html(`
                     <div class="text-center text-danger py-5">
                         <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
                         <h5>Error Loading Composition</h5>
                         <p>Please try again or contact support if the problem persists.</p>
                     </div>
                 `);
-            },
-            complete: function() {
-                $('#loading_indicator').hide();
-                $('#results_container').show();
-            }
-        });
-    }
-    
-    function displayRandomComposition(data) {
-        if (data.length === 0) {
-            $('#results_container').html(`
+                },
+                complete: function() {
+                    $('#loading_indicator').hide();
+                    $('#results_container').show();
+                }
+            });
+        }
+
+        function displayRandomComposition(data) {
+            if (data.length === 0) {
+                $('#results_container').html(`
                 <div class="no-results">
                     <i class="fas fa-music fa-4x mb-4 text-muted"></i>
                     <h5 class="text-muted">No Compositions Available</h5>
                     <p class="text-muted">Please check back later</p>
                 </div>
             `);
-            $('#results_count').text('0 compositions');
-            $('#results_subtitle').text('No compositions found');
-            return;
-        }
-        
-        const comp = data[0]; // Get the first (and only) random composition
-        const duration = comp.duration ? Math.round(comp.duration / 60) + ' min' : '0:00';
-        const grade = comp.grade || 'N/A';
-        const composer = comp.composer || 'Unknown';
-        const arranger = comp.arranger ? ` • arr. ${comp.arranger}` : '';
-        const genre = comp.genre_name || 'Unknown';
-        const ensemble = comp.ensemble_name || 'Unknown';
-        const partsCount = comp.parts_count || 0;
-        const partsText = partsCount === 1 ? '1 Part' : `${partsCount} Parts`;
-        
-        const html = `
-            <div class="text-center mb-4">
-                <div class="card border-primary shadow-sm mx-auto" style="max-width: 500px;">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-star"></i> Featured Composition</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <span class="badge bg-light text-dark">${ensemble} • ${genre}</span>
-                            <span class="card-duration">${duration}</span>
-                        </div>
-                        
-                        <h4 class="card-title text-primary mb-2">${comp.name}</h4>
-                        <p class="card-text text-muted mb-3">
-                            <strong>${composer}${arranger}</strong>
-                        </p>
-                        
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <span class="badge bg-primary">Grade ${grade}</span>
-                            </div>
-                            <small class="card-catalog">${comp.catalog_number}</small>
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            <button type="button" data-catalog="${comp.catalog_number}"
-                               class="btn btn-primary view-composition-btn">
-                                <i class="fas fa-eye"></i> View Details
-                            </button>
-                            <button type="button" data-catalog="${comp.catalog_number}"
-                               class="btn btn-outline-success view-parts-btn">
-                                <i class="fas fa-puzzle-piece"></i> ${partsText}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center">
-                <div class="alert alert-info mx-auto" style="max-width: 600px;">
-                    <h6 class="alert-heading"><i class="fas fa-lightbulb"></i> Discover More Music</h6>
-                    <p class="mb-2">Use the search box above or expand the filter sections on the left to explore our full music library.</p>
-                    <hr class="my-2">
-                    <p class="mb-0 small">You can search by title, composer, or catalog number, or filter by genre, ensemble, grade level, and more!</p>
-                </div>
-            </div>
-        `;
-        
-        $('#results_container').html(html);
-        $('#results_count').text('1 featured composition');
-        $('#results_subtitle').text('Discover more by searching or using filters');
-    }
-    
-    function displayResults(data) {
-        if (data.length === 0) {
-            $('#results_container').html(`
-                <div class="no-results">
-                    <i class="fas fa-search fa-4x mb-4 text-muted"></i>
-                    <h5 class="text-muted">No Compositions Found</h5>
-                    <p class="text-muted">Try adjusting your search criteria or clearing some filters</p>
-                </div>
-            `);
-            $('#results_count').text('0 compositions');
-            $('#results_subtitle').text('No results match your search criteria');
-            return;
-        }
-        
-        let html = '<div class="row">';
-        
-        data.forEach(function(comp) {
+                $('#results_count').text('0 compositions');
+                $('#results_subtitle').text('No compositions found');
+                return;
+            }
+
+            const comp = data[0]; // Get the first (and only) random composition
             const duration = comp.duration ? Math.round(comp.duration / 60) + ' min' : '0:00';
             const grade = comp.grade || 'N/A';
             const composer = comp.composer || 'Unknown';
@@ -654,14 +577,95 @@ $(document).ready(function() {
             const ensemble = comp.ensemble_name || 'Unknown';
             const partsCount = comp.parts_count || 0;
             const partsText = partsCount === 1 ? '1 Part' : `${partsCount} Parts`;
-            
-            // Create ensemble/genre text with truncation
-            const ensembleGenreText = `${ensemble} • ${genre}`;
-            const displayText = ensembleGenreText.length > 35 ? 
-                ensembleGenreText.substring(0, 32) + '...' : 
-                ensembleGenreText;
-            
-            html += `
+
+            const html = `
+            <div class="mb-4 row">
+                <div class="col-sm-6 text-center">
+                    <div class="card border-primary shadow-sm mx-auto">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Featured composition</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="badge bg-light text-dark">${ensemble} • ${genre}</span>
+                                <span class="card-duration">${duration}</span>
+                            </div>
+                            <h4 class="card-title text-primary mb-2">${comp.name}</h4>
+                            <p class="card-text text-muted mb-3">
+                                <strong>${composer}${arranger}</strong>
+                            </p>
+                        
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <span class="badge bg-primary">Grade ${grade}</span>
+                                </div>
+                                <small class="card-catalog">${comp.catalog_number}</small>
+                            </div>
+                        
+                            <div class="d-grid gap-2">
+                                <button type="button" data-catalog="${comp.catalog_number}"
+                                    class="btn btn-primary view-composition-btn">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                                <button type="button" data-catalog="${comp.catalog_number}"
+                                class="btn btn-outline-success view-parts-btn">
+                                    <i class="fas fa-puzzle-piece"></i> ${partsText}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card mx-auto">
+                        <h6 class="card-header"><i class="fas fa-lightbulb"></i> Discover more music</h6>
+                        <div class="card-body">
+                            <p class="mb-2">Use the search field or expand the filter sections to explore the full music library.</p>
+                            <hr class="my-2">
+                            <p class="mb-0 small">You can search by title, composer, or catalog number, or filter by genre, ensemble, grade level, and more!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+            $('#results_container').html(html);
+            $('#results_count').text('1 featured composition');
+            $('#results_subtitle').text('Discover more by searching or using filters');
+        }
+
+        function displayResults(data) {
+            if (data.length === 0) {
+                $('#results_container').html(`
+                <div class="no-results">
+                    <i class="fas fa-search fa-4x mb-4 text-muted"></i>
+                    <h5 class="text-muted">No Compositions Found</h5>
+                    <p class="text-muted">Try adjusting your search criteria or clearing some filters</p>
+                </div>
+            `);
+                $('#results_count').text('0 compositions');
+                $('#results_subtitle').text('No results match your search criteria');
+                return;
+            }
+
+            let html = '<div class="row">';
+
+            data.forEach(function(comp) {
+                const duration = comp.duration ? Math.round(comp.duration / 60) + ' min' : '0:00';
+                const grade = comp.grade || 'N/A';
+                const composer = comp.composer || 'Unknown';
+                const arranger = comp.arranger ? ` • arr. ${comp.arranger}` : '';
+                const genre = comp.genre_name || 'Unknown';
+                const ensemble = comp.ensemble_name || 'Unknown';
+                const partsCount = comp.parts_count || 0;
+                const partsText = partsCount === 1 ? '1 Part' : `${partsCount} Parts`;
+
+                // Create ensemble/genre text with truncation
+                const ensembleGenreText = `${ensemble} • ${genre}`;
+                const displayText = ensembleGenreText.length > 35 ?
+                    ensembleGenreText.substring(0, 32) + '...' :
+                    ensembleGenreText;
+
+                html += `
                 <div class="col-lg-6 col-xl-4">
                     <div class="card composition-card h-100">
                         <div class="card-body">
@@ -698,82 +702,87 @@ $(document).ready(function() {
                     </div>
                 </div>
             `;
+            });
+
+            html += '</div>';
+
+            $('#results_container').html(html);
+            $('#results_count').text(`${data.length} composition${data.length !== 1 ? 's' : ''}`);
+
+            // Update subtitle based on search criteria
+            const hasFilters = $('#search_text').val() ||
+                $('input[name="genre_filter"]:checked').val() ||
+                $('input[name="ensemble_filter"]:checked').val() ||
+                $('input[name="grade_filter"]:checked').val() ||
+                $('input[name="duration_filter"]:checked').val() ||
+                $('input[name="composer_filter"]:checked').val();
+
+            $('#results_subtitle').text(hasFilters ?
+                'Showing filtered results' :
+                'Showing all available compositions'
+            );
+        }
+
+        // View composition button handler
+        $(document).on('click', '.view-composition-btn', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const catalogNumber = $(this).data('catalog');
+
+            // Show loading in modal
+            $('#composition_detail').html('<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-3">Loading composition details...</p></div>');
+
+            // Show modal immediately
+            $('#viewData').modal('show');
+
+            // Load composition details
+            $.ajax({
+                url: 'includes/select_compositions.php',
+                type: 'POST',
+                data: {
+                    catalog_number: catalogNumber
+                },
+                success: function(data) {
+                    $('#composition_detail').html(data);
+                },
+                error: function() {
+                    $('#composition_detail').html('<div class="text-center text-danger py-4"><i class="fas fa-exclamation-triangle fa-3x mb-3"></i><h5>Error Loading Details</h5><p>Unable to load composition details. Please try again.</p></div>');
+                }
+            });
         });
-        
-        html += '</div>';
-        
-        $('#results_container').html(html);
-        $('#results_count').text(`${data.length} composition${data.length !== 1 ? 's' : ''}`);
-        
-        // Update subtitle based on search criteria
-        const hasFilters = $('#search_text').val() || 
-                          $('input[name="genre_filter"]:checked').val() ||
-                          $('input[name="ensemble_filter"]:checked').val() ||
-                          $('input[name="grade_filter"]:checked').val() ||
-                          $('input[name="duration_filter"]:checked').val() ||
-                          $('input[name="composer_filter"]:checked').val();
-        
-        $('#results_subtitle').text(hasFilters ? 
-            'Showing filtered results' : 
-            'Showing all available compositions'
-        );
-    }
-    
-    // View composition button handler
-    $(document).on('click', '.view-composition-btn', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const catalogNumber = $(this).data('catalog');
-        
-        // Show loading in modal
-        $('#composition_detail').html('<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-3">Loading composition details...</p></div>');
-        
-        // Show modal immediately
-        $('#viewData').modal('show');
-        
-        // Load composition details
-        $.ajax({
-            url: 'includes/select_compositions.php',
-            type: 'POST',
-            data: { catalog_number: catalogNumber },
-            success: function(data) {
-                $('#composition_detail').html(data);
-            },
-            error: function() {
-                $('#composition_detail').html('<div class="text-center text-danger py-4"><i class="fas fa-exclamation-triangle fa-3x mb-3"></i><h5>Error Loading Details</h5><p>Unable to load composition details. Please try again.</p></div>');
-            }
+
+        // View parts button handler
+        $(document).on('click', '.view-parts-btn', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const catalogNumber = $(this).data('catalog');
+
+            // Show loading in modal
+            $('#instrumentation_detail').html('<div class="modal-header"><h3 class="modal-title">Loading Parts...</h3><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-3">Loading parts information...</p></div></div>');
+
+            // Show modal immediately
+            $('#partsData').modal('show');
+
+            // Load parts details
+            $.ajax({
+                url: 'includes/select_composition_parts.php',
+                type: 'POST',
+                data: {
+                    catalog_number: catalogNumber
+                },
+                success: function(data) {
+                    $('#instrumentation_detail').html(data);
+                },
+                error: function() {
+                    $('#instrumentation_detail').html('<div class="modal-header"><h3 class="modal-title">Error</h3><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="text-center text-danger py-4"><i class="fas fa-exclamation-triangle fa-3x mb-3"></i><h5>Error Loading Parts</h5><p>Unable to load parts information. Please try again.</p></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>');
+                }
+            });
         });
     });
-    
-    // View parts button handler
-    $(document).on('click', '.view-parts-btn', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const catalogNumber = $(this).data('catalog');
-        
-        // Show loading in modal
-        $('#instrumentation_detail').html('<div class="modal-header"><h3 class="modal-title">Loading Parts...</h3><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-3">Loading parts information...</p></div></div>');
-        
-        // Show modal immediately
-        $('#partsData').modal('show');
-        
-        // Load parts details
-        $.ajax({
-            url: 'includes/select_composition_parts.php',
-            type: 'POST',
-            data: { catalog_number: catalogNumber },
-            success: function(data) {
-                $('#instrumentation_detail').html(data);
-            },
-            error: function() {
-                $('#instrumentation_detail').html('<div class="modal-header"><h3 class="modal-title">Error</h3><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="text-center text-danger py-4"><i class="fas fa-exclamation-triangle fa-3x mb-3"></i><h5>Error Loading Parts</h5><p>Unable to load parts information. Please try again.</p></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>');
-            }
-        });
-    });
-});
 </script>
 
 </body>
+
 </html>

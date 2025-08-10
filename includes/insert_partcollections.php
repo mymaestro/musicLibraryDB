@@ -64,13 +64,22 @@ if (isset($catalog_number_key) && isset($id_part_type_key) && isset($id_instrume
             ferror_log("UPDATE with SQL =" . $sql);
 
             $message = 'Data Updated';
-            if(mysqli_query($f_link, $sql)) {
-                echo '<p class="text-success">Updated '  . $catalog_number_key .':'.$id_part_type_key .':'. $id_instrument_key . ' successfully.</p>';
-            } else {
-                $error_message = mysqli_error($f_link);
-                echo '<p class="text-danger">Error updating ' . $catalog_number_key .':'.$id_part_type_key .':'. $id_instrument_key . '. Error: ' . $error_message . '</p>
-                ';
-                ferror_log("Error: " . $error_message);
+            try {
+                if(mysqli_query($f_link, $sql)) {
+                    echo '<p class="text-success">Updated '  . $catalog_number_key .':'.$id_part_type_key .':'. $id_instrument_key . ' successfully.</p>';
+                }
+            } catch (mysqli_sql_exception $e) {
+                $error_message = $e->getMessage();
+                $mysql_errno = $e->getCode();
+                
+                ferror_log("Error: " . $error_message . " (Error Code: " . $mysql_errno . ")");
+                
+                // Check for specific error types
+                if ($mysql_errno == 1062) {
+                    echo '<p class="text-danger">Duplicate Entry Error: A part collection with this key combination already exists for ' . $catalog_number_key .':'.$id_part_type_key .':'. $id_instrument_key . '.</p>';
+                } else {
+                    echo '<p class="text-danger">Error updating ' . $catalog_number_key .':'.$id_part_type_key .':'. $id_instrument_key . '. Error Code: ' . $mysql_errno . ' - Details: ' . htmlspecialchars($error_message) . '</p>';
+                }
             }
         }
     } elseif($_POST["update"] == "add") {
@@ -83,13 +92,22 @@ if (isset($catalog_number_key) && isset($id_part_type_key) && isset($id_instrume
             VALUES('$catalog_number_key', '$id_part_type_key', '$id_instrument_key', $name, $description, CURRENT_TIMESTAMP() );
             ";
             ferror_log("Running SQL ". $sql);
-            if(mysqli_query($f_link, $sql)) {
-                echo '<p class="text-success">Inserted ' . $id_part_type . ' successfully.</p>';
-            } else {
-                $error_message = mysqli_error($f_link);
-                echo '<p class="text-danger">Error inserting ' . $id_part_type . '. Error: ' . $error_message . '</p>
-                    ';
-                ferror_log("Error: " . $error_message);
+            try {
+                if(mysqli_query($f_link, $sql)) {
+                    echo '<p class="text-success">Inserted ' . $id_part_type_key . ' successfully.</p>';
+                }
+            } catch (mysqli_sql_exception $e) {
+                $error_message = $e->getMessage();
+                $mysql_errno = $e->getCode();
+                
+                ferror_log("Error: " . $error_message . " (Error Code: " . $mysql_errno . ")");
+                
+                // Check for specific error types
+                if ($mysql_errno == 1062) {
+                    echo '<p class="text-danger">Duplicate Entry Error: A part collection with this key combination already exists for ' . $id_part_type . '.</p>';
+                } else {
+                    echo '<p class="text-danger">Error inserting ' . $id_part_type . '. Error Code: ' . $mysql_errno . ' - Details: ' . htmlspecialchars($error_message) . '</p>';
+                }
             }
         } // foreach
         $referred = $_SERVER['HTTP_REFERER'];

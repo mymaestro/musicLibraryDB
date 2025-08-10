@@ -50,16 +50,32 @@ if(!empty($_POST)) {
     $referred = $_SERVER['HTTP_REFERER']; // http://musicLibraryDB.org/instruments.php
     $referred .= '/#' . $id_instrument;
     ferror_log("Referred: " . $referred);
-    if(mysqli_query($f_link, $sql)) {
-        $output .= '<label class="text-success">' . $message . '</label>';
-        $query = parse_url($referred, PHP_URL_QUERY);
-        $referred = str_replace(array('?', $query), '', $referred);
-    } else {
+    
+    try {
+        if(mysqli_query($f_link, $sql)) {
+            $output .= '<label class="text-success">' . $message . '</label>';
+            $query = parse_url($referred, PHP_URL_QUERY);
+            $referred = str_replace(array('?', $query), '', $referred);
+            
+            // Echo the output for success display
+            echo $output;
+        }
+    } catch (mysqli_sql_exception $e) {
         $message = "Failed";
-        $error_message = mysqli_error($f_link);
-        $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
-           ';
-        ferror_log("Error: " . $error_message);
+        $error_message = $e->getMessage();
+        $mysql_errno = $e->getCode();
+        
+        ferror_log("Error: " . $error_message . " (Error Code: " . $mysql_errno . ")");
+        
+        // Check for specific error types
+        if ($mysql_errno == 1062) {
+            $output .= '<p class="text-danger">Duplicate Entry Error: An instrument with this ID or name already exists. Please use a different ID or name.</p>';
+        } else {
+            $output .= '<p class="text-danger">' . $message . '. Error Code: ' . $mysql_errno . ' - Details: ' . htmlspecialchars($error_message) . '</p>';
+        }
+        
+        // Echo the output for error display
+        echo $output;
     }
  } else {
     require_once("header.php");

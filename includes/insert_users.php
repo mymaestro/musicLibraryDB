@@ -46,23 +46,34 @@ if(!empty($_POST)) {
         $message = "user $name inserted";
     }
     $referred = $_SERVER['HTTP_REFERER'];
-    if(mysqli_query($f_link, $sql)) {
-        $output .= '<label class="text-success">' . $message . '</label>';
-        $query = parse_url($referred, PHP_URL_QUERY);
-        $referred = str_replace(array('?', $query), '', $referred);
-        $output .= '<p><a href="'.$referred.'">Return</a></p>';
-        echo $output;
-        ferror_log($output);
-    } else {
+    
+    try {
+        if(mysqli_query($f_link, $sql)) {
+            $output .= '<label class="text-success">' . $message . '</label>';
+            $query = parse_url($referred, PHP_URL_QUERY);
+            $referred = str_replace(array('?', $query), '', $referred);
+            $output .= '<p><a href="'.$referred.'">Return</a></p>';
+            echo $output;
+            ferror_log($output);
+        }
+    } catch (mysqli_sql_exception $e) {
         $message = "Failed";
-        $error_message = mysqli_error($f_link);
-        $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
-           ';
+        $error_message = $e->getMessage();
+        $mysql_errno = $e->getCode();
+        
+        ferror_log("Error: " . $error_message . " (Error Code: " . $mysql_errno . ")");
+        ferror_log("Command:" . $sql);
+        
+        // Check for specific error types
+        if ($mysql_errno == 1062) {
+            $output .= '<p class="text-danger">Duplicate Entry Error: A user with this ID or name already exists. Please use a different ID or name.</p>';
+        } else {
+            $output .= '<p class="text-danger">' . $message . '. Error Code: ' . $mysql_errno . ' - Details: ' . htmlspecialchars($error_message) . '</p>';
+        }
+        
         $output .= '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
         ferror_log($output);
-        ferror_log("Command:" . $sql);
-        ferror_log("Error: " . $error_message);
     }
  } else {
     require_once("header.php");

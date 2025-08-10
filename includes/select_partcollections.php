@@ -26,7 +26,7 @@ if (isset($catalog_number_key) && isset($id_part_type_key) && isset($id_instrume
             FROM   part_collections k
             LEFT JOIN  compositions c ON c.catalog_number = k.catalog_number_key
             LEFT JOIN  part_types y ON y.id_part_type = k.id_part_type_key
-            LEFT JOIN  instruments i ON i.id_instrument_key = k.id_instrument_key
+            LEFT JOIN  instruments i ON i.id_instrument = k.id_instrument_key
             WHERE k.catalog_number_key = '" . $catalog_number_key . "' AND k.id_part_type_key = " . $id_part_type_key . " AND k.id_instrument_key = " . $id_instrument_key .";";
     ferror_log("Running SQL: ". $sql);
     if ($res = mysqli_query($f_link, $sql)) {

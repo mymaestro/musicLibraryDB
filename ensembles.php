@@ -15,7 +15,7 @@
   require_once("includes/navbar.php");
   require_once('includes/functions.php');
 ?>
-<main role="main" class="container">
+<main role="main">
   <div class="container">
         <button type="button" class="btn btn-warning btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
@@ -116,21 +116,6 @@
             </div><!-- modal-content -->
         </div><!-- modal-dialog -->
     </div><!-- editModal -->
-    <div id="messageModal" class="modal"><!-- message feedback -->
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Message</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div><!-- modal-header -->
-                <div class="modal-body" id="message_detail">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div><!-- modal-footer -->
-            </div><!-- modal-content -->
-        </div><!-- modal-dialog -->
-    </div><!-- messageModal -->
     </div><!-- container -->
 </main>
 <?php require_once("includes/footer.php"); ?>
@@ -202,14 +187,11 @@ $(document).ready(function(){
         });
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
-        // var id_ensemble = $(this).attr("id");
-        $('#deleteModal').modal('show');
         $('#confirm-delete').data('id', id_ensemble);
         $('#ensemble2delete').text(id_ensemble);
     });
     $('#confirm-delete').click(function(){
         // The confirm delete button
-        // var id_ensemble = $(this).data('id');
         $.ajax({
             url:"includes/delete_records.php",
             method:"POST",
@@ -219,22 +201,11 @@ $(document).ready(function(){
                 table_key: id_ensemble
             },
             success:function(response){
+                $('#insert_form')[0].reset();
                 if (response.success) {
-                    $('#message_detail').html('<p class="text-success">Record ' + response.message + ' deleted from ensembles</p>');
-                    $('#messageModal').modal('show');
-                    $.ajax({
-                        url:"includes/fetch_ensembles.php",
-                        method:"POST",
-                        data:{
-                            user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody' ?>"
-                        },
-                        success:function(data){
-                            $('#ensemble_table').html(data);
-                        }
-                    });                    
+                    $('#ensemble_table').html('<p><a href="#" onclick="window.location.reload(true)">Return</a></p><p class="text-success">Record ' + response.message + ' deleted from ensembles</p>');
                 } else {
-                    $('#message_detail').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');
-                    $('#messageModal').modal('show');
+                    $('#ensemble_table').html('<p class="text-danger">Error: <emp>' + response.error + '</emp></p>');
                 }
             },
             error:function(xhr, status, error){
@@ -264,16 +235,7 @@ $(document).ready(function(){
                 success:function(data){
                     $('#insert_form')[0].reset();
                     $('#editModal').modal('hide');
-                    $.ajax({
-                        url:"includes/fetch_ensembles.php",
-                        method:"POST",
-                        data:{
-                            user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody' ?>"
-                        },
-                        success:function(data){
-                            $('#ensemble_table').html(data);
-                        }
-                    });
+                    $('#ensemble_table').html(data);
                 }
             });
         }

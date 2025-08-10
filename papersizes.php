@@ -14,7 +14,6 @@
   require_once('includes/config.php');
   require_once("includes/navbar.php");
   require_once('includes/functions.php');
-  ferror_log("RUNNING papersizes.php");
 ?>
 <main role="main">
     <div class="container">
@@ -219,7 +218,6 @@ $(document).ready(function(){
         });
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
-        // input button name="delete" id="id_paper_size" class="delete_data"
         if(id_paper_size !== null) {
             $('#confirm-delete').data('id', id_paper_size);
             $('#papersize2delete').text(id_paper_size);

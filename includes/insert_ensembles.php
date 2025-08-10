@@ -6,16 +6,12 @@ require_once('config.php');
 require_once('functions.php');
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
-    error_log("RUNNING insert_ensembles.php with id_ensemble=". $_POST["id_ensemble"]);
+    ferror_log("RUNNING insert_ensembles.php with id_ensemble=". $_POST["id_ensemble"]);
+    ferror_log("POST ".print_r($_POST, true));
     $output = '';
     $message = '';
     $timestamp = time();
-    ferror_log("POST id_ensemble=".$_POST["id_ensemble"]);
-    ferror_log("POST name=".$_POST["name"]);
-    ferror_log("POST description=".$_POST["description"]);
-    ferror_log("POST link=".$_POST["link"]);
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
-    ferror_log("POST enabled=".$enabled);
     $id_ensemble = mysqli_real_escape_string($f_link, $_POST['id_ensemble']);
     $id_ensemble_hold = mysqli_real_escape_string($f_link, $_POST['id_ensemble_hold']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
@@ -41,17 +37,31 @@ if(!empty($_POST)) {
         $message = "Ensemble $name inserted";
     }
     $referred = $_SERVER['HTTP_REFERER'];
-    if(mysqli_query($f_link, $sql)) {
-        $output .= '<label class="text-success">' . $message . '</label>';
-        $query = parse_url($referred, PHP_URL_QUERY);
-        $referred = str_replace(array('?', $query), '', $referred);
-        ferror_log($message);
-    } else {
-        $message = "Insert/update ensemble failed";
-        $error_message = mysqli_error($f_link);
-        ferror_log("Error: " . $error_message);
-        $output .= '<p class="text-danger">' . $message . '. Error: ' . $error_message . '</p>
-        ';
+    
+    try {
+        if(mysqli_query($f_link, $sql)) {
+            $output .= '<label class="alert alert-success">' . $message . '</label>';
+            $query = parse_url($referred, PHP_URL_QUERY);
+            $referred = str_replace(array('?', $query), '', $referred);
+            echo '<p><a href="'.$referred.'">Return</a></p>';
+            echo $output;
+        }
+    } catch (mysqli_sql_exception $e) {
+        $message = "Insert/update ensemble failed.";
+        $error_message = $e->getMessage();
+        $mysql_errno = $e->getCode();
+        
+        ferror_log("Error: " . $error_message . " (Error Code: " . $mysql_errno . ")");
+
+         // Check for specific error types
+        if ($mysql_errno == 1062) {
+            $output .= '<p class="text-danger">Duplicate Entry Error: An ensemble with this ID already exists. Please use a different ID.</p>';
+        } else {
+            $output .= '<p class="text-danger">' . $message . '. Error Code: ' . $mysql_errno . ' - Details: ' . htmlspecialchars($error_message) . '</p>';
+        }
+        
+        echo '<p><a href="'.$referred.'">Return</a></p>';
+        echo $output;
     }
  } else {
     require_once("header.php");

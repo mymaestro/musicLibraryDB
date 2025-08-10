@@ -183,18 +183,32 @@ if(!empty($_POST)) {
     $referred = $_SERVER['HTTP_REFERER'];
 
     header('Content-Type: application/json');
-    if(mysqli_query($f_link, $sql)) {
-        ferror_log("SQL executed successfully: " . $sql);
-        echo json_encode([
-            'success' => true,
-            'message' => $message,
-        ]);
-    } else {
-        ferror_log("SQL execution failed: " . mysqli_error($f_link));
-        echo json_encode([
-            'success' => false,
-            'message' => 'Failed with error: ' . mysqli_error($f_link),
-        ]);
+    try {
+        if(mysqli_query($f_link, $sql)) {
+            ferror_log("SQL executed successfully: " . $sql);
+            echo json_encode([
+                'success' => true,
+                'message' => $message,
+            ]);
+        }
+    } catch (mysqli_sql_exception $e) {
+        $error_message = $e->getMessage();
+        $mysql_errno = $e->getCode();
+        
+        ferror_log("SQL execution failed: " . $error_message . " (Error Code: " . $mysql_errno . ")");
+        
+        // Check for specific error types
+        if ($mysql_errno == 1062) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Duplicate Entry Error: A recording with this information already exists. Please check the data and try again.',
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed with error: Error Code ' . $mysql_errno . ' - ' . htmlspecialchars($error_message),
+            ]);
+        }
     }
     mysqli_close($f_link);
  } else {

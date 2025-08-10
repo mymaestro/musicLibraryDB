@@ -118,15 +118,25 @@ require_once("navbar.php");
                         $sql = "INSERT INTO parts(catalog_number, id_part_type, name, paper_size, page_count, originals_count, copies_count)
                         VALUES('$catalog_number', '$id_part_type', '$name', '$paper_size', $page_count, $originals_count, $copies_count);";
                         ferror_log("Running SQL ". $sql);
-                        if(mysqli_query($f_link, $sql)) {
-                            $output .= '<tr><td>' . $catalog_number . '</td><td>' . $id_part_type . '</td><td>Added</td><td>';
-                            $output .= '<span class="text-success">Part ' . $catalog_number . '-' . $id_part_type . ' added successfully.</span></td></tr>';
-                        } else {
-                            $error_message = mysqli_error($f_link);
-                            $error_number = mysqli_errno($f_link);
+                        try {
+                            if(mysqli_query($f_link, $sql)) {
+                                $output .= '<tr><td>' . $catalog_number . '</td><td>' . $id_part_type . '</td><td>Added</td><td>';
+                                $output .= '<span class="text-success">Part ' . $catalog_number . '-' . $id_part_type . ' added successfully.</span></td></tr>';
+                            }
+                        } catch (mysqli_sql_exception $e) {
+                            $error_message = $e->getMessage();
+                            $mysql_errno = $e->getCode();
+                            
+                            ferror_log("Error: " . $error_message . " (Error Code: " . $mysql_errno . ")");
+                            
                             $output .= '<tr><td>' . $catalog_number . '</td><td>' . $id_part_type . '</td><td>Error</td><td>';
-                            $output .= '<span class="text-danger">Insert failed. Error (' . $error_number . '): ' .$error_message . '</span></td></tr>';
-                            ferror_log("Error: " . $error_message);
+                            
+                            // Check for specific error types
+                            if ($mysql_errno == 1062) {
+                                $output .= '<span class="text-danger">Duplicate Entry Error: Part ' . $catalog_number . '-' . $id_part_type . ' already exists.</span></td></tr>';
+                            } else {
+                                $output .= '<span class="text-danger">Insert failed. Error Code ' . $mysql_errno . ': ' . htmlspecialchars($error_message) . '</span></td></tr>';
+                            }
                         }
                     }
                     

@@ -7,36 +7,10 @@ require_once('functions.php');
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
     ferror_log("RUNNING insert_compositions.php with catalog_number=". $_POST["catalog_number"]);
+    ferror_log("POST ". print_r($_POST, true));
     $output = '';
     $message = '';
     $timestamp = time();
-    ferror_log("POST catalog_number=".$_POST["catalog_number"]);
-    ferror_log("POST catalog_number_hold=".$_POST["catalog_number_hold"]);
-    ferror_log("POST name=".$_POST["name"]);
-    ferror_log("POST description=".$_POST["description"]);
-
-    ferror_log("POST composer=".$_POST["composer"]);
-    ferror_log("POST arranger=".$_POST["arranger"]);
-    ferror_log("POST editor=".$_POST["editor"]);
-    ferror_log("POST publisher=".$_POST["publisher"]);
-    ferror_log("POST genre=".$_POST["genre"]);
-    ferror_log("POST ensemble=".$_POST["ensemble"]);
-    ferror_log("POST grade=".$_POST["grade"]);
-    ferror_log("POST last_performance_date=".$_POST["last_performance_date"]);
-    ferror_log("POST duration=".$_POST["duration"]);
-    ferror_log("POST comments=".$_POST["comments"]);
-    ferror_log("POST performance_notes=".$_POST["performance_notes"]);
-    ferror_log("POST storage_location=".$_POST["storage_location"]);
-    ferror_log("POST provenance=".$_POST["provenance"]);
-    ferror_log("POST date_acquired=".$_POST["date_acquired"]);
-    ferror_log("POST cost=".$_POST["cost"]);
-    ferror_log("POST listening_example_link=".$_POST["listening_example_link"]);
-    ferror_log("POST windrep_link=".$_POST["windrep_link"]);
-    ferror_log("POST image_path=".$_POST["image_path"]);
-    ferror_log("POST checked_out=".$_POST["checked_out"]);
-    ferror_log("POST paper_size=".$_POST["paper_size"]);
-    ferror_log("POST last_inventory_date=".$_POST["last_inventory_date"]);
-
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
     $description = mysqli_real_escape_string($f_link, $_POST['description']);

@@ -7,6 +7,7 @@ if (isset($_POST["catalog_number"])) {
     <div class="table-responsive">
         <table class="table table-striped table-condensed">';
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $catalog_number = mysqli_real_escape_string($f_link, $_POST["catalog_number"]);
 
     $sql = "SELECT c.catalog_number         'Catalog',
                    c.name                   'Composition',
@@ -31,9 +32,9 @@ if (isset($_POST["catalog_number"])) {
             LEFT JOIN genres g ON c.genre = g.id_genre
             LEFT JOIN ensembles e ON c.ensemble = e.id_ensemble
             LEFT JOIN paper_sizes p ON c.paper_size = p.id_paper_size
-            WHERE  c.catalog_number = '".$_POST["catalog_number"]."'";
+            WHERE  c.catalog_number = '".$catalog_number."'";
 
-    ferror_log("Running SQL: ". $sql);
+    ferror_log("Getting details for composition with catalog number: ".$catalog_number);
     if ($res = mysqli_query($f_link, $sql)) {
         $col = 0;
         while ($fieldinfo = mysqli_fetch_field($res)) {
@@ -52,5 +53,6 @@ if (isset($_POST["catalog_number"])) {
     </div>
     ';
     echo $output;
+    mysqli_close($f_link);
 }
 ?>

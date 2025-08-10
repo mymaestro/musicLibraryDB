@@ -1,6 +1,7 @@
 <?php
-//delete_compositions.php
-//
+// delete_compositions.php
+// Called from the compositions page
+// Remove a composition and all its parts
 require_once('config.php');
 require_once('functions.php');
 
@@ -27,11 +28,12 @@ if (isset($_POST['catalog_number'])) {
         mysqli_stmt_execute($stmt_pc);
         $part_collections_deleted = mysqli_stmt_affected_rows($stmt_pc);
         mysqli_stmt_close($stmt_pc);
+
         ferror_log("Deleted " . $part_collections_deleted . " part_collections entries for catalog_number: " . $catalog_number);
         
         // Step 2: Delete all parts for this composition
         $sql_parts = "DELETE FROM parts WHERE catalog_number = ?";
-        ferror_log("Delete parts SQL: " . $sql_parts);
+        ferror_log("Delete parts for this composition: " . $catalog_number);
         
         $stmt_parts = mysqli_prepare($f_link, $sql_parts);
         mysqli_stmt_bind_param($stmt_parts, "s", $catalog_number);
@@ -42,7 +44,7 @@ if (isset($_POST['catalog_number'])) {
         
         // Step 3: Delete the composition itself
         $sql_composition = "DELETE FROM compositions WHERE catalog_number = ?";
-        ferror_log("Delete composition SQL: " . $sql_composition);
+        ferror_log("Delete the composition: " . $catalog_number);
         
         $stmt_comp = mysqli_prepare($f_link, $sql_composition);
         mysqli_stmt_bind_param($stmt_comp, "s", $catalog_number);
@@ -81,4 +83,5 @@ if (isset($_POST['catalog_number'])) {
     }
 
 }
+mysqli_close($f_link);
 ?>

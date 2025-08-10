@@ -4,7 +4,7 @@ define('PAGE_TITLE', 'Insert part collections');
 define('PAGE_NAME', 'Insert part collections');
 require_once('config.php');
 require_once('functions.php');
-ferror_log("--------> Running insert_partcollections.php with update = ".$_POST["update"]);
+ferror_log("Running insert_partcollections.php with update = ".print_r($_POST, true));
 
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
@@ -39,11 +39,6 @@ if (isset($catalog_number_key) && isset($id_part_type_key) && isset($id_instrume
     $output = '';
     $message = '';
     $timestamp = time();
-    ferror_log("RUNNING insert_partcollections.php with catalog_number_key=". $_POST["catalog_number_key"]);
-    ferror_log("POST id_part_type_key=".$_POST["id_part_type_key"]);
-    ferror_log("POST id_instrument_key=".$_POST["id_instrument_key"]);
-    ferror_log("POST name=".$_POST["name"]);
-    ferror_log("POST description=".$_POST["description"]);
 
     // Update?
     if($_POST["update"] == "update") {
@@ -61,7 +56,6 @@ if (isset($catalog_number_key) && isset($id_part_type_key) && isset($id_instrume
             WHERE catalog_number_key='".$catalog_number_key_hold."'
             AND   id_part_type_key='".$id_part_type_key_hold."'
             AND   id_instrument_key = '".$id_instrument_key_hold."';";
-            ferror_log("UPDATE with SQL =" . $sql);
 
             $message = 'Data Updated';
             try {
@@ -91,7 +85,6 @@ if (isset($catalog_number_key) && isset($id_part_type_key) && isset($id_instrume
             INSERT INTO part_collections(catalog_number_key, id_part_type_key, id_instrument_key, name, description, last_update)
             VALUES('$catalog_number_key', '$id_part_type_key', '$id_instrument_key', $name, $description, CURRENT_TIMESTAMP() );
             ";
-            ferror_log("Running SQL ". $sql);
             try {
                 if(mysqli_query($f_link, $sql)) {
                     echo '<p class="text-success">Inserted ' . $id_part_type_key . ' successfully.</p>';
@@ -116,8 +109,7 @@ if (isset($catalog_number_key) && isset($id_part_type_key) && isset($id_instrume
         echo '<p><a href="'.$referred.'">Return</a></p>';
         // end loop
     } // update button = add
-
- } else { // $POST is empty
+} else { // empty
     require_once("header.php");
     echo '<body>
 ';
@@ -129,4 +121,5 @@ if (isset($catalog_number_key) && isset($id_part_type_key) && isset($id_instrume
     require_once("footer.php");
     echo '</body>';
 }
+mysqli_close($f_link);
 ?>

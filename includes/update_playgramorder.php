@@ -5,8 +5,9 @@ define('PAGE_NAME', 'Update score order');
 require_once('config.php');
 require_once('functions.php');
 ferror_log(print_r($_POST, true));
-$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
+    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
     $output = '';
     $message = '';
     $updated = 0;
@@ -34,9 +35,9 @@ if(!empty($_POST)) {
     $referred = $_SERVER['HTTP_REFERER'];
     $query = parse_url($referred, PHP_URL_QUERY);
     $referred = str_replace(array('?', $query), '', $referred);
-//    echo '<p><a href="'.$referred.'">Refresh</a></p>';
     echo '<p><a href="playgrams.php">Refresh</a></p>';
     echo $output;
+    mysqli_close($f_link);
  } else {
     require_once("header.php");
     echo '<body>

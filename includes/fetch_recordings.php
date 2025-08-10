@@ -16,9 +16,8 @@ $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 if(isset($_POST["id_recording"])) {  // EDIT
     // Fetch a specific recording for editing
-    ferror_log("with id=". $_POST["id_recording"]);
     $id_recording = mysqli_real_escape_string($f_link, $_POST['id_recording']);
-
+    ferror_log("Fetching recording with id=". $id_recording);
     $sql = "SELECT
         r.id_recording       AS id_recording,
         r.id_concert         AS id_concert,
@@ -43,9 +42,6 @@ if(isset($_POST["id_recording"])) {  // EDIT
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $rowList = mysqli_fetch_array($res);
-
-    ferror_log("SQL: ". $sql);
-    ferror_log("JSON for $id_recording: " . json_encode($rowList));
     echo json_encode($rowList);
 
 } elseif(isset($_POST["catalog_number"])) { // CHOOSE COMPOSITION
@@ -54,16 +50,16 @@ if(isset($_POST["id_recording"])) {  // EDIT
     ferror_log("with catalog_number=". $_POST["catalog_number"]); 
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $sql = "SELECT catalog_number, composer, arranger FROM compositions WHERE catalog_number = '" . $catalog_number ."';";
-    ferror_log("SQL: ". $sql);
+    ferror_log("Getting catalog_number, composer, arranger data for catalog number: " . $catalog_number);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     echo json_encode($rowList);
 
 } elseif(isset($_POST["id_concert"]) && isset($_POST["catalog_number"])) {
     // Get the playgram item order for a specific concert and catalog number
-    ferror_log("with id_concert=". $_POST["id_concert"] . " and catalog_number=". $_POST["catalog_number"]);
     $id_concert = mysqli_real_escape_string($f_link, $_POST['id_concert']);
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
+    ferror_log("with id_concert=". $id_concert . " and catalog_number=". $catalog_number);
 
     $sql = "
     SELECT pi.comp_order

@@ -9,13 +9,7 @@ if (isset($_POST["id_playgram"])) {
 
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-    $id_playgram = $_POST['id_playgram'];
-/* $sql = "SELECT p.id_playgram            'Playgram ID',
-                   p.name                   'Name',
-                   if(p.enabled = 1, 'Yes', 'No') 'Enabled',
-                   p.description            'Description'
-            FROM   playgrams p
-            WHERE  id_playgram = ".$_POST["id_playgram"] . ";"; */
+    $id_playgram = mysqli_real_escape_string($f_link, $_POST["id_playgram"]);
 
     $sql = "SELECT
         p.id_playgram 'Playgram ID',
@@ -41,7 +35,7 @@ if (isset($_POST["id_playgram"])) {
     GROUP BY
         p.id_playgram;";
 
-    ferror_log("Running SQL: ". $sql);
+    ferror_log("Getting details for playgram with ID: ".$id_playgram);
     if ($res = mysqli_query($f_link, $sql)) {
         ferror_log("1 Returned rows: " . mysqli_num_rows($res));
         $col = 0;
@@ -66,7 +60,7 @@ if (isset($_POST["id_playgram"])) {
     WHERE
     pi.id_playgram = $id_playgram 
     ORDER BY pi.comp_order; ";
-    ferror_log("Running SQL: ". $sql);
+    ferror_log("Getting duration information for playgram with ID: ".$id_playgram);
     if ($res = mysqli_query($f_link, $sql)) {
         ferror_log("2 Returned rows: " . mysqli_num_rows($res));
         $col = 0;
@@ -81,13 +75,14 @@ if (isset($_POST["id_playgram"])) {
             }
         }
     } else {
-        ferror_log("Something went wrong with " . $sql);
-    };
+        ferror_log("Something went wrong with " . trim(preg_replace('/\s+/', ' ', $sql)));
+    }
 
     $output .= '
         </table>
     </div>
     ';
     echo $output;
+    mysqli_close($f_link);
 }
 ?>

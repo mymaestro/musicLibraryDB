@@ -7,29 +7,21 @@ require_once('functions.php');
 
 ferror_log(print_r($_POST, true));
 
-$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
-    ferror_log("RUNNING insert_concerts.php with id_concert=". $_POST["id_concert"]);
+    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $output = '';
     $message = '';
     $timestamp = time();
     
-    ferror_log("POST performance_date=".$_POST["performance_date"]);
-    ferror_log("POST venue=".$_POST["venue"]);
-    ferror_log("POST conductor=".$_POST["conductor"]);
-    ferror_log("POST notes=".$_POST["notes"]);
-
     $id_playgram = mysqli_real_escape_string($f_link, $_POST['id_playgram']);
     $performance_date = mysqli_real_escape_string($f_link, $_POST['performance_date']);
     $venue = mysqli_real_escape_string($f_link, $_POST['venue']);
     $conductor = mysqli_real_escape_string($f_link, $_POST['conductor']);
+    $id_concert = mysqli_real_escape_string($f_link, $_POST['id_concert']);
     $notes = mysqli_real_escape_string($f_link, $_POST['notes']);
-
-    ferror_log("POST update=".$_POST["update"]);
+    ferror_log("RUNNING insert_concerts.php with id_concert=". $id_concert . " at ". date("Y-m-d H:i:s", $timestamp));
 
     if($_POST["update"] == "update") {
-        ferror_log("POST id_playgram=".$_POST["id_playgram"]);
-        $id_concert = mysqli_real_escape_string($f_link, $_POST['id_concert']);
         $sql = "
         UPDATE concerts 
         SET id_playgram = '$id_playgram',
@@ -46,7 +38,7 @@ if(!empty($_POST)) {
         ";
         $message = 'Data Inserted';
     }
-    ferror_log("Running SQL ". $sql);
+    ferror_log("Insert concerts SQL ". trim(preg_replace('/\s+/', ' ', $sql)));
     $referred = $_SERVER['HTTP_REFERER'];
     
     try {
@@ -74,6 +66,7 @@ if(!empty($_POST)) {
         echo '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
     }
+    mysqli_close($f_link);
  } else {
     require_once("header.php");
     echo '<body>

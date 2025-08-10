@@ -4,10 +4,10 @@
  define('PAGE_NAME', 'Insert papersizes');
 require_once('config.php');
 require_once('functions.php');
-$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+ferror_log("Insert paper sizes POST ".print_r($_POST, true));
 if(!empty($_POST)) {
-    ferror_log("RUNNING insert_papersizes.php with id_paper_size=". $_POST["id_paper_size"]);
-    ferror_log("POST ".print_r($_POST, true));
+    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
     $output = '';
     $message = '';
     $timestamp = time();
@@ -65,7 +65,8 @@ if(!empty($_POST)) {
         echo '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
     }
- } else {
+    mysqli_close($f_link);
+} else {
     require_once("header.php");
     echo '<body>
 ';
@@ -77,4 +78,4 @@ if(!empty($_POST)) {
     require_once("footer.php");
     echo '</body>';
  }
- ?>
+?>

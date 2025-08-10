@@ -7,6 +7,7 @@ if (isset($_POST["id_instrument"])) {
     <div class="table-responsive">
     <table class="table table-striped table-condensed">';
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $id_instrument = mysqli_real_escape_string($f_link, $_POST["id_instrument"]);
 
     $sql = "SELECT i.id_instrument       'Instrument ID',
                    if(i.enabled = 1, 'Yes', 'No') 'Enabled',
@@ -15,9 +16,9 @@ if (isset($_POST["id_instrument"])) {
                    i.family              'Family',
                    i.description         'Description'
             FROM   instruments i
-            WHERE  i.id_instrument = '".$_POST["id_instrument"]."'";
+            WHERE  i.id_instrument = '".$id_instrument."'";
 
-    ferror_log("Running SQL: ". $sql);
+    ferror_log("Getting details for instrument with id: ".$id_instrument);
     if ($res = mysqli_query($f_link, $sql)) {
         $col = 0;
         while ($fieldinfo = mysqli_fetch_field($res)) {
@@ -36,5 +37,6 @@ if (isset($_POST["id_instrument"])) {
     </div>
     ';
     echo $output;
+    mysqli_close($f_link);
 }
 ?>

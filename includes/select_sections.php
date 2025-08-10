@@ -9,14 +9,7 @@ ferror_log("Running select_sections.php with id=". $id_section);
 if ($id_section > 0) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-
-    // $sql = "SELECT * FROM sections WHERE id_section = '".$_POST["id_section"]."'";
-
-    //$sql = "SELECT s.*, u.name AS leader_name
-    //    FROM sections s
-    //    LEFT JOIN users u ON s.section_leader = u.id_users
-    //    WHERE id_section = '".$_POST["id_section"]."'";
-
+    
     $sql = "SELECT s.*, u.name AS leader_name, COUNT(spt.id_part_type) AS parttype_count
         FROM sections s
         LEFT JOIN users u ON s.section_leader = u.id_users
@@ -57,5 +50,6 @@ if ($id_section > 0) {
     </div>
     ';
     echo $output;
+    mysqli_close($f_link);
 }
 ?>

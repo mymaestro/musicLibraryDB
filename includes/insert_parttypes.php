@@ -4,21 +4,13 @@ define('PAGE_TITLE', 'Insert part types');
 define('PAGE_NAME', 'Insert part types');
 require_once('config.php');
 require_once('functions.php');
-$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+ferror_log("Running insert_parttypes.php with POST data: ". print_r($_POST, true));
 if(!empty($_POST)) {
-    ferror_log("RUNNING insert_parttypes.php with id_part_type=". $_POST["id_part_type"]);
+    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $output = '';
     $message = '';
     $timestamp = time();
-    ferror_log("POST id_part_type=".$_POST["id_part_type"]);
-    ferror_log("POST collation=".$_POST["collation"]);
-    ferror_log("POST name=".$_POST["name"]);
-    ferror_log("POST family=".$_POST["family"]);
-    ferror_log("POST description=".$_POST["description"]);
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
-    ferror_log("POST enabled=".$enabled);
-    ferror_log("POST default_instrument=".$_POST["default_instrument"]);
-    ferror_log("POST is_part_collection=".$_POST["is_part_collection"]);
     $is_part_collection =  mysqli_real_escape_string($f_link, $_POST["is_part_collection"]);
     if (empty($is_part_collection)) {
         $is_part_collection = "NULL";
@@ -32,8 +24,6 @@ if(!empty($_POST)) {
     $default_instrument = mysqli_real_escape_string($f_link, $_POST['default_instrument']);
     $family = mysqli_real_escape_string($f_link, $_POST['family']);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
-
-    ferror_log("POST update=".$_POST["update"]);
 
     if($_POST["update"] == "update") {
         $sql = "
@@ -54,7 +44,7 @@ if(!empty($_POST)) {
         ";
         $message = 'Data Inserted';
     }
-    ferror_log("Running SQL ". $sql);
+    ferror_log("Running parttypes SQL ". trim(preg_replace('/\s+/', ' ', $sql)));
     $referred = $_SERVER['HTTP_REFERER'];
     $referred .= "/#" . $id_part_type;
     
@@ -84,7 +74,8 @@ if(!empty($_POST)) {
         // Echo the output for error display
         echo $output;
     }
- } else {
+    mysqli_close($f_link);
+} else {
     require_once("header.php");
     echo '<body>
 ';

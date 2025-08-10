@@ -1,12 +1,13 @@
 <?php
 require_once('config.php');
 require_once('functions.php');
-ferror_log("Running select_papersizes.php with id=". $_POST["id_paper_size"]);
+ferror_log("Running select_papersizes.php with POST data: ". print_r($_POST, true));
 if (isset($_POST["id_paper_size"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    $sql = "SELECT * FROM paper_sizes WHERE id_paper_size = '".$_POST["id_paper_size"]."'";
-    ferror_log("Running SQL: ". $sql);
+    $id_paper_size = mysqli_real_escape_string($f_link, $_POST["id_paper_size"]);
+    $sql = "SELECT * FROM paper_sizes WHERE id_paper_size = '".$id_paper_size."'";
+    ferror_log("Getting details for paper size with id: ".$id_paper_size);
     $res = mysqli_query($f_link, $sql);
     $output .= '
     <div class="table-responsive">
@@ -40,5 +41,6 @@ if (isset($_POST["id_paper_size"])) {
     </div>
     ';
     echo $output;
+    mysqli_close($f_link);
 }
 ?>

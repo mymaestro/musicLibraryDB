@@ -13,14 +13,15 @@ ferror_log("RUNNING fetch_instruments_table.php");
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 if(isset($_POST["id_instrument"])) {
-    $sql = "SELECT * FROM instruments WHERE id_instrument = '".$_POST["id_instrument"]."'";
-    ferror_log("SQL: ". $sql);
+    $id_instrument = mysqli_escape_string($f_link, $_POST["id_instrument"]);
+    $sql = "SELECT * FROM instruments WHERE id_instrument = '".$id_instrument."'";
+    ferror_log("Getting details for instrument ID: " . $id_instrument);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     echo json_encode($rowList);
 } elseif(isset($_POST["instrument_list"])) {
     $sql = "SELECT `id_instrument`, `name` FROM instruments WHERE `enabled` = 1 ORDER BY collation;";
-    ferror_log("Running " . $sql);
+    ferror_log("Fetching instrument list");
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
     $opt = "<select class='form-select form-control' aria-label='Select instrument' id='default_instrument' name='default_instrument'>";
     while($rowList = mysqli_fetch_array($res)) {
@@ -33,7 +34,6 @@ if(isset($_POST["id_instrument"])) {
     </select>';
     mysqli_close($f_link);
     echo $opt;
-    ferror_log("returned: " . $sql);
 } else { 
     echo '            <div class="panel panel-default">
                <div class="table-responsive scrolling-data">
@@ -75,6 +75,6 @@ if(isset($_POST["id_instrument"])) {
             </div><!-- table-responsive -->
         </div><!-- panel -->
         ';
-  }
-  mysqli_close($f_link);
+}
+mysqli_close($f_link);
 ?>

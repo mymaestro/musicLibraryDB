@@ -27,7 +27,7 @@ if ($random == 1) {
             GROUP BY c.catalog_number
             ORDER BY RAND() LIMIT 1";
     
-    ferror_log("Random composition SQL: " . $sql);
+    ferror_log("Picking a random composition.");
     
     $res = mysqli_query($f_link, $sql);
     $results = [];
@@ -102,7 +102,7 @@ if (!empty($composer)) {
 
 $sql .= " GROUP BY c.catalog_number ORDER BY c.name LIMIT 100"; // Limit results to prevent overwhelming
 
-ferror_log("The search SQL: " . $sql);
+ferror_log("The search SQL: " . trim(preg_replace('/\s+/', ' ', $sql)));
 
 $res = mysqli_query($f_link, $sql);
 $results = [];

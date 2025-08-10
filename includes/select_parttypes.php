@@ -8,6 +8,7 @@ if (isset($_POST["id_part_type"])) {
     <table class="table table-striped table-condensed">';
 
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $id_part_type = mysqli_real_escape_string($f_link, $_POST["id_part_type"]);
 
     $sql = "SELECT t.id_part_type           'Part Type ID',
                    t.name                   'Name',
@@ -18,9 +19,9 @@ if (isset($_POST["id_part_type"])) {
                    t.default_instrument     'Default instrument',
                    t.is_part_collection     '# instruments on this part'
             FROM   part_types t
-            WHERE  id_part_type = '".$_POST["id_part_type"]."'";
+            WHERE  id_part_type = '".$id_part_type."'";
 
-    ferror_log("Running SQL: ". $sql);
+    ferror_log("Getting details for part type with ID: ".$id_part_type);
     if ($res = mysqli_query($f_link, $sql)) {
         $col = 0;
         while ($fieldinfo = mysqli_fetch_field($res)) {
@@ -39,5 +40,6 @@ if (isset($_POST["id_part_type"])) {
     </div>
     ';
     echo $output;
+    mysqli_close($f_link);
 }
 ?>

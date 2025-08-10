@@ -1,11 +1,15 @@
 <?php  
- //fetch_collections.php
+ //fetch_partcollections.php
 require_once('config.php');
 require_once('functions.php');
+
 if(isset($_POST["catalog_number_key"])) {
-    ferror_log("Running fetch_partcollections.php with id=". $_POST["catalog_number_key"]);
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    
+    $catalog_number_key = mysqli_escape_string($f_link, $_POST["catalog_number_key"]);
+    $id_part_type_key = mysqli_escape_string($f_link, $_POST["id_part_type_key"]);
+    $id_instrument_key = mysqli_escape_string($f_link, $_POST["id_instrument_key"]);
+
+    ferror_log("Running fetch_partcollections.php with id=". $catalog_number_key);    
     // Get the specific collection details
     $sql = "SELECT pc.*, 
                    c.name as composition_title,
@@ -15,11 +19,11 @@ if(isset($_POST["catalog_number_key"])) {
               LEFT JOIN compositions c ON c.catalog_number = pc.catalog_number_key
               LEFT JOIN part_types pt ON pt.id_part_type = pc.id_part_type_key
               LEFT JOIN instruments i ON i.id_instrument = pc.id_instrument_key
-             WHERE pc.catalog_number_key = '".$_POST["catalog_number_key"]."'
-               AND pc.id_part_type_key = '".$_POST["id_part_type_key"]."'
-               AND pc.id_instrument_key = '".$_POST["id_instrument_key"]."'";
+             WHERE pc.catalog_number_key = '".$catalog_number_key."'
+               AND pc.id_part_type_key = '".$id_part_type_key."'
+               AND pc.id_instrument_key = '".$id_instrument_key."'";
 
-    ferror_log("SQL: ". $sql);
+    ferror_log("Running SQL to fetch part collection details: " . trim(preg_replace('/\s+/', ' ', $sql)));
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     

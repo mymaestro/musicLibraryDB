@@ -9,10 +9,10 @@ if(isset($_POST["username"]) && isset($_POST["password"])) {
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $username = mysqli_real_escape_string($f_link, $_POST['username']);
     $password = mysqli_real_escape_string($f_link, $_POST['password']);
-    error_log("Login attempt by " . $username);
+    ferror_log("Login attempt by " . $username);
     // Prepare a select statement
     $sql = "SELECT username, password, roles FROM users WHERE username = ?";
-    ferror_log("SQL: ". $sql);
+    ferror_log("Getting user details for username: " . $username);
 
     if ($stmt = mysqli_prepare($f_link, $sql)) {
         // Bind variables to the prepared statement as parameters and set parameters
@@ -56,5 +56,6 @@ if(isset($_POST["username"]) && isset($_POST["password"])) {
  
     // echo json_encode($rowList);
     echo $message;
+    mysqli_close($f_link);
 }
 ?>

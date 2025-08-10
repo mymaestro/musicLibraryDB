@@ -4,17 +4,14 @@ define('PAGE_TITLE', 'Insert users');
 define('PAGE_NAME', 'Insert users');
 require_once('config.php');
 require_once('functions.php');
-$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+ferror_log("Running ". PAGE_NAME . " with POST data: " . print_r($_POST, true));
+
 if(!empty($_POST)) {
-    error_log("RUNNING insert_users.php with id_users=". $_POST["id_users"]);
+    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
     $output = '';
     $message = '';
     $timestamp = time();
-    ferror_log("POST id_users=".$_POST["id_users"]);
-    ferror_log("POST username=".$_POST["username"]);
-    ferror_log("POST name=".$_POST["name"]);
-    ferror_log("POST address=".$_POST["address"]);
-    ferror_log("POST roles=".$_POST["roles"]);
         
     $id_users = mysqli_real_escape_string($f_link, $_POST['id_users']);
     $id_users_hold = mysqli_real_escape_string($f_link, $_POST['id_users_hold']);
@@ -24,8 +21,7 @@ if(!empty($_POST)) {
     $roles = mysqli_real_escape_string($f_link, $_POST['roles']);
     $u_password = 'changeme'; // need to encode this
     $passwordHash = password_hash($u_password, PASSWORD_DEFAULT);
-    //grr
-    ferror_log("Password hash =" . $passwordHash);
+    // ferror_log("Password hash =" . $passwordHash);
 
     // Need to check that a user with that username or email address already exist
     if($_POST["update"] == "update") {
@@ -54,7 +50,6 @@ if(!empty($_POST)) {
             $referred = str_replace(array('?', $query), '', $referred);
             $output .= '<p><a href="'.$referred.'">Return</a></p>';
             echo $output;
-            ferror_log($output);
         }
     } catch (mysqli_sql_exception $e) {
         $message = "Failed";
@@ -62,7 +57,7 @@ if(!empty($_POST)) {
         $mysql_errno = $e->getCode();
         
         ferror_log("Error: " . $error_message . " (Error Code: " . $mysql_errno . ")");
-        ferror_log("Command:" . $sql);
+        ferror_log("Running SQL:" . trim(preg_replace('/\s+/', ' ', $sql)));
         
         // Check for specific error types
         if ($mysql_errno == 1062) {
@@ -73,8 +68,8 @@ if(!empty($_POST)) {
         
         $output .= '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
-        ferror_log($output);
     }
+    mysqli_close($f_link);
  } else {
     require_once("header.php");
     echo '<body>

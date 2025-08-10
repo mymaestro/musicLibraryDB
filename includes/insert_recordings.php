@@ -14,6 +14,8 @@ define('PAGE_NAME', 'Insert recordings');
 require_once('config.php');
 require_once('functions.php');
 
+ferror_log("Running ".PAGE_NAME." with POST data: " . print_r($_POST, true));
+
 // Settings
 $maxFileSize = 40 * 1024 * 1024; // 40 MB
 // You might need to adjust these settings in your php.ini file as well
@@ -29,13 +31,11 @@ if (!file_exists('../getID3/getid3/getid3.php') || !file_exists('../getID3/getid
     die("getID3 library not found. Please ensure it is installed in the correct path.");
 } else {
     ferror_log("getID3 library found at: ../getID3/getid3/getid3.php");
-}
+} 
+// NOTE TO SELF: Verify getID3 library functionality but also if it's not available we can still upload files.
 
-$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
-    ferror_log("RUNNING insert_recordings.php with id_recording=". $_POST["id_recording"]);
-    ferror_log("POST data: " . print_r($_POST, true));
-    ferror_log("FILES data: " . print_r($_FILES, true));
+    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $output = '';
     $message = '';
     $timestamp = time();
@@ -179,13 +179,13 @@ if(!empty($_POST)) {
         ";
         $message = 'Data Inserted';
     }
-    ferror_log("Running SQL ". $sql);
+    ferror_log("Updating recordings with SQL: " . trim(preg_replace('/\s+/', ' ', $sql)));
     $referred = $_SERVER['HTTP_REFERER'];
 
     header('Content-Type: application/json');
     try {
         if(mysqli_query($f_link, $sql)) {
-            ferror_log("SQL executed successfully: " . $sql);
+            ferror_log("SQL executed successfully.");
             echo json_encode([
                 'success' => true,
                 'message' => $message,

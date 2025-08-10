@@ -5,7 +5,7 @@ ferror_log("Running select_recordings.php with id=". $_POST["id_recording"]);
 if (isset($_POST["id_recording"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    $id_recording = $_POST["id_recording"];
+    $id_recording = mysqli_real_escape_string($f_link, $_POST["id_recording"]);
     $sql = "SELECT * FROM recordings WHERE id_recording = $id_recording";
 
     $sql = "SELECT
@@ -28,8 +28,7 @@ if (isset($_POST["id_recording"])) {
     WHERE r.id_recording = $id_recording
     ORDER BY con.performance_date DESC, r.id_recording; ";
 
-
-    ferror_log("Running SQL: ". $sql);
+    ferror_log("Getting details for recording with ID: ".$id_recording);
     $res = mysqli_query($f_link, $sql);
     $output .= '
     <div class="table-responsive">
@@ -88,5 +87,6 @@ if (isset($_POST["id_recording"])) {
     </div>
     ';
     echo $output;
+    mysqli_close($f_link);
 }
 ?>

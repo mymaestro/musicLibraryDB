@@ -12,10 +12,8 @@ ferror_log("Running fetch_parts.php");
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) { // User selects edit part
-    ferror_log("Edit part:");
     $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
     $id_part_type = mysqli_real_escape_string($f_link, $_POST['id_part_type']);
-    //$sql = "SELECT * FROM parts WHERE catalog_number = '" . $catalog_number . "' AND id_part_type = " . $id_part_type .";";
     $sql = "SELECT  p.catalog_number,
                     p.id_part_type,
                     p.name,
@@ -31,7 +29,7 @@ if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) { // User
             FROM    parts p
             JOIN    part_types t  ON p.id_part_type = t.id_part_type
             WHERE   p.catalog_number = '" . $catalog_number . "' AND p.id_part_type = " . $id_part_type .";";
-    ferror_log("SQL: ". $sql);
+    ferror_log("Get part details for catalog number: " . $catalog_number . " and part type: " . $id_part_type);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     $part_data =  json_encode($rowList);
@@ -47,7 +45,7 @@ if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) { // User
     $instrument_list = json_encode($instrument_data);
 
     $return = json_encode('{"part":' . $part_data . ',"instruments":' . $instrument_list . "}");
-    //ferror_log("JSON: ". $return);
+    ferror_log("Returning JSON for part: " . $catalog_number . " / " . $id_part_type);
     echo $return;
 
 } elseif (isset($_POST['catalog_number'])) { // Create a table of parts for this catalog number, user selected a composition to see its parts
@@ -102,7 +100,7 @@ if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) { // User
             WHERE  p.catalog_number = '".$catalog_number ."'
             GROUP BY p.catalog_number, p.id_part_type
             ORDER BY y.collation;";
-    ferror_log("SQL: ". $sql);
+    ferror_log("Retrieving parts data for catalog number: " . $catalog_number);
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
     while ($rowList = mysqli_fetch_array($res)) {
         $catalog_number = $rowList['catalog_number'];
@@ -170,7 +168,7 @@ if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) { // User
             JOIN   compositions c
             ON     p.catalog_number = c.catalog_number
             GROUP BY p.catalog_number;";
-    ferror_log("SQL: ". $sql);
+    ferror_log("Fetching parts count data for all compositions");
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
     while ($rowList = mysqli_fetch_array($res)) {
         $catalog_number = $rowList['catalog_number'];
@@ -204,7 +202,6 @@ if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) { // User
     </div><!-- table-responsive -->
     </div><!-- class panel -->' . PHP_EOL;
 } else { // Get parts to list on the menu by composition
-    //ferror_log("Compositions that have parts");
     $sql = "SELECT p.catalog_number,
                    c.name title,
                    c.composer composer,
@@ -214,7 +211,7 @@ if(isset($_POST['id_part_type']) && (isset($_POST['catalog_number']))) { // User
             JOIN   compositions c
             ON     p.catalog_number = c.catalog_number
             GROUP BY p.catalog_number;";
-    //ferror_log("SQL: ". $sql);
+    ferror_log("Fetching parts count data for all compositions");
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
     while ($rowList = mysqli_fetch_array($res)) {
         $catalog_number = $rowList['catalog_number'];
@@ -239,6 +236,4 @@ echo '
 
 }
 mysqli_close($f_link);
-// ferror_log("returned: " . $sql);
-
 ?>

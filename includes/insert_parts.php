@@ -15,6 +15,7 @@ if (!file_exists('../PHPdfer/PHPdfer.php') || !file_exists('../PHPdfer/MetadataD
     require_once('../PHPdfer/MetadataDirector.php');
     require_once('../PHPdfer/MetadataBuilder.php');
 }
+// NOTE TO SELF! If the PHPdfer library is not found, we can still upload the PDF files but not attempt to modify their metadata.
 
 function updatePartPDFMetadata($partFilePath, $partData) {    
     $phpdfer = new PHPdfer\PHPdfer();
@@ -56,8 +57,8 @@ $maxFileSize = 20 * 1024 * 1024; // 20 MB
 $uploadMax = ini_get('upload_max_filesize');
 $postMax = ini_get('post_max_size');
 
-$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
+    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     ferror_log("------------------------------------------------");
     ferror_log("RUNNING insert_parts.php with id_part=". $_POST["catalog_number"] . ":" . $_POST["id_part_type"]);
     $output = '';
@@ -365,7 +366,7 @@ if(!empty($_POST)) {
         }
         mysqli_stmt_close($insert_stmt);
     }
-
+    mysqli_close($f_link);
 } else {
     require_once("header.php");
     echo '<body>

@@ -154,7 +154,8 @@ require_once("navbar.php");
                     echo '<form action="../parts.php" method="POST"><input type="hidden" name="catalog_number" value="'.$catalog_number.'"><button class="btn btn-outline-secondary" type="submit">Edit parts</button></form>';
                 } // Part types array is not empty
             } // Submit function was "add"
-         }?>
+            mysqli_close($f_link);
+        }?>
         <?php endif; ?>
 </main>
 </body>

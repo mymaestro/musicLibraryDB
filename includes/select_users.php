@@ -5,7 +5,8 @@ ferror_log("Running select_users.php with id_users=". $_POST["id_users"]);
 if (isset($_POST["id_users"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    $sql = "SELECT * FROM users WHERE id_users = '".$_POST["id_users"]."'";
+    $id_user = intval($_POST["id_users"]);
+    $sql = "SELECT * FROM users WHERE id_users = $id_user";
     ferror_log("Running SQL: ". $sql);
     $res = mysqli_query($f_link, $sql);
     $output .= '
@@ -52,5 +53,6 @@ if (isset($_POST["id_users"])) {
     </div>
     ';
     echo $output;
+    mysqli_close($f_link);
 }
 ?>

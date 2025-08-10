@@ -101,7 +101,7 @@ function ferror_log($error){
         if (isset($_SESSION['username'])) {
             $username = $_SESSION['username'];
         } else {
-            $username = 'anon';
+            $username = 'anonymous';
         }
         error_log($username."> ".$error);
     }

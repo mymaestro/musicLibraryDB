@@ -1,10 +1,11 @@
 <?php
 require_once('config.php');
 require_once('functions.php');
-ferror_log("Running select_composition_parts.php with id=". $_POST["catalog_number"]);
+ferror_log("Running select_composition_parts.php with POST data: ". print_r($_POST, true));
 if (isset($_POST["catalog_number"])) {
     $output = "";
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $catalog_number = mysqli_real_escape_string($f_link, $_POST["catalog_number"]);
     $sql = "SELECT p.catalog_number,
                    c.name title,
                    c.composer composer,
@@ -21,9 +22,9 @@ if (isset($_POST["catalog_number"])) {
             ON     t.id_part_type = p.id_part_type
             JOIN   paper_sizes z
             ON     p.paper_size = z.id_paper_size
-            WHERE  p.catalog_number = '".$_POST["catalog_number"]."'
+            WHERE  p.catalog_number = '".$catalog_number."'
             ORDER BY t.collation;";
-    ferror_log("Running SQL: ". $sql);
+    ferror_log("Getting details for parts of composition with catalog number: ".$catalog_number);
     $output = '<div class="modal-header">';
     $res = mysqli_query($f_link, $sql);
     $rowNum = 0;
@@ -77,5 +78,6 @@ if (isset($_POST["catalog_number"])) {
 
     ';
     echo $output;
+    mysqli_close($f_link);
 }
 ?>

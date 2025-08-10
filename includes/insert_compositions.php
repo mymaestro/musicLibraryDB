@@ -30,6 +30,11 @@ if(!empty($_POST)) {
     $paper_size = mysqli_real_escape_string($f_link, $_POST['paper_size']);
 
     // Special handling for numbers and dates and columns that can be NULL
+    /*
+     * Have a look at insert_parts.php to understand how this NULL stuff
+     * can be properly handled much more efficiently using PHP functions
+     * designed for that purpose
+     */
     $grade = mysqli_real_escape_string($f_link, $_POST['grade']);
     if (empty($grade)) {
         $grade = "NULL";
@@ -142,4 +147,5 @@ if(!empty($_POST)) {
     require_once("footer.php");
     echo '</body>';
  }
- ?>
+mysqli_close($f_link);
+?>

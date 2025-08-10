@@ -13,15 +13,9 @@ if (isset($_POST["table_key"])) $table_key = mysqli_real_escape_string($f_link, 
 if (isset($table_name) && isset($table_key_name) && isset($table_key)) {
     $timestamp = time();
     header('Content-Type: application/json');
-    
-    ferror_log("table=". $table_name );
-    ferror_log("table key=". $table_key);
-    ferror_log("table key name=". $table_key_name);
+    ferror_log("Delete request for table=". $table_name . " table key=" . $table_key . " table key name=". $table_key_name);
 
     $sql = "DELETE FROM " . $table_name . " WHERE ".$table_key_name . " = ?";
-
-    ferror_log("Delete SQL: " . $sql);
-    ferror_log("Command:" . $sql);
 
     try {
         $stmt = mysqli_prepare($f_link, $sql);
@@ -47,4 +41,5 @@ if (isset($table_name) && isset($table_key_name) && isset($table_key)) {
         }
     }
 }
+mysqli_close($f_link);
 ?>

@@ -13,14 +13,14 @@ if(isset($_POST["user_role"])) {
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 if(isset($_POST["catalog_number"])) {
-    ferror_log("catalog id=". $_POST["catalog_number"]);
-    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    $sql = "SELECT * FROM compositions WHERE catalog_number = '".$_POST["catalog_number"]."'";
-    ferror_log("SQL: ". $sql);
+    $catalog_number = mysqli_real_escape_string($f_link, $_POST['catalog_number']);
+    $sql = "SELECT * FROM compositions WHERE catalog_number = '".$catalog_number."'";
+    ferror_log("Fetching composition details for catalog number: " . $catalog_number);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     echo json_encode($rowList);
 } else {
+    // Log the search request
     if (isset($_POST["submitButton"])) {
         ferror_log("SEARCH_BUTTON:".$_POST["submitButton"]);
     }
@@ -47,9 +47,8 @@ if(isset($_POST["catalog_number"])) {
                 </tr>
                 </thead>
                 <tbody>';
-    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
     if (isset($_POST["submitButton"])) {
-        ferror_log("POST search=".$_POST["search"]);
         $jcode = array("[","]");
         $pcode = array("(",")");
         $extra_search = "";
@@ -123,7 +122,7 @@ if(isset($_POST["catalog_number"])) {
                 GROUP  BY c.catalog_number
                 ORDER BY c.last_update DESC;";
     }
-    ferror_log("RUNNING SQL = " .$sql);
+    ferror_log("Running search SQL: " .trim(preg_replace('/\s+/', ' ', $sql)));
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
     while ($rowList = mysqli_fetch_array($res)) {
         $catalog_number = $rowList['catalog_number'];
@@ -167,8 +166,6 @@ if(isset($_POST["catalog_number"])) {
             </div><!-- table-responsive -->
         </div><!-- class panel -->
        ';
-    mysqli_close($f_link);
-    // ferror_log("returned: " . $sql);
-
 }
+mysqli_close($f_link);
 ?>

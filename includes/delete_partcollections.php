@@ -1,6 +1,7 @@
-<?php  
- //delete_parts.php
- //
+<?php
+// delete_partcollections.php
+// Deletes a part collection entry based on catalog number, part type key, and instrument key.
+// Called from the part collections page partcollections.php
 require_once('config.php');
 require_once('functions.php');
 
@@ -19,7 +20,7 @@ if(isset($id_instrument_key) && isset($id_part_type_key) && isset($catalog_numbe
         $sql = "
         DELETE FROM " . $table_name . " 
         WHERE catalog_number_key = '" . $catalog_number_key . "' AND id_part_type_key = " . $id_part_type_key . " AND id_instrument_key = " . $id_instrument_key .";";
-        ferror_log("Running SQL ".$sql);
+        ferror_log("Deleting part collection entry: " . $catalog_number_key . ", " . $id_part_type_key . ", " . $id_instrument_key);
         $message = 'Data deleted';
         if(mysqli_query($f_link, $sql)) {
             $output .= '<label class="text-success">' . $message . '</label>';
@@ -49,4 +50,5 @@ if(isset($id_instrument_key) && isset($id_part_type_key) && isset($catalog_numbe
         ferror_log("Error: " . $error_message);
     }
 }
+mysqli_close($f_link);
 ?>

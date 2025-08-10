@@ -15,7 +15,7 @@ if (isset($_POST["id_ensemble"])) $id_ensemble = mysqli_escape_string($f_link, $
 
 if(isset($id_ensemble)) {
     $sql = "SELECT * FROM ensembles WHERE id_ensemble = '".$id_ensemble ."'";
-    ferror_log("Running SQL: " . $sql);
+    ferror_log("Fetching ensemble details for ID: " . $id_ensemble);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);  
     echo json_encode($rowList);
@@ -57,7 +57,6 @@ if(isset($id_ensemble)) {
             </div><!-- table-responsive -->
         </div><!-- class panel -->
        ';
-    mysqli_close($f_link);
-    // ferror_log("returned: " . $sql);
 }
+mysqli_close($f_link);
 ?>

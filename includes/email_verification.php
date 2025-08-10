@@ -3,7 +3,6 @@ require_once('config.php');
 require_once('functions.php');
 
 if (isset($_POST["registration-submit"])) {
-
     $selector = bin2hex(random_bytes(8));
     $token = random_bytes(32);
     $url = ORGHOME . "/verify_email.php?selector=" . $selector . "&validator=" . bin2hex($token);
@@ -17,13 +16,15 @@ if (isset($_POST["registration-submit"])) {
     $password = mysqli_real_escape_string($f_link, $_POST['password']);
     $address = mysqli_real_escape_string($f_link, $_POST['address']);
 
+    ferror_log("Running email verification for user: " . $username . " with email: " . $address);
+
     // Hash the password
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
     // Delete any existing verification requests for this email
     $sql = "DELETE FROM password_reset WHERE password_reset_email=? AND request_type='email_verification';";
     if (!$stmt = mysqli_prepare($f_link, $sql)) {
-        echo "Database error.";
+        ferror_log("Database error.");
         exit();
     } else {
         mysqli_stmt_bind_param($stmt, "s", $address);
@@ -34,7 +35,7 @@ if (isset($_POST["registration-submit"])) {
     $sql = "INSERT INTO password_reset (password_reset_email, password_reset_selector, password_reset_token, password_reset_expires, username, name, password_hash, request_type) VALUES (?, ?, ?, ?, ?, ?, ?, 'email_verification');";
 
     if (!$stmt = mysqli_prepare($f_link, $sql)) {
-        echo "Database error preparing verification insert.";
+        ferror_log("Database error preparing verification insert.");
         exit();
     } else {
         $hashedToken = password_hash($token, PASSWORD_DEFAULT);
@@ -64,10 +65,10 @@ if (isset($_POST["registration-submit"])) {
                 header("Location: ../login_register.php?verification=email_error");
             }
         } else {
-            echo "Database error during verification insert.";
+            ferror_log("Database error during verification insert.");
         }
     }
-
+    mysqli_close($f_link);
 } else {
     header("Location: ../login.php");
 }

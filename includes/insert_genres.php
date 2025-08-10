@@ -1,20 +1,20 @@
 <?php
  //insert_genres.php
+
+use Dom\Mysql;
+
 define('PAGE_TITLE', 'Insert genres');
 define('PAGE_NAME', 'Insert genres');
 require_once('config.php');
 require_once('functions.php');
-$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+ferror_log("Running insert_genres.php with POST data: " . print_r($_POST, true));
 if(!empty($_POST)) {
-    ferror_log("RUNNING insert_genres.php with id_genre=". $_POST["id_genre"]);
+    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
     $output = '';
     $message = '';
     $timestamp = time();
-    ferror_log("POST id_genre=".$_POST["id_genre"]);
-    ferror_log("POST name=".$_POST["name"]);
-    ferror_log("POST description=".$_POST["description"]);
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
-    ferror_log("POST enabled=".$enabled);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
     $id_genre = mysqli_real_escape_string($f_link, $_POST['id_genre']);
     $id_genre_hold = mysqli_real_escape_string($f_link, $_POST['id_genre_hold']);
@@ -37,7 +37,7 @@ if(!empty($_POST)) {
         ";
         $message = 'Data Inserted';
     }
-    ferror_log("Running SQL ". $sql);
+    ferror_log("Insert genres SQL ". trim(preg_replace('/\s+/', ' ', $sql)));
     $referred = $_SERVER['HTTP_REFERER'];
     
     try {
@@ -84,6 +84,7 @@ if(!empty($_POST)) {
         require_once("footer.php");
         echo '</body>';
     }
+    mysqli_close($f_link);
  } else {
     require_once("header.php");
     echo '<body>

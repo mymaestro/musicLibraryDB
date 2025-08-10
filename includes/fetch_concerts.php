@@ -8,9 +8,9 @@ if(isset($_POST["id_concert"])) {
     $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $id_concert = mysqli_real_escape_string($f_link, $_POST["id_concert"]);
     $sql = "SELECT * FROM concerts WHERE id_concert = $id_concert ;";
-    ferror_log("SQL: " . $sql);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     echo json_encode($rowList);
+    mysqli_close($f_link);
 };
 ?>

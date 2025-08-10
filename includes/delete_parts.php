@@ -15,7 +15,7 @@ if(isset($id_part_type) && (isset($catalog_number))) {
     WHERE catalog_number_key = '".$catalog_number."'
     AND id_part_type_key = '".$id_part_type."';";
     
-    ferror_log("Running SQL: ". $sql);
+    ferror_log("Cleaning up instruments in part_collections for: ". $id_part_type . " for " . $catalog_number);
     if(mysqli_query($f_link, $sql)) {
         ferror_log("Part collection(s) removed for ".$catalog_number." and ".$id_part_type.".");
     } else {

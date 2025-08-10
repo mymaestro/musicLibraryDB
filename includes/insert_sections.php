@@ -5,12 +5,11 @@
 require_once('config.php');
 require_once('functions.php');
 
-ferror_log("Running insert_sections.php");
-ferror_log(print_r($_POST, true));
+ferror_log("Running insert_sections.php with POST data: " . print_r($_POST, true));
 
-$f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
-    ferror_log("RUNNING insert_sections.php with id_section=". $_POST["id_section"]);
+    $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
     $output = '';
     $message = '';
     $timestamp = time();
@@ -22,8 +21,6 @@ if(!empty($_POST)) {
 
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
-
-    ferror_log("POST update=".$_POST["update"]);
 
     // If _POST is update and id_section is set, update the section
     if($_POST["update"] == "update" && !empty($_POST['id_section'])) {
@@ -42,7 +39,6 @@ if(!empty($_POST)) {
         ";
         $message = 'Data Inserted';
     }
-    ferror_log("Running SQL ". $sql);
     $referred = $_SERVER['HTTP_REFERER'];
     
     try {
@@ -70,6 +66,7 @@ if(!empty($_POST)) {
         echo '<p><a href="'.$referred.'">Return</a></p>';
         echo $output;
     }
+    mysqli_close($f_link);
  } else {
     require_once("header.php");
     echo '<body>

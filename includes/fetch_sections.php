@@ -12,5 +12,6 @@ if(isset($section_id)) {
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     echo json_encode($rowList);
+    mysqli_close($f_link);
 }
 ?>

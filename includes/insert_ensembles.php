@@ -1,13 +1,13 @@
 <?php
  //insert_ensembles.php
 define('PAGE_TITLE', 'Insert ensembles');
-define('PAGE_NAME', 'Insert ensembles');
+define('PAGE_NAME', 'InsertEnsembles');
 require_once('config.php');
 require_once('functions.php');
+ferror_log("Insert ensembles POST ".print_r($_POST, true));
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if(!empty($_POST)) {
     ferror_log("RUNNING insert_ensembles.php with id_ensemble=". $_POST["id_ensemble"]);
-    ferror_log("POST ".print_r($_POST, true));
     $output = '';
     $message = '';
     $timestamp = time();
@@ -75,4 +75,5 @@ if(!empty($_POST)) {
     require_once("footer.php");
     echo '</body>';
  }
+ mysqli_close($f_link);
  ?>

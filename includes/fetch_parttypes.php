@@ -15,9 +15,9 @@ ferror_log(print_r($_POST, true));
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 if(isset($_POST["id_part_type"])) {
-    ferror_log("with id=". $_POST["id_part_type"]);
-    $sql = "SELECT * FROM part_types WHERE id_part_type = '".$_POST["id_part_type"]."'";
-    ferror_log("SQL: ". $sql);
+    $id_part_type = mysqli_real_escape_string($f_link, $_POST["id_part_type"]);
+    $sql = "SELECT * FROM part_types WHERE id_part_type = '".$id_part_type."'";
+    ferror_log("Fetching part type with ID: " . $id_part_type);
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     $output = json_encode($rowList);

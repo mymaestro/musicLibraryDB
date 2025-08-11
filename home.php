@@ -32,7 +32,7 @@ $sql = "SELECT
 FROM compositions";
 $res = mysqli_query($f_link, $sql);
 $stats['compositions'] = mysqli_fetch_assoc($res);
-
+ferror_log("Returned ". mysqli_num_rows($res)." counts for compositions");
 // Parts statistics
 $sql = "SELECT 
     COUNT(*) as total_parts,
@@ -43,7 +43,7 @@ $sql = "SELECT
 FROM parts";
 $res = mysqli_query($f_link, $sql);
 $stats['parts'] = mysqli_fetch_assoc($res);
-
+ferror_log("Returned ". mysqli_num_rows($res)." counts for parts");
 // Recordings statistics
 $sql = "SELECT 
     COUNT(*) as total_recordings,
@@ -56,7 +56,7 @@ if ($res) {
 } else {
     $stats['recordings'] = array('total_recordings' => 0, 'recorded_compositions' => 0, 'recording_sessions' => 0);
 }
-
+ferror_log("Returned ". mysqli_num_rows($res)." counts for recordings");
 // Concerts statistics  
 $sql = "SELECT 
     COUNT(*) as total_concerts,
@@ -68,7 +68,7 @@ if ($res) {
 } else {
     $stats['concerts'] = array('total_concerts' => 0, 'concert_dates' => 0);
 }
-
+ferror_log("Returned ". mysqli_num_rows($res)." counts for concerts");
 // Ensembles, Genres, Part Types statistics
 $sql = "SELECT COUNT(*) as total FROM ensembles WHERE enabled = 1";
 $res = mysqli_query($f_link, $sql);

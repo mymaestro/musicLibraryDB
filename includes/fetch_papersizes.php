@@ -11,6 +11,7 @@ if(isset($_POST["id_paper_size"])) {
     $res = mysqli_query($f_link, $sql);
     $rowList = mysqli_fetch_array($res);
     echo json_encode($rowList);
+    ferror_log("Fetch paper sizes returned ".mysqli_num_rows($res). " rows.");
     mysqli_close($f_link);
 }
 ?>

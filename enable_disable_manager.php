@@ -104,12 +104,13 @@ if ($selected_table && isset($enabled_tables[$selected_table])) {
             FROM {$selected_table} 
             ORDER BY {$table_config['display_fields'][0]}";
     
-    $result = mysqli_query($f_link, $sql);
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
+    $res = mysqli_query($f_link, $sql);
+    if ($res) {
+        while ($row = mysqli_fetch_assoc($res)) {
             $table_data[] = $row;
         }
     }
+    ferror_log("Returned ". mysqli_num_rows($res)." rows for table " . $selected_table);
 }
 
 mysqli_close($f_link);

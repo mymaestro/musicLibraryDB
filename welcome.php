@@ -5,6 +5,7 @@ define('PAGE_NAME', 'welcome');
 require_once('includes/header.php');
 require_once('includes/config.php');
 require_once('includes/functions.php');
+ferror_log("RUNNING welcome.php");
 // If session variable is not set it will redirect to login page
 if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
   header("location: ./login.php");

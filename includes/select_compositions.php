@@ -53,6 +53,7 @@ if (isset($_POST["catalog_number"])) {
     </div>
     ';
     echo $output;
+    ferror_log("select compositions returned ".mysqli_num_rows($res). " rows.");
     mysqli_close($f_link);
 }
 ?>

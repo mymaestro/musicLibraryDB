@@ -12,6 +12,7 @@ $assigned = [];
 while ($row = mysqli_fetch_assoc($res)) {
     $assigned[] = $row['id_part_type'];
 }
+ferror_log("Fetch section part types returned ".mysqli_num_rows($res). " rows.");
 mysqli_close($f_link);
 header('Content-Type: application/json');
 echo json_encode($assigned);

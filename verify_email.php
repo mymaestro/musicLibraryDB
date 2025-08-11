@@ -5,6 +5,7 @@ require_once('includes/header.php');
 require_once('includes/config.php');
 require_once('includes/functions.php');
 require_once('includes/navbar.php');
+ferror_log("RUNNING verify_email.php");
 
 $verification_result = "";
 

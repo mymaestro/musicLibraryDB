@@ -14,6 +14,7 @@
   require_once('includes/config.php');
   require_once("includes/navbar.php");
   require_once('includes/functions.php');
+  ferror_log("Running ensembles.php");
 ?>
 <main role="main">
   <div class="container">

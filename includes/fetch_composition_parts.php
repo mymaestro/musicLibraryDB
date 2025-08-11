@@ -22,6 +22,8 @@ if(isset($catalog_number)) {
     $jsondata = rtrim($jsondata, ',');
     $jsondata .= '}'.PHP_EOL;
     echo $jsondata;
+    ferror_log("Fetch composition_parts returned ".mysqli_num_rows($res). " rows.");
+
 }
 mysqli_close($f_link);
 ?>

@@ -14,6 +14,7 @@ if (isset($_SESSION['username'])) {
 require_once("includes/config.php");
 require_once("includes/navbar.php");
 require_once('includes/functions.php');
+ferror_log("Running comps2csv.php");
 ?>
 <main role="main">
     <div class="container-xl">

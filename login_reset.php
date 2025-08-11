@@ -14,7 +14,7 @@ if(isset($_GET["reset"])) {
 } else {
     $result = "new";
 }
-
+ferror_log("Running login_reset.php");
 // This page has a form to input username and email address
 // That will POST to includes/password_reset.php
 // -- which generates the token and sends e-mail

@@ -69,6 +69,7 @@
                 </div><!-- table-responsive -->
             </div><!-- class panel -->
            ';
+        ferror_log("Returned ". mysqli_num_rows($res)." genres.");
         mysqli_close($f_link);
         // ferror_log("returned: " . $sql);
         ?>

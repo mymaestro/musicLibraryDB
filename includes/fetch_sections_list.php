@@ -11,6 +11,7 @@ $sections = [];
 while ($row = mysqli_fetch_assoc($res)) {
     $sections[] = $row;
 }
+ferror_log("Fetch sections list returned ".mysqli_num_rows($res). " rows.");
 mysqli_close($f_link);
 header('Content-Type: application/json');
 echo json_encode($sections);

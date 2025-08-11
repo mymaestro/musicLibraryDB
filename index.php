@@ -93,7 +93,9 @@
 						}
 					} else {
 						echo "<p class='card-text text-muted'>No recordings available</p>";
-					}?>
+					}
+					mysqli_close($f_link);
+					?>
 				</div>
 			</div>
 		</div>

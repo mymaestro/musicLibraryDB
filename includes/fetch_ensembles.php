@@ -57,6 +57,7 @@ if(isset($id_ensemble)) {
             </div><!-- table-responsive -->
         </div><!-- class panel -->
        ';
+    ferror_log("Fetch ensembles returned ".mysqli_num_rows($res). " rows.");
 }
 mysqli_close($f_link);
 ?>

@@ -2,11 +2,11 @@
 // Include config file
 define('PAGE_TITLE', 'Privacy statement');
 define('PAGE_NAME', 'privacy');
-require_once('includes/header.php');
 require_once('includes/config.php');
 require_once('includes/functions.php');
-
+require_once('includes/header.php');
 require_once("includes/navbar.php");
+ferror_log("RUNNING terms-conditions.php");
 ?>
 <main>
   <div class="container">

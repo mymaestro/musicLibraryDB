@@ -16,7 +16,7 @@ if ($id_section > 0) {
         LEFT JOIN section_part_types spt ON s.id_section = spt.id_section
         WHERE s.id_section = $id_section";
 
-    ferror_log("Running SQL: ". $sql);
+    ferror_log("Getting section detail for section " . $id_section);
     $res = mysqli_query($f_link, $sql);
     $output .= '
     <div class="table-responsive">
@@ -50,6 +50,7 @@ if ($id_section > 0) {
     </div>
     ';
     echo $output;
+    ferror_log("Retrieved ".mysqli_num_rows($res)." rows for section " . $id_section);
     mysqli_close($f_link);
 }
 ?>

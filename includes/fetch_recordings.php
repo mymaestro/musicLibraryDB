@@ -162,7 +162,7 @@ if(isset($_POST["id_recording"])) {  // EDIT
         </div><!-- table-responsive -->
     </div><!-- class panel -->
     ';
-    ferror_log("returned: " . $sql);
+    ferror_log("Fetch recordings returned ".mysqli_num_rows($res). " rows.");
 }
 mysqli_close($f_link);
 ?>

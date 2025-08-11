@@ -75,6 +75,7 @@ if(isset($_POST["id_instrument"])) {
             </div><!-- table-responsive -->
         </div><!-- panel -->
         ';
+    ferror_log("Fetch instruments returned ".mysqli_num_rows($res). " rows.");
 }
 mysqli_close($f_link);
 ?>

@@ -83,6 +83,7 @@ if (isset($_SESSION['username'])) {
                 </div><!-- table-responsive -->
             </div><!-- class panel -->
            ';
+        ferror_log("Returned ". mysqli_num_rows($res)." concerts.");
         mysqli_close($f_link);
         // ferror_log("returned: " . $sql);
         ?>

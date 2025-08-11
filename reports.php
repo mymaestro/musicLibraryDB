@@ -14,6 +14,7 @@ if (isset($_SESSION['username'])) {
 require_once("includes/config.php");
 require_once("includes/navbar.php");
 require_once("includes/functions.php");
+ferror_log("RUNNING reports.php");
 
 // Get database connection
 $f_link = f_sqlConnect(DB_HOST, DB_USER, DB_PASS, DB_NAME);

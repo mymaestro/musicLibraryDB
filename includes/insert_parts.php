@@ -6,18 +6,28 @@ require_once('config.php');
 require_once('functions.php');
 
 // Include PHPdfer for PDF metadata handling
-if (!file_exists('../PHPdfer/PHPdfer.php') || !file_exists('../PHPdfer/MetadataDirector.php') || !file_exists('../PHPdfer/MetadataBuilder.php')) {
-    ferror_log("PHPdfer library not found at: " . __DIR__ . "/PHPdfer/");
-    die("PHPdfer library not found. Please ensure it is installed in the correct path.");
-} else {
+$phpdfer_available = false;
+
+if (file_exists('../PHPdfer/PHPdfer.php') && file_exists('../PHPdfer/MetadataDirector.php') && file_exists('../PHPdfer/MetadataBuilder.php')) {
     ferror_log("PHPdfer library found at: " . __DIR__ . "/PHPdfer/");
     require_once('../PHPdfer/PHPdfer.php');
     require_once('../PHPdfer/MetadataDirector.php');
     require_once('../PHPdfer/MetadataBuilder.php');
+    $phpdfer_available = true;
+} else {
+    ferror_log("PHPdfer library not found at: " . __DIR__ . "/PHPdfer/");
+    // Do not die; allow upload to continue without PDF metadata
 }
-// NOTE TO SELF! If the PHPdfer library is not found, we can still upload the PDF files but not attempt to modify their metadata.
 
 function updatePartPDFMetadata($partFilePath, $partData) {    
+    global $phpdfer_available;
+
+    if (!$phpdfer_available) {
+        ferror_log("PHPdfer is not available, skipping metadata update for: " . $partFilePath);
+        // Return the original file path if PHPdfer is not available
+        return $partFilePath;
+    }
+
     $phpdfer = new PHPdfer\PHPdfer();
     
     $metadata = [

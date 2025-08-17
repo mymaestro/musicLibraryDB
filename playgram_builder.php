@@ -103,12 +103,17 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                 <input type="hidden" id="playgram_id" value="<?php echo $playgram_data['id_playgram']; ?>"/>
                                 <?php endif; ?>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="target_duration" class="form-label">Target duration (minutes)*</label>
                                 <input type="number" class="form-control" id="target_duration" name="target_duration" 
                                        min="5" max="180" value="60" required/>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-2">
+                                <label for="performance_date" class="form-label">Performance Date</label>
+                                <input type="date" class="form-control" id="performance_date" name="performance_date"
+                                    value="<?php echo $editing_playgram && !empty($playgram_data['performance_date']) ? htmlspecialchars($playgram_data['performance_date']) : ''; ?>" />
+                            </div>                           
+                            <div class="col-md-4">
                                 <label for="program_description" class="form-label">Description</label>
                                 <input type="text" class="form-control" id="program_description" name="program_description" 
                                        placeholder="Concert theme or notes..."
@@ -820,6 +825,7 @@ $(document).ready(function() {
         const formData = {
             name: programName,
             description: programDescription,
+            performance_date: $('#performance_date').val(),
             enabled: $('#program_enabled').is(':checked') ? 1 : 0,
             'id_composition[]': selectedCompositions.map(comp => comp.catalog_number)
         };

@@ -92,6 +92,14 @@
                                 </div>
                             </div>
                             <div class="row bg-white">
+                                <div class="col-md-3">
+                                    <label for="performance_date" class="col-form-label">First performance date</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="date" class="form-control" id="performance_date" name="performance_date" />
+                                </div>
+                            </div>
+                            <div class="row bg-white">
                                 <div class="col-md-12">
                                     <label for="description" class="col-form-label">Description (up to 2048 characters)</label>
                                     <textarea class="form-control" id="description" name="description" rows="3" maxlength="2048"></textarea>
@@ -246,6 +254,7 @@ $(document).ready(function(){
                     $('#id_composition_list option[value="'+ val + '"]').remove();
                 });
                 $('#id_playgram').val(playgram.id_playgram);
+                $('#performance_date').val(playgram.performance_date);
                 $('#name').val(playgram.name);
                 $('#description').val(playgram.description);
                 if ((playgram.enabled) == 1) {

@@ -14,6 +14,7 @@ if (isset($_POST["id_playgram"])) {
     $sql = "SELECT
         p.id_playgram 'Playgram ID',
         p.name 'Name',
+        p.performance_date 'Date',
         p.description 'Description',
     GROUP_CONCAT(
         CONCAT(pi.comp_order, '. ',

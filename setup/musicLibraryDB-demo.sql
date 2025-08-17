@@ -618,6 +618,7 @@ CREATE TABLE `playgrams` (
   `id_playgram` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier, incremented number',
   `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT 'Title of the playgram (concert program series); must be unique.',
   `description` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL COMMENT 'Complete description of the program, with concert performance notes.',
+  `performance_date` date DEFAULT current_timestamp() COMMENT 'Date of the first planned performance of this playgram',
   `enabled` int(11) DEFAULT NULL COMMENT 'Set to 1 if enabled, otherwise 0',
   PRIMARY KEY (`id_playgram`),
   UNIQUE KEY `title` (`name`)
@@ -630,11 +631,11 @@ CREATE TABLE `playgrams` (
 
 LOCK TABLES `playgrams` WRITE;
 /*!40000 ALTER TABLE `playgrams` DISABLE KEYS */;
-INSERT INTO `playgrams` VALUES (1,'Patriotic Concert','A patriotic concert featuring American marches and favorites',1);
-INSERT INTO `playgrams` VALUES (2,'Classical Showcase','An evening of classical masterworks arranged for band',1);
-INSERT INTO `playgrams` VALUES (3,'Holiday Concert','Annual Christmas concert featuring seasonal favorites',1);
-INSERT INTO `playgrams` VALUES (4,'Jazz Night','An evening of jazz and popular music',1);
-INSERT INTO `playgrams` VALUES (5,'March Madness','Concert featuring the best American marches',1);
+INSERT INTO `playgrams` VALUES (1,'Patriotic Concert','A patriotic concert featuring American marches and favorites','2024-07-04',1);
+INSERT INTO `playgrams` VALUES (2,'Classical Showcase','An evening of classical masterworks arranged for band','2024-03-15',1);
+INSERT INTO `playgrams` VALUES (3,'Holiday Concert','Annual Christmas concert featuring seasonal favorites','2024-12-20',1);
+INSERT INTO `playgrams` VALUES (4,'Jazz Night','An evening of jazz and popular music','2024-02-14',1);
+INSERT INTO `playgrams` VALUES (5,'March Madness','Concert featuring the best American marches','2024-06-16',1);
 /*!40000 ALTER TABLE `playgrams` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -815,4 +816,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-10 14:43:31
+-- Dump completed on 2025-08-17 13:17:41

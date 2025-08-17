@@ -15,6 +15,7 @@ if(!empty($_POST)) {
     $enabled = ((isset($_POST["enabled"])) ? 1 : 0);
     $id_playgram = mysqli_real_escape_string($f_link, $_POST['id_playgram']);
     $name = mysqli_real_escape_string($f_link, $_POST['name']);
+    $performance_date = mysqli_real_escape_string($f_link, $_POST['performance_date']);
     $description = mysqli_real_escape_string($f_link, $_POST['description']);
     $enabled = mysqli_real_escape_string($f_link, $enabled);
 
@@ -31,6 +32,7 @@ if(!empty($_POST)) {
         $sql = "
         UPDATE playgrams
             SET name = '$name',
+            performance_date = '$performance_date',
             description = '$description',
             enabled = $enabled
         WHERE id_playgram = $id_playgram ;
@@ -102,8 +104,8 @@ if(!empty($_POST)) {
         }
     } elseif( $insert_mode == "add") {
         $sql = "
-        INSERT INTO playgrams(name, description, enabled)
-        VALUES('$name', '$description', $enabled);
+        INSERT INTO playgrams(name, performance_date, description, enabled)
+        VALUES('$name', '$performance_date', '$description', $enabled);
         ";
         ferror_log("107: Insert PG SQL ". trim(preg_replace('/\s+/', ' ', $sql)));
         if(!mysqli_query($f_link, $sql)) {  

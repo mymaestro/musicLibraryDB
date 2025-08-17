@@ -43,6 +43,7 @@ if(isset($_POST["id_playgram"])) {
                 <tr>
                     <th style="width: 50px;"></th>
                     <th>Name</th>
+                    <th>Date</th>
                     <th>Description</th>
                     <th>Compositions</th>
                     <th>Duration</th>
@@ -54,6 +55,7 @@ if(isset($_POST["id_playgram"])) {
     $sql = "SELECT 
         p.id_playgram AS id_playgram,
         p.name AS playgram_name,
+        p.performance_date AS playgram_performance_date,
         p.description AS playgram_description,
         COUNT(pi.catalog_number) AS num_compositions,
         SEC_TO_TIME(SUM(c.duration)) AS total_duration,
@@ -64,12 +66,13 @@ if(isset($_POST["id_playgram"])) {
     GROUP BY
       p.id_playgram, p.name, p.description
     ORDER BY
-    p.name;";
+    p.performance_date DESC;";
 
     $res = mysqli_query($f_link, $sql) or die('Error: ' . mysqli_error($f_link));
     while ($rowList = mysqli_fetch_array($res)) {
         $id_playgram = $rowList['id_playgram'];
         $name = $rowList['playgram_name'];
+        $date = $rowList['playgram_performance_date'];
         $description = $rowList['playgram_description'];
         $duration = $rowList['total_duration'];
         $pieces = $rowList['num_compositions'];
@@ -79,6 +82,7 @@ if(isset($_POST["id_playgram"])) {
                     <td>
                         <a href="#" class="view_data" name="view" data-id="'.$id_playgram.'">'.$name.'</a>
                     </td>
+                    <td>'.$date.'</td>
                     <td>'.$description.'</td>
                     <td>'.$pieces.'</td>
                     <td>'.$duration.'</td>

@@ -100,7 +100,7 @@ if(isset($_POST["id_recording"])) {  // EDIT
     echo '<thead class="thead-light" style="position: sticky; top: 0; z-index: 1;"><tr>
         <th style="width: 50px;"></th>
         <th data-tablesort-type="string">Composition <i class="fa fa-sort" aria-hidden="true"></i></th>
-        <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <th data-tablesort-type="string">Ensemble description<i class="fa fa-sort" aria-hidden="true"></i></th>
         <th data-tablesort-type="date">Date <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th data-tablesort-type="string">Composer <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th data-tablesort-type="string">Arranger <i class="fa fa-sort" aria-hidden="true"></i></th>

@@ -316,8 +316,8 @@ $(document).ready(function(){
     $('#catalog_number').change(function() { // when user selects a catalog number get its details
         // Get the catalog number from the selected option
         // and fetch its details via AJAX
-        console.log("Catalog number changed");
         var catalog_number = this.value;
+        console.log("Catalog number changed to " + catalog_number);
         $.ajax({
             url: "includes/fetch_recordings.php",
             method: "POST",
@@ -332,13 +332,14 @@ $(document).ready(function(){
                 $('#arranger').val(data.arranger);
                 // Now fetch the composition name and set #name if blank
                 if (catalog_number) {
+                    console.log("Fetching composition for catalog number: " + catalog_number);
                     $.ajax({
                         url: "includes/fetch_compositions.php",
                         method: "POST",
                         dataType: "json",
                         data: { catalog_number: catalog_number },
                         success: function (comp) {
-                            if (comp && comp.name && !$('#name').val()) {
+                            if (comp && comp.name) {
                                 $('#name').val(comp.name);
                             }
                         }
@@ -463,7 +464,6 @@ $(document).ready(function(){
             formData.append('filedate', $('#filedate').val());
             formData.append('linkDisplay', $('#linkDisplay').text());
             formData.append('venue', $('#venue').val()); // Add the venue to the form data
-            console.log("Form data: " + JSON.stringify(Object.fromEntries(formData)));
             $.ajax({
                 url: "includes/insert_recordings.php",
                 method: "POST",

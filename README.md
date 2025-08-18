@@ -42,6 +42,8 @@ Whether you're managing a small community band library or a large institutional 
   - `fileinfo` (file type detection)
   - `mbstring` (multibyte string handling)
 - **Database**: MySQL 5.7+ or MariaDB 10.3+
+- **GhostScript**: Uses `gs` to set metadata in PDF parts you upload (optional)
+- **Vorbis tools**: Uses `vorbiscomment` to set metadata in OGG and FLAC audio files (optional)
 - **Storage**: Minimum 500MB for application + space for recordings and parts
 
 ### Browser Support
@@ -302,6 +304,7 @@ tar -czf files_backup_$(date +%Y%m%d).tar.gz files/
 3. **Regular backups** of database and files
 4. **Limit file upload types** to audio formats only
 5. **Keep PHP and database updated**
+6. **Protect your parts directory** with an htaccess file so that casual browsers cannot download your PDF library.
 
 ## 📈 Reporting Features
 
@@ -390,13 +393,14 @@ Future enhancements may include:
 
 - [ ] Install LAMP/LEMP stack
 - [ ] Create database and import schema
+- [ ] Upload your logo
 - [ ] Configure `config.php` with your settings
 - [ ] Set file permissions for uploads
 - [ ] Login with default credentials
 - [ ] Change default password
+- [ ] Set up supporting data (ensembles, instruments, genres, paper sizes, part types) to fit your organization
 - [ ] Add your first composition
 - [ ] Create user accounts for your organization
-- [ ] Upload your logo
 - [ ] Begin cataloging your music library!
 
 ---

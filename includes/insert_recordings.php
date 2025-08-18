@@ -1,4 +1,5 @@
 <?php
+ob_start();
 /* insert_recordings.php
 #############################################################################
 # Licensed Materials - Property of ACWE*
@@ -59,7 +60,7 @@ if(!empty($_POST)) {
     // Handle file upload
     $link = mysqli_real_escape_string($f_link, $_POST['linkDisplay']);
 
-    if (isset($_FILES['link']) && $_FILES['link']['error'] === UPLOAD_ERR_OK) {
+    if (isset($_FILES['link']) && $_FILES['link']['error'] === UPLOAD_ERR_OK) { // There's a file to upload
         $fileTmpPath = $_FILES['link']['tmp_name'];
         $fileName = $_FILES['link']['name'];
         $fileSize = $_FILES['link']['size'];
@@ -107,34 +108,56 @@ if(!empty($_POST)) {
             die("Failed to save the uploaded file.");
         }
 
-        // Analyze and save metadata as JSON
+        // We can tag these file formats
+        $supportedTagFormats = [
+            'audio/mpeg' => ['id3v2.3', 'id3v1'],
+            'audio/ogg' => ['vorbiscomment'],
+            'audio/flac' => ['vorbiscomment'],
+            'audio/x-flac' => ['vorbiscomment'],
+        ];
+
         $audio = new getID3();
-        $tagwriter = new getid3_writetags();
-        // Set up the tag writer
-        $tagwriter->filename = $destination;
-        $tagwriter->tagformats = ['id3v2.3', 'id3v2.4', 'id3v1'];
-        $tagwriter->overwrite_tags = true;
-        $tagwriter->remove_other_tags = false;
-        $tagwriter->tag_encoding = 'UTF-8';
-        // Set the tags to write from the form data
+        $didTag = false;
 
-        $tagData = array(
-            'title'   => array($name),
-            'artist'  => array($composer),
-            'album'   => array($ensemble),
-            'year'    => array(substr($filedate, 0, 4)),
-            'comment' => array($notes),
-            'genre'   => array('Classical'),
-        );
-        $tagwriter->tag_data = $tagData;
+        if (isset($supportedTagFormats[$mime])) {
+            $tagwriter = new getid3_writetags();
+            $tagwriter->filename = $destination;
+            $tagwriter->tagformats = $supportedTagFormats[$mime];
 
-        // Write the tags
-        if ($tagwriter->WriteTags()) {
-            ferror_log('Successfully wrote tags');
+            $tagCommand = true;
+            if (in_array('vorbiscomment', $tagwriter->tagformats)) {
+                $vorbisPath = '/usr/bin/vorbiscomment';
+                if (!file_exists($vorbisPath) || !is_executable($vorbisPath)) {
+                    $tagCommand = false;
+                    ferror_log('vorbiscomment tool not found or not executable at ' . $vorbisPath . ', skipping tagging for Ogg/FLAC.');
+                }
+            }
+
+            if ($tagCommand) {
+                $tagwriter->overwrite_tags = true;
+                $tagwriter->remove_other_tags = false;
+                $tagwriter->tag_encoding = 'UTF-8';
+                $tagData = array(
+                    'title'   => array($name),
+                    'artist'  => array($composer),
+                    'album'   => array($ensemble),
+                    'year'    => array(substr($filedate, 0, 4)),
+                    'comment' => array($notes),
+                    'genre'   => array('Classical'),
+                );
+                $tagwriter->tag_data = $tagData;
+                if ($tagwriter->WriteTags()) {
+                    ferror_log('Successfully wrote tags');
+                    $didTag = true;
+                } else {
+                    ferror_log('Failed to write tags: '.implode(', ', $tagwriter->errors));
+                }
+            }
         } else {
-            ferror_log('Failed to write tags: '.implode(', ', $tagwriter->errors));
+            ferror_log('Tagging skipped: format not supported for tagging (MIME: ' . $mime . ')');
         }
 
+        // Always analyze and save metadata, even if tagging was skipped
         $info = $audio->analyze($destination);
         if (isset($info['error'])) {
             die("Error analyzing audio file: " . implode(', ', $info['error']));
@@ -143,20 +166,17 @@ if(!empty($_POST)) {
         $metaFile = $uploadDir . 'meta_' . $safeName . '.json';
         file_put_contents($metaFile, json_encode($info, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
-        echo "Audio file uploaded and metadata saved.<br>";
-        echo "File: " . htmlspecialchars(basename($safeName)) . "<br>";
-        echo "Metadata: " . htmlspecialchars(basename($metaFile));
-
         ferror_log("Audio file uploaded and metadata saved.");
         ferror_log("File: " . htmlspecialchars(basename($safeName)));
         ferror_log("Metadata: " . htmlspecialchars(basename($metaFile)));
-
-    } elseif ($_POST["update"] == "update") {
-        // If updating, keep the existing link
-        ferror_log("No new file uploaded, keeping existing link: " . $link);
+    } elseif (isset($_POST['linkDisplay']) && !empty($_POST['linkDisplay'])) {
+        // If no file is uploaded, use the link provided
+        $link = mysqli_real_escape_string($f_link, $_POST['linkDisplay']);
+        ferror_log("No file uploaded, using link: " . $link);
     } else {
         die("No file uploaded or an error occurred.");
     }
+
     if($_POST["update"] == "update") {
         $sql = "
         UPDATE recordings 
@@ -181,11 +201,13 @@ if(!empty($_POST)) {
     }
     ferror_log("Updating recordings with SQL: " . trim(preg_replace('/\s+/', ' ', $sql)));
     $referred = $_SERVER['HTTP_REFERER'];
+    $referred .= "/#" . $id_recording;
 
+    ob_clean();
     header('Content-Type: application/json');
     try {
         if(mysqli_query($f_link, $sql)) {
-            ferror_log("SQL executed successfully.");
+            ferror_log("SQL ran successfully.");
             echo json_encode([
                 'success' => true,
                 'message' => $message,

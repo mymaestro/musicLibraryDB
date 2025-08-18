@@ -380,7 +380,6 @@ $(document).ready(function(){
         });
     });
     $(document).on('click', '.delete_data', function(){ // button that brings up modal
-        // var id_recording = $(this).attr("id");
         $('#deleteModal').modal('show');
         $('#confirm-delete').data('id', id_recording);
         $('#recording2delete').text(id_recording);
@@ -449,31 +448,49 @@ $(document).ready(function(){
             formData.append('venue', $('#venue').val()); // Add the venue to the form data
             console.log("Form data: " + JSON.stringify(Object.fromEntries(formData)));
             $.ajax({
-                url:"includes/insert_recordings.php",
-                method:"POST",
-                data:formData,
+                url: "includes/insert_recordings.php",
+                method: "POST",
+                data: formData,
                 contentType: false,
                 processData: false,
-                beforeSend:function(){
+                dataType: "json",
+                beforeSend: function () {
                     $('#insert').val("Inserting");
                 },
-                success:function(data){
-                    $('#insert_form')[0].reset();
-                    $('#editModal').modal('hide');
-                    // Show the message modal with the response
-                    $('#message_detail').html('<p class="' + (data.success ? 'text-success' : 'text-danger') + '">' + data.message + '</p>');
-                    $('#messageModal').modal('show');
-                    // Refresh the table
-                    $.ajax({
-                        url:"includes/fetch_recordings.php",
-                        method:"POST",
-                        data:{
-                            user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
-                        },   
-                        success:function(data){
-                            $('#recordings_table').html(data);
+                success: function (data) {
+                    try {
+                        console.log("Response data: ", data);
+                        $('#insert_form')[0].reset();
+                        $('#editModal').modal('hide');
+                        if (data && typeof data === 'object' && 'success' in data && 'message' in data) {
+                            $('#message_detail').html('<p class="' + (data.success ? 'text-success' : 'text-danger') + '">' + data.message + '</p>');
+                        } else {
+                            $('#message_detail').html('<p class="text-danger">Unexpected response from server.</p>');
                         }
-                    });
+                        $('#messageModal').modal('show');
+                        // Refresh the table
+                        $.ajax({
+                            url: "includes/fetch_recordings.php",
+                            method: "POST",
+                            data: {
+                                user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
+                            },
+                            success: function (data) {
+                                $('#recordings_table').html(data);
+                            }
+                        });
+                    } catch (e) {
+                        console.error("Error handling AJAX response:", e);
+                        $('#editModal').modal('hide');
+                        $('#message_detail').html('<p class="text-danger">Error handling server response.</p>');
+                        $('#messageModal').modal('show');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", status, error, xhr.responseText);
+                    $('#editModal').modal('hide');
+                    $('#message_detail').html('<p class="text-danger">AJAX error: ' + error + '</p>');
+                    $('#messageModal').modal('show');
                 }
             });
         }

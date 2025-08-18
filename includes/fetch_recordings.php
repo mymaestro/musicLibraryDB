@@ -27,6 +27,7 @@ if(isset($_POST["id_recording"])) {  // EDIT
         r.ensemble           AS ensemble,
         r.id_ensemble        AS id_ensemble,
         r.composer           AS composer,
+        r.arranger           AS arranger,
         r.link               AS link,
         con.performance_date AS date,
         con.venue            AS venue,
@@ -102,6 +103,7 @@ if(isset($_POST["id_recording"])) {  // EDIT
         <th data-tablesort-type="string">Ensemble <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th data-tablesort-type="date">Date <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th data-tablesort-type="string">Composer <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <th data-tablesort-type="string">Arranger <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th data-tablesort-type="string">Venue <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th>Enabled</th>
       </tr></thead>
@@ -115,6 +117,7 @@ if(isset($_POST["id_recording"])) {  // EDIT
         r.ensemble           AS ensemble,
         r.id_ensemble        AS id_ensemble,
         r.composer           AS composer,
+        r.arranger           AS arranger,
         r.link               AS link,
         con.performance_date AS date,
         con.venue            AS venue,
@@ -135,6 +138,7 @@ if(isset($_POST["id_recording"])) {  // EDIT
         $ensemble         = htmlspecialchars($rowList["ensemble"]);
         $id_ensemble      = $rowList["id_ensemble"];
         $composer         = htmlspecialchars($rowList["composer"]);
+        $arranger         = htmlspecialchars($rowList["arranger"]);
         $date             = $rowList["date"];
         $venue            = htmlspecialchars($rowList["venue"]);
         $notes            = nl2br(htmlspecialchars($rowList["concert_notes"]));
@@ -152,6 +156,7 @@ if(isset($_POST["id_recording"])) {  // EDIT
         <td>'.$ensemble.'</td>
         <td>'.$date.'</td>
         <td>'.$composer.'</td>
+        <td>'.$arranger.'</td>
         <td>'.$venue.'</td>
         <td>'. (($enabled == 1) ? "Yes" : "No") .'</td>
         </tr>';

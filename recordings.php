@@ -146,7 +146,10 @@
                     </div><!-- modal-body -->
                     <div class="modal-footer">  
                             <input type="hidden" name="update" id="update" value="0" />
-                            <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                            <button type="submit" name="insert" id="insert" class="btn btn-success">
+                                <span class="spinner-border spinner-border-sm me-2 d-none" id="insertSpinner" role="status" aria-hidden="true"></span>
+                                <span id="insertText">Insert</span>
+                            </button>
                         </form>  
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
                     </div><!-- modal-footer -->
@@ -316,17 +319,31 @@ $(document).ready(function(){
         console.log("Catalog number changed");
         var catalog_number = this.value;
         $.ajax({
-            url:"includes/fetch_recordings.php",
-            method:"POST",
+            url: "includes/fetch_recordings.php",
+            method: "POST",
             dataType: "json",
-            data:{
-                catalog_number: catalog_number, 
+            data: {
+                catalog_number: catalog_number,
                 user_role: "<?php echo ($u_librarian) ? 'librarian' : 'nobody'; ?>"
             },
-            success:function(data){
+            success: function (data) {
                 $('#catalog_number').val(data.catalog_number);
                 $('#composer').val(data.composer);
                 $('#arranger').val(data.arranger);
+                // Now fetch the composition name and set #name if blank
+                if (catalog_number) {
+                    $.ajax({
+                        url: "includes/fetch_compositions.php",
+                        method: "POST",
+                        dataType: "json",
+                        data: { catalog_number: catalog_number },
+                        success: function (comp) {
+                            if (comp && comp.name && !$('#name').val()) {
+                                $('#name').val(comp.name);
+                            }
+                        }
+                    });
+                }
             }
         });
     });
@@ -455,7 +472,10 @@ $(document).ready(function(){
                 processData: false,
                 dataType: "json",
                 beforeSend: function () {
-                    $('#insert').val("Inserting");
+                    // Show spinner, change text, and disable button
+                    $('#insertSpinner').removeClass('d-none');
+                    $('#insertText').text('Inserting...');
+                    $('#insert').prop('disabled', true);
                 },
                 success: function (data) {
                     try {
@@ -485,10 +505,18 @@ $(document).ready(function(){
                         $('#message_detail').html('<p class="text-danger">Error handling server response.</p>');
                         $('#messageModal').modal('show');
                     }
+                    // Hide spinner, restore text, enable button
+                    $('#insertSpinner').addClass('d-none');
+                    $('#insertText').text('Insert');
+                    $('#insert').prop('disabled', false);
                 },
                 error: function (xhr, status, error) {
                     console.error("AJAX error:", status, error, xhr.responseText);
                     $('#editModal').modal('hide');
+                    // Hide spinner, restore text, enable button
+                    $('#insertSpinner').addClass('d-none');
+                    $('#insertText').text('Insert');
+                    $('#insert').prop('disabled', false);
                     $('#message_detail').html('<p class="text-danger">AJAX error: ' + error + '</p>');
                     $('#messageModal').modal('show');
                 }

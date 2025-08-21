@@ -59,7 +59,7 @@ Whether you're managing a small community band library or a large institutional 
 ```bash
 # Clone to your web server's document root
 cd /var/www/html
-git clone https://github.com/yourusername/musicLibraryDB.git
+git clone https://github.com/yourusername/musicLibraryDB1.git
 cd musicLibraryDB
 
 # Set proper permissions
